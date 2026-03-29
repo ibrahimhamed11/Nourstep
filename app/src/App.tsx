@@ -1,14 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
-import About from './components/About';
-import Problems from './components/Problems';
-import TargetUsers from './components/TargetUsers';
-import Features from './components/Features';
-import MobileApp from './components/MobileApp';
-import Countdown from './components/Countdown';
-import Footer from './components/Footer';
 import type { Lang, Theme } from './types';
+
+// Lazy load below-the-fold sections
+const About = lazy(() => import('./components/About'));
+const Problems = lazy(() => import('./components/Problems'));
+const TargetUsers = lazy(() => import('./components/TargetUsers'));
+const Features = lazy(() => import('./components/Features'));
+const MobileApp = lazy(() => import('./components/MobileApp'));
+const Countdown = lazy(() => import('./components/Countdown'));
+const Footer = lazy(() => import('./components/Footer'));
 
 export type { Lang, Theme };
 
@@ -36,13 +38,15 @@ function App() {
     <div dir={dir} className={`min-h-screen bg-navy text-lightblue overflow-x-hidden ${fontClass}`}>
       <Navbar lang={lang} setLang={setLang} theme={theme} setTheme={setTheme} />
       <Hero lang={lang} />
-      <About lang={lang} />
-      <Problems lang={lang} />
-      <TargetUsers lang={lang} />
-      <Features lang={lang} />
-      <MobileApp lang={lang} />
-      <Countdown lang={lang} />
-      <Footer lang={lang} theme={theme} />
+      <Suspense fallback={<div className="min-h-[50vh]" />}>
+        <About lang={lang} />
+        <Problems lang={lang} />
+        <TargetUsers lang={lang} />
+        <Features lang={lang} />
+        <MobileApp lang={lang} />
+        <Countdown lang={lang} />
+        <Footer lang={lang} theme={theme} />
+      </Suspense>
     </div>
   );
 }
