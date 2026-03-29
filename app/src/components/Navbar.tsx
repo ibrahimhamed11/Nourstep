@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Menu, X, Globe } from 'lucide-react';
+import { Menu, X, Globe, Sun, Moon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import type { Lang, I18n } from '../types';
-
+import type { Lang, Theme, I18n } from '../types';
+import NavbarLogo from './NavbarLogo';
 interface NavItem { label: string; href: string }
 
 const navItems: I18n<NavItem[]> = {
@@ -27,9 +27,11 @@ const navItems: I18n<NavItem[]> = {
 interface Props {
   lang: Lang;
   setLang: (l: Lang) => void;
+  theme: Theme;
+  setTheme: (t: Theme) => void;
 }
 
-export default function Navbar({ lang, setLang }: Props) {
+export default function Navbar({ lang, setLang, theme, setTheme }: Props) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -45,23 +47,14 @@ export default function Navbar({ lang, setLang }: Props) {
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-navy/90 backdrop-blur-xl shadow-lg shadow-black/20 border-b border-bright/10'
+          ? 'bg-navy/90 backdrop-blur-xl shadow-lg shadow-black/10 dark:shadow-black/20 border-b border-border'
           : 'bg-transparent'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
-          <a href="#hero" className="flex items-center gap-2.5 group">
-            <img
-              src="/logo_no_bg.png"
-              alt="NourStep"
-              className="h-9 w-9 lg:h-10 lg:w-10 rounded-xl transition-transform group-hover:scale-105"
-            />
-            <span className="text-lg lg:text-xl font-bold text-gradient">
-              {lang === 'ar' ? 'نور ستيب' : 'NourStep'}
-            </span>
-          </a>
+          <NavbarLogo theme={theme} />
 
           {/* Desktop Nav */}
           <div className="hidden lg:flex items-center gap-1">
@@ -69,7 +62,7 @@ export default function Navbar({ lang, setLang }: Props) {
               <a
                 key={item.href}
                 href={item.href}
-                className="px-3.5 py-2 rounded-lg text-sm font-medium text-lightblue/70 hover:text-white hover:bg-bright/10 transition-all duration-200"
+                className="px-3.5 py-2 rounded-lg text-sm font-medium text-muted hover:text-heading hover:bg-bright/10 transition-all duration-200"
               >
                 {item.label}
               </a>
@@ -78,27 +71,45 @@ export default function Navbar({ lang, setLang }: Props) {
             {/* Language toggle */}
             <button
               onClick={() => setLang(lang === 'en' ? 'ar' : 'en')}
-              className="mx-2 flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-muted hover:text-sky hover:bg-bright/10 transition-all cursor-pointer"
+              className="mx-1 flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-muted hover:text-sky hover:bg-bright/10 transition-all cursor-pointer"
             >
               <Globe size={16} />
               {lang === 'en' ? 'عربي' : 'EN'}
             </button>
 
+            {/* Theme toggle */}
+            <button
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              className="mx-1 flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-muted hover:text-sky hover:bg-bright/10 transition-all cursor-pointer"
+              title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            >
+              {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+            </button>
+
             <a
               href="#countdown"
-              className="ms-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-royal hover:bg-bright transition-all duration-300 shadow-lg shadow-royal/30 hover:shadow-bright/30"
+              className="ms-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-royal to-bright hover:from-bright hover:to-sky transition-all duration-300 shadow-lg shadow-royal/30 hover:shadow-bright/30 hover:-translate-y-0.5"
             >
               {lang === 'ar' ? 'ابدأ الآن' : 'Get Started'}
             </a>
           </div>
 
           {/* Mobile toggle */}
-          <button
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className="lg:hidden p-2 rounded-lg text-lightblue hover:bg-card-dark transition-colors"
-          >
-            {mobileOpen ? <X size={22} /> : <Menu size={22} />}
-          </button>
+          <div className="lg:hidden flex items-center gap-2">
+            {/* Mobile theme toggle */}
+            <button
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              className="p-2 rounded-lg text-muted hover:bg-bright/10 transition-colors cursor-pointer"
+            >
+              {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+            </button>
+            <button
+              onClick={() => setMobileOpen(!mobileOpen)}
+              className="p-2 rounded-lg text-lightblue hover:bg-card-dark transition-colors"
+            >
+              {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -109,7 +120,7 @@ export default function Navbar({ lang, setLang }: Props) {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden bg-navy/95 backdrop-blur-xl border-t border-bright/10"
+            className="lg:hidden bg-navy/95 backdrop-blur-xl border-t border-border"
           >
             <div className="px-4 py-4 space-y-1">
               {items.map((item) => (
@@ -117,7 +128,7 @@ export default function Navbar({ lang, setLang }: Props) {
                   key={item.href}
                   href={item.href}
                   onClick={() => setMobileOpen(false)}
-                  className="block px-4 py-3 rounded-xl text-lightblue/80 hover:text-white hover:bg-card-dark font-medium transition-all"
+                  className="block px-4 py-3 rounded-xl text-muted hover:text-heading hover:bg-card-dark font-medium transition-all"
                 >
                   {item.label}
                 </a>
@@ -132,7 +143,7 @@ export default function Navbar({ lang, setLang }: Props) {
               <a
                 href="#countdown"
                 onClick={() => setMobileOpen(false)}
-                className="block px-4 py-3 rounded-xl text-center font-semibold text-white bg-royal mt-2"
+                className="block px-4 py-3 rounded-xl text-center font-semibold text-white bg-gradient-to-r from-royal to-bright mt-2"
               >
                 {lang === 'ar' ? 'ابدأ الآن' : 'Get Started'}
               </a>
