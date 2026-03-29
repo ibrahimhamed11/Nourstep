@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>خطوة للنور - غلاف فيسبوك</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #04060f;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 40px 20px;
+    font-family: 'Noto Kufi Arabic', sans-serif;
+  }
+
+  .cover-wrapper {
+    width: 100%;
+    max-width: 820px;
+  }
+
+  /* ─── Main Canvas — exact Facebook cover ratio ─── */
+  .cover-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 820 / 312;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow:
+      0 0 0 1px rgba(91,196,255,0.10),
+      0 30px 80px rgba(0,0,0,0.95);
+  }
+
+  /* ─── Background ─── */
+  .cover-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 55% 70% at 22% 50%, rgba(15,40,120,0.60) 0%, transparent 65%),
+      radial-gradient(ellipse 35% 55% at 75% 15%, rgba(8,25,90,0.40) 0%, transparent 60%),
+      linear-gradient(135deg, #030820 0%, #06112e 40%, #091540 70%, #050c22 100%);
+  }
+
+  /* ─── Gradient veil — keeps text side readable ─── */
+  .overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to left,
+      rgba(4, 10, 40, 0.00) 0%,
+      rgba(4, 10, 40, 0.30) 32%,
+      rgba(4, 10, 40, 0.82) 55%,
+      rgba(4, 10, 40, 0.97) 100%
+    );
+  }
+
+  /* ─── Vertical separator between logo and text ─── */
+  .separator {
+    position: absolute;
+    top: 12%;
+    bottom: 12%;
+    left: 42%;
+    width: 1px;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(91,196,255,0.25) 25%,
+      rgba(91,196,255,0.25) 75%,
+      transparent 100%
+    );
+  }
+
+  /* ─── Logo block ─── */
+  .logo-block {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 42%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: clamp(6px, 1.2vw, 12px);
+    pointer-events: none;
+    padding: 6% 5%;
+  }
+
+  .logo-block img {
+    width: clamp(80px, 17vw, 150px);
+    height: auto;
+  }
+
+  .logo-tagline {
+    font-size: clamp(6px, 1.1vw, 9.5px);
+    font-weight: 600;
+    color: rgba(91,196,255,0.55);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    direction: ltr;
+    text-align: center;
+  }
+
+  /* ─── Text block ─── */
+  .text-block {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 57%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+    padding: 5% 6% 5% 3%;
+    gap: clamp(6px, 1.4vw, 14px);
+  }
+
+  /* ─── Badge ─── */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(91,196,255,0.07);
+    border: 1px solid rgba(91,196,255,0.20);
+    border-radius: 3px;
+    padding: clamp(3px,0.55vw,5px) clamp(9px,1.5vw,16px);
+    font-size: clamp(7px, 1.25vw, 10.5px);
+    font-weight: 700;
+    color: rgba(140,200,255,0.85);
+    letter-spacing: 0.08em;
+    direction: rtl;
+  }
+
+  /* ─── Main title ─── */
+  .main-title {
+    font-weight: 900;
+    font-size: clamp(24px, 5.5vw, 46px);
+    color: #ffffff;
+    direction: rtl;
+    text-align: right;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    text-shadow: 0 2px 24px rgba(0,15,70,0.9);
+  }
+
+  .main-title .light-word {
+    color: #5bc4ff;
+  }
+
+  /* ─── Divider ─── */
+  .divider-line {
+    width: clamp(44px, 8vw, 80px);
+    height: 2px;
+    background: linear-gradient(to left, #5bc4ff, rgba(91,196,255,0.06));
+    border-radius: 2px;
+  }
+
+  /* ─── Description ─── */
+  .description {
+    font-weight: 600;
+    font-size: clamp(9.5px, 1.8vw, 15.5px);
+    color: rgba(175, 215, 255, 0.80);
+    direction: rtl;
+    text-align: right;
+    line-height: 1.85;
+    letter-spacing: 0.01em;
+  }
+
+  .role-teacher { font-weight: 800; color: #5bc4ff; }
+  .role-student  { font-weight: 800; color: #a8deff; }
+  .role-parent   { font-weight: 800; color: #8eb4f8; }
+
+  /* ─── Feature pills ─── */
+  .pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(5px, 1vw, 10px);
+    justify-content: flex-end;
+    direction: rtl;
+    margin-top: clamp(2px, 0.4vw, 4px);
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: clamp(4px, 0.7vw, 7px);
+    background: rgba(91,196,255,0.06);
+    border: 1px solid rgba(91,196,255,0.18);
+    border-radius: 3px;
+    padding: clamp(3px,0.55vw,5px) clamp(8px,1.3vw,13px);
+    font-size: clamp(7.5px, 1.25vw, 11px);
+    font-weight: 700;
+    color: rgba(160,215,255,0.88);
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+  }
+
+  .pill svg {
+    width: clamp(9px, 1.4vw, 13px);
+    height: clamp(9px, 1.4vw, 13px);
+    flex-shrink: 0;
+    stroke: #5bc4ff;
+    opacity: 0.80;
+  }
+
+  /* ─── Note ─── */
+  .note {
+    text-align: center;
+    margin-top: 16px;
+    font-family: 'Noto Kufi Arabic', sans-serif;
+    color: rgba(255,255,255,0.18);
+    font-size: 11px;
+    direction: rtl;
+    letter-spacing: 0.03em;
+  }
+</style>
+</head>
+<body>
+<div class="cover-wrapper">
+  <div class="cover-container">
+
+    <div class="cover-bg"></div>
+    <div class="overlay"></div>
+
+    <!-- Vertical separator -->
+    <div class="separator"></div>
+
+    <!-- Logo -->
+    <div class="logo-block">
+      <img src="logo_no_bg.png" alt="خطوة للنور - Logo" />
+      <div class="logo-tagline">www.nourstep.com</div>
+    </div>
+
+    <!-- Text -->
+    <div class="text-block">
+
+      <div class="badge">منصة تعليمية متكاملة</div>
+
+      <div class="main-title">خطوة <span class="light-word">للنور</span></div>
+
+      <div class="divider-line"></div>
+
+      <div class="description">
+        ربط <span class="role-teacher">المعلمين</span> و<span class="role-student">الطلاب</span> و<span class="role-parent">أولياء الأمور</span><br>
+        في نظام واحد سلس وسهل الاستخدام
+      </div>
+
+      <div class="pills">
+        <div class="pill">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15z"/>
+          </svg>
+          متابعة الدروس
+        </div>
+        <div class="pill">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="20" x2="18" y2="10"/>
+            <line x1="12" y1="20" x2="12" y2="4"/>
+            <line x1="6"  y1="20" x2="6"  y2="14"/>
+            <line x1="2"  y1="20" x2="22" y2="20"/>
+          </svg>
+          تقارير الأداء
+        </div>
+        <div class="pill">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+          تواصل مباشر
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="note">انقر يمين على الصورة ← حفظ الصورة للتنزيل</div>
+</div>
+</body>
+</html>
