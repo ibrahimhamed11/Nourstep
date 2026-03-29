@@ -5,6 +5,7 @@ import About from './components/About';
 import Problems from './components/Problems';
 import TargetUsers from './components/TargetUsers';
 import Features from './components/Features';
+import MobileApp from './components/MobileApp';
 import Countdown from './components/Countdown';
 import Footer from './components/Footer';
 import type { Lang, Theme } from './types';
@@ -39,6 +40,7 @@ function App() {
       <Problems lang={lang} />
       <TargetUsers lang={lang} />
       <Features lang={lang} />
+      <MobileApp lang={lang} />
       <Countdown lang={lang} />
       <Footer lang={lang} />
     </div>

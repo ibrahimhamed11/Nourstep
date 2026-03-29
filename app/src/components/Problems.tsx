@@ -56,7 +56,7 @@ const content: I18n<ProblemsContent> = {
   },
   ar: {
     badge: 'المشاكل التي نحلها',
-    title: 'لماذا نور ستيب؟',
+    title: 'لماذا خطوة للنور؟',
     subtitle: 'التعليم يستحق الأفضل. هذه هي التحديات التي تعيق الجميع — ونحن نحلّ كل واحدة منها.',
     problems: [
       {
@@ -128,10 +128,6 @@ export default function Problems({ lang }: { lang: Lang }) {
                 transition={{ delay: i * 0.08, duration: 0.4 }}
                 className="card-dark p-6 md:p-7 group relative overflow-hidden"
               >
-                {/* Subtle number watermark */}
-                <span className="absolute top-3 right-4 rtl:right-auto rtl:left-4 text-6xl font-extrabold text-border/50 dark:text-border/30 select-none leading-none">
-                  {String(i + 1).padStart(2, '0')}
-                </span>
                 <div className="relative flex items-start gap-4">
                   <div className={`shrink-0 w-12 h-12 rounded-xl ${problem.iconBg} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
                     <Icon size={22} className={problem.iconColor} />

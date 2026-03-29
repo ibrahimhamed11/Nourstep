@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowDown, CheckCircle, GraduationCap, BookOpen, Users, School, Sparkles } from 'lucide-react';
+import { ArrowDown, CheckCircle, GraduationCap, BookOpen, Users, School } from 'lucide-react';
 import type { Lang, I18n } from '../types';
 
 /* ─────────────────── Typewriter — types once then stops ─────────────────── */

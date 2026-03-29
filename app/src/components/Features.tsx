@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Brain, BadgeCheck, BarChart3, BookOpenCheck, Gamepad2 } from 'lucide-react';
+import { Brain, BadgeCheck, BarChart3, BookOpenCheck, Gamepad2, MessageCircle } from 'lucide-react';
 import type { Lang, I18n } from '../types';
 import type { LucideIcon } from 'lucide-react';
 
@@ -27,37 +27,44 @@ const content: I18n<FeaturesContent> = {
       {
         icon: Brain,
         title: 'AI Teacher Insights & Study Buddy',
-        description: 'Smart AI analytics help teachers identify struggling students early, while a personal study assistant guides learners through challenges.',
+        description: 'Intelligent analytics powered by AI help teachers pinpoint struggling students before it\'s too late. Meanwhile, every learner gets a personal study assistant that adapts to their pace, answers questions, and suggests focused revision paths — turning weaknesses into strengths.',
         iconColor: 'text-sky',
         iconBg: 'bg-sky/10',
       },
       {
         icon: BadgeCheck,
         title: 'Verified Teacher Profiles',
-        description: 'Professional public profiles with verified badges, ratings, and portfolios — building instant trust and credibility with parents.',
+        description: 'Professional public profiles featuring verified badges, star ratings, subject specializations, and rich teaching portfolios. Parents can browse qualifications, read reviews, and choose the perfect teacher — building instant trust and transparency.',
         iconColor: 'text-bright',
         iconBg: 'bg-bright/10',
       },
       {
         icon: BarChart3,
         title: 'Real-Time Parent Dashboards',
-        description: 'Beautiful live dashboards where parents see attendance, grades, homework status, and learning trends at a glance — no more guessing.',
+        description: 'Elegant live dashboards that give parents a complete picture: attendance records, grade trends, homework status, behavioral notes, and learning trajectory — all updated in real time. No more chasing teachers for updates.',
         iconColor: 'text-success',
         iconBg: 'bg-success/10',
       },
       {
         icon: BookOpenCheck,
         title: 'Course Management & Live Sessions',
-        description: 'End-to-end course creation with integrated scheduling, live streaming, recordings, assignments, and automated grading.',
+        description: 'Full end-to-end course creation: build structured curricula, schedule sessions with integrated calendars, stream live classes, auto-record lectures, assign homework, and let the system grade quizzes instantly. Everything a modern classroom needs, digitized.',
         iconColor: 'text-warning',
         iconBg: 'bg-warning/10',
       },
       {
         icon: Gamepad2,
         title: 'Gamified Student Progress',
-        description: 'XP points, achievement badges, streaks, and competitive leaderboards that turn learning into an engaging, rewarding experience.',
+        description: 'Transform learning into an adventure with XP points, achievement badges, daily streaks, milestone rewards, and competitive leaderboards. Students stay motivated, celebrate progress, and develop healthy study habits — all while having fun.',
         iconColor: 'text-error',
         iconBg: 'bg-error/10',
+      },
+      {
+        icon: MessageCircle,
+        title: 'Smart Communication Hub',
+        description: 'A unified messaging center connecting teachers, parents, and students. Send announcements, share progress reports, schedule parent-teacher meetings, and get instant notifications — all in one secure, organized space. No more scattered WhatsApp groups.',
+        iconColor: 'text-royal',
+        iconBg: 'bg-royal/10',
       },
     ],
   },
@@ -69,37 +76,44 @@ const content: I18n<FeaturesContent> = {
       {
         icon: Brain,
         title: 'رؤى ذكية ومساعد دراسي بالذكاء الاصطناعي',
-        description: 'تحليلات ذكية تساعد المعلمين على اكتشاف الطلاب المتعثرين مبكرًا، بينما يرشد المساعد الدراسي الشخصي المتعلمين خلال التحديات.',
+        description: 'تحليلات ذكية مدعومة بالذكاء الاصطناعي تساعد المعلمين على اكتشاف الطلاب المتعثرين قبل فوات الأوان. في الوقت نفسه، يحصل كل متعلّم على مساعد دراسي شخصي يتكيّف مع مستواه، يجيب على أسئلته، ويقترح مسارات مراجعة مركّزة — ليحوّل نقاط الضعف إلى قوة.',
         iconColor: 'text-sky',
         iconBg: 'bg-sky/10',
       },
       {
         icon: BadgeCheck,
         title: 'ملفات معلمين موثّقة ومعتمدة',
-        description: 'ملفات شخصية احترافية مع شارات توثيق وتقييمات ومحفظة أعمال — تبني ثقة فورية مع أولياء الأمور.',
+        description: 'ملفات شخصية احترافية تتضمن شارات توثيق، تقييمات نجوم، تخصصات دراسية، ومحفظة أعمال غنية. يمكن لأولياء الأمور تصفّح المؤهلات وقراءة المراجعات واختيار المعلم المثالي — ثقة فورية وشفافية كاملة.',
         iconColor: 'text-bright',
         iconBg: 'bg-bright/10',
       },
       {
         icon: BarChart3,
         title: 'لوحات متابعة حية لأولياء الأمور',
-        description: 'لوحات متابعة أنيقة تعرض الحضور والدرجات وحالة الواجبات واتجاهات التعلّم بنظرة واحدة — لا مزيد من التخمين.',
+        description: 'لوحات متابعة أنيقة تمنح أولياء الأمور صورة شاملة: سجلات الحضور، اتجاهات الدرجات، حالة الواجبات، ملاحظات السلوك، ومسار التعلّم — كلها مُحدّثة لحظيًا. لا مزيد من ملاحقة المعلمين للحصول على تحديثات.',
         iconColor: 'text-success',
         iconBg: 'bg-success/10',
       },
       {
         icon: BookOpenCheck,
         title: 'إدارة الدورات والحصص المباشرة',
-        description: 'إنشاء دورات متكامل مع جدولة مدمجة وبث مباشر وتسجيلات وواجبات وتصحيح آلي.',
+        description: 'إنشاء دورات متكامل من الألف إلى الياء: بناء مناهج منظّمة، جدولة حصص بتقويم مدمج، بث مباشر للحصص، تسجيل تلقائي للمحاضرات، تعيين واجبات، وتصحيح اختبارات آلي فوري. كل ما يحتاجه الفصل الحديث، رقميًا.',
         iconColor: 'text-warning',
         iconBg: 'bg-warning/10',
       },
       {
         icon: Gamepad2,
         title: 'تقدّم الطلاب بطريقة ممتعة وتفاعلية',
-        description: 'نقاط خبرة وشارات إنجاز وسلاسل نجاح ولوحات متصدرين تحوّل التعلّم إلى تجربة مشوّقة ومحفّزة.',
+        description: 'حوّل التعلّم إلى مغامرة مع نقاط خبرة، شارات إنجاز، سلاسل نجاح يومية، مكافآت مراحل، ولوحات متصدرين تنافسية. الطلاب يبقون متحمسين، يحتفلون بتقدّمهم، ويبنون عادات دراسية صحية — وهم يستمتعون.',
         iconColor: 'text-error',
         iconBg: 'bg-error/10',
+      },
+      {
+        icon: MessageCircle,
+        title: 'مركز تواصل ذكي وموحّد',
+        description: 'مركز رسائل موحّد يربط المعلمين وأولياء الأمور والطلاب. أرسل إعلانات، شارك تقارير التقدّم، جدوِل اجتماعات أولياء الأمور، واحصل على إشعارات فورية — كل شيء في مكان واحد آمن ومنظّم. لا مزيد من مجموعات الواتساب المتناثرة.',
+        iconColor: 'text-royal',
+        iconBg: 'bg-royal/10',
       },
     ],
   },
@@ -140,7 +154,7 @@ export default function Features({ lang }: { lang: Lang }) {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.08, duration: 0.4 }}
-                className={`card-dark p-7 group relative overflow-hidden ${i === 0 ? 'md:col-span-2 lg:col-span-1' : ''}`}
+                className={`card-dark p-7 group relative overflow-hidden`}
               >
                 {/* Top gradient accent line */}
                 <div className={`absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r ${
@@ -148,7 +162,8 @@ export default function Features({ lang }: { lang: Lang }) {
                   i === 1 ? 'from-bright to-royal' :
                   i === 2 ? 'from-success to-sky' :
                   i === 3 ? 'from-warning to-error' :
-                  'from-error to-bright'
+                  i === 4 ? 'from-error to-bright' :
+                  'from-royal to-sky'
                 } opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
 
                 <div className={`w-12 h-12 rounded-xl ${feature.iconBg} flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300`}>
