@@ -6,7 +6,6 @@ import type { LucideIcon } from 'lucide-react';
 interface StatItem { icon: LucideIcon; value: string; label: string }
 
 interface AboutContent {
-  badge: string;
   title: string;
   description: string;
   stats: StatItem[];
@@ -14,7 +13,6 @@ interface AboutContent {
 
 const content: I18n<AboutContent> = {
   en: {
-    badge: 'About NourStep',
     title: 'Empowering the Education Ecosystem',
     description:
       'NourStep is more than a platform — it\'s a movement. We empower teachers and learning centers with intelligent analytics, real-time student progress tracking, and powerful tools to scale courses, strengthen reputations, and create lasting educational impact.',
@@ -25,7 +23,6 @@ const content: I18n<AboutContent> = {
     ],
   },
   ar: {
-    badge: 'عن خطوة للنور',
     title: 'تمكين منظومة التعليم بالكامل',
     description:
       'خطوة للنور ليست مجرد منصة — إنها حركة تعليمية. نُمكّن المعلمين والمراكز التعليمية من الوصول إلى تحليلات ذكية، ومتابعة تقدّم الطلاب في الوقت الفعلي، وأدوات فعّالة لتطوير الدورات وبناء سمعة مهنية قوية وتحقيق أثر تعليمي دائم.',
@@ -41,59 +38,54 @@ export default function About({ lang }: { lang: Lang }) {
   const t = content[lang];
 
   return (
-    <section id="about" className="relative py-24 md:py-32 px-4 bg-darkblue">
-      {/* Top separator */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+    <section id="about" className="relative py-20 md:py-28 px-6 bg-surface dark:bg-darkblue">
+      <div className="max-w-5xl mx-auto">
+        {/* Two-column: text left, stats right — not centered everything */}
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16 items-start">
 
-      <div className="max-w-7xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-16"
-        >
-          <span className="inline-block px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider bg-royal/10 dark:bg-bright/10 text-royal dark:text-sky border border-royal/20 dark:border-bright/20 mb-4">
-            {t.badge}
-          </span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading font-extrabold text-heading mt-4">
-            {t.title}
-          </h2>
-        </motion.div>
-
-        <div className="max-w-3xl mx-auto">
+          {/* Text — takes more space */}
           <motion.div
-            initial={{ opacity: 0, y: 24 }}
+            initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.6 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.45 }}
+            className="lg:col-span-3"
           >
-            <p className="text-lg md:text-xl text-muted leading-relaxed mb-12 text-center max-w-2xl mx-auto">
+            <p className="text-xs font-semibold uppercase tracking-widest text-royal dark:text-sky/70 mb-3">
+              {lang === 'ar' ? 'عن خطوة للنور' : 'About NourStep'}
+            </p>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-heading font-bold text-heading leading-snug">
+              {t.title}
+            </h2>
+            <p className="mt-5 text-[15px] text-muted leading-[1.75] max-w-xl">
               {t.description}
             </p>
-
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-              {t.stats.map((stat, i) => {
-                const Icon = stat.icon;
-                return (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, y: 16 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.12 }}
-                    className="card-dark p-5 text-center group"
-                  >
-                    <div className="w-11 h-11 rounded-xl bg-bright/10 flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
-                      <Icon size={20} className="text-bright" />
-                    </div>
-                    <p className="text-base font-bold text-heading">{stat.value}</p>
-                    <p className="text-xs text-muted mt-0.5">{stat.label}</p>
-                  </motion.div>
-                );
-              })}
-            </div>
           </motion.div>
+
+          {/* Stats — vertical stack on the side */}
+          <div className="lg:col-span-2 flex flex-col gap-4">
+            {t.stats.map((stat, i) => {
+              const Icon = stat.icon;
+              return (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, x: lang === 'ar' ? -12 : 12 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.1 + i * 0.1, duration: 0.35 }}
+                  className="flex items-center gap-4 p-4 rounded-xl bg-navy/50 dark:bg-navy/40 border border-border/50"
+                >
+                  <div className="w-10 h-10 rounded-lg bg-royal/8 dark:bg-bright/8 flex items-center justify-center shrink-0">
+                    <Icon size={18} className="text-royal dark:text-bright" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-heading leading-tight">{stat.value}</p>
+                    <p className="text-xs text-muted mt-0.5">{stat.label}</p>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>

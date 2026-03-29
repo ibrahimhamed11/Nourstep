@@ -42,7 +42,7 @@ function App() {
       <Features lang={lang} />
       <MobileApp lang={lang} />
       <Countdown lang={lang} />
-      <Footer lang={lang} />
+      <Footer lang={lang} theme={theme} />
     </div>
   );
 }

@@ -45,9 +45,9 @@ export default function Navbar({ lang, setLang, theme, setTheme }: Props) {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ${
         scrolled
-          ? 'bg-navy/90 backdrop-blur-xl shadow-lg shadow-black/10 dark:shadow-black/20 border-b border-border'
+          ? 'bg-navy/85 backdrop-blur-lg border-b border-border/40'
           : 'bg-transparent'
       }`}
     >
@@ -88,7 +88,7 @@ export default function Navbar({ lang, setLang, theme, setTheme }: Props) {
 
             <a
               href="#countdown"
-              className="ms-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-royal to-bright hover:from-bright hover:to-sky transition-all duration-300 shadow-lg shadow-royal/30 hover:shadow-bright/30 hover:-translate-y-0.5"
+              className="ms-2 px-5 py-2 rounded-lg text-sm font-semibold text-white bg-royal hover:bg-bright transition-colors duration-200"
             >
               {lang === 'ar' ? 'ابدأ الآن' : 'Get Started'}
             </a>
@@ -143,7 +143,7 @@ export default function Navbar({ lang, setLang, theme, setTheme }: Props) {
               <a
                 href="#countdown"
                 onClick={() => setMobileOpen(false)}
-                className="block px-4 py-3 rounded-xl text-center font-semibold text-white bg-gradient-to-r from-royal to-bright mt-2"
+                className="block px-4 py-3 rounded-lg text-center font-semibold text-white bg-royal mt-2"
               >
                 {lang === 'ar' ? 'ابدأ الآن' : 'Get Started'}
               </a>

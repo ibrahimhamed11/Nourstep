@@ -7,12 +7,10 @@ interface FeatureItem {
   icon: LucideIcon;
   title: string;
   description: string;
-  iconColor: string;
-  iconBg: string;
 }
 
 interface FeaturesContent {
-  badge: string;
+  eyebrow: string;
   title: string;
   subtitle: string;
   features: FeatureItem[];
@@ -20,100 +18,76 @@ interface FeaturesContent {
 
 const content: I18n<FeaturesContent> = {
   en: {
-    badge: 'Key Features',
+    eyebrow: 'Features',
     title: 'Everything You Need, Nothing You Don\'t',
-    subtitle: 'Powerful, intuitive tools designed to transform how education works — for teachers, students, parents, and centers.',
+    subtitle: 'Powerful tools designed to transform how education works.',
     features: [
       {
         icon: Brain,
-        title: 'AI Teacher Insights & Study Buddy',
-        description: 'Intelligent analytics powered by AI help teachers pinpoint struggling students before it\'s too late. Meanwhile, every learner gets a personal study assistant that adapts to their pace, answers questions, and suggests focused revision paths — turning weaknesses into strengths.',
-        iconColor: 'text-sky',
-        iconBg: 'bg-sky/10',
+        title: 'AI Insights & Study Buddy',
+        description: 'Smart analytics help teachers spot struggling students early. Every learner gets a personal AI assistant that adapts to their pace.',
       },
       {
         icon: BadgeCheck,
         title: 'Verified Teacher Profiles',
-        description: 'Professional public profiles featuring verified badges, star ratings, subject specializations, and rich teaching portfolios. Parents can browse qualifications, read reviews, and choose the perfect teacher — building instant trust and transparency.',
-        iconColor: 'text-bright',
-        iconBg: 'bg-bright/10',
+        description: 'Professional profiles with verified badges, ratings, and specializations. Parents browse qualifications and pick the right teacher.',
       },
       {
         icon: BarChart3,
         title: 'Real-Time Parent Dashboards',
-        description: 'Elegant live dashboards that give parents a complete picture: attendance records, grade trends, homework status, behavioral notes, and learning trajectory — all updated in real time. No more chasing teachers for updates.',
-        iconColor: 'text-success',
-        iconBg: 'bg-success/10',
+        description: 'Live dashboards showing attendance, grade trends, homework status, and learning trajectory — all updated instantly.',
       },
       {
         icon: BookOpenCheck,
-        title: 'Course Management & Live Sessions',
-        description: 'Full end-to-end course creation: build structured curricula, schedule sessions with integrated calendars, stream live classes, auto-record lectures, assign homework, and let the system grade quizzes instantly. Everything a modern classroom needs, digitized.',
-        iconColor: 'text-warning',
-        iconBg: 'bg-warning/10',
+        title: 'Course Management & Live Classes',
+        description: 'Build curricula, schedule sessions, stream live, auto-record, assign homework, and grade quizzes — all in one place.',
       },
       {
         icon: Gamepad2,
-        title: 'Gamified Student Progress',
-        description: 'Transform learning into an adventure with XP points, achievement badges, daily streaks, milestone rewards, and competitive leaderboards. Students stay motivated, celebrate progress, and develop healthy study habits — all while having fun.',
-        iconColor: 'text-error',
-        iconBg: 'bg-error/10',
+        title: 'Gamified Progress',
+        description: 'XP points, achievement badges, daily streaks, and leaderboards keep students motivated while building study habits.',
       },
       {
         icon: MessageCircle,
-        title: 'Smart Communication Hub',
-        description: 'A unified messaging center connecting teachers, parents, and students. Send announcements, share progress reports, schedule parent-teacher meetings, and get instant notifications — all in one secure, organized space. No more scattered WhatsApp groups.',
-        iconColor: 'text-royal',
-        iconBg: 'bg-royal/10',
+        title: 'Smart Communication',
+        description: 'Unified messaging connecting teachers, parents, and students. Announcements, reports, meetings — no scattered WhatsApp groups.',
       },
     ],
   },
   ar: {
-    badge: 'المميزات الأساسية',
+    eyebrow: 'المميزات',
     title: 'كل ما تحتاجه، بلا تعقيدات',
-    subtitle: 'أدوات قوية وسهلة الاستخدام مصممة لتغيير طريقة عمل التعليم — للمعلمين والطلاب وأولياء الأمور والمراكز.',
+    subtitle: 'أدوات قوية مصممة لتغيير طريقة عمل التعليم.',
     features: [
       {
         icon: Brain,
-        title: 'رؤى ذكية ومساعد دراسي بالذكاء الاصطناعي',
-        description: 'تحليلات ذكية مدعومة بالذكاء الاصطناعي تساعد المعلمين على اكتشاف الطلاب المتعثرين قبل فوات الأوان. في الوقت نفسه، يحصل كل متعلّم على مساعد دراسي شخصي يتكيّف مع مستواه، يجيب على أسئلته، ويقترح مسارات مراجعة مركّزة — ليحوّل نقاط الضعف إلى قوة.',
-        iconColor: 'text-sky',
-        iconBg: 'bg-sky/10',
+        title: 'رؤى ذكية ومساعد دراسي AI',
+        description: 'تحليلات ذكية تساعد المعلمين على اكتشاف الطلاب المتعثرين. كل متعلّم يحصل على مساعد شخصي يتكيّف مع مستواه.',
       },
       {
         icon: BadgeCheck,
-        title: 'ملفات معلمين موثّقة ومعتمدة',
-        description: 'ملفات شخصية احترافية تتضمن شارات توثيق، تقييمات نجوم، تخصصات دراسية، ومحفظة أعمال غنية. يمكن لأولياء الأمور تصفّح المؤهلات وقراءة المراجعات واختيار المعلم المثالي — ثقة فورية وشفافية كاملة.',
-        iconColor: 'text-bright',
-        iconBg: 'bg-bright/10',
+        title: 'ملفات معلمين موثّقة',
+        description: 'ملفات احترافية بشارات توثيق وتقييمات. أولياء الأمور يتصفّحون المؤهلات ويختارون المعلم المناسب.',
       },
       {
         icon: BarChart3,
-        title: 'لوحات متابعة حية لأولياء الأمور',
-        description: 'لوحات متابعة أنيقة تمنح أولياء الأمور صورة شاملة: سجلات الحضور، اتجاهات الدرجات، حالة الواجبات، ملاحظات السلوك، ومسار التعلّم — كلها مُحدّثة لحظيًا. لا مزيد من ملاحقة المعلمين للحصول على تحديثات.',
-        iconColor: 'text-success',
-        iconBg: 'bg-success/10',
+        title: 'لوحات متابعة حية للأهالي',
+        description: 'لوحات تعرض الحضور واتجاهات الدرجات وحالة الواجبات ومسار التعلّم — كلها مُحدّثة لحظيًا.',
       },
       {
         icon: BookOpenCheck,
-        title: 'إدارة الدورات والحصص المباشرة',
-        description: 'إنشاء دورات متكامل من الألف إلى الياء: بناء مناهج منظّمة، جدولة حصص بتقويم مدمج، بث مباشر للحصص، تسجيل تلقائي للمحاضرات، تعيين واجبات، وتصحيح اختبارات آلي فوري. كل ما يحتاجه الفصل الحديث، رقميًا.',
-        iconColor: 'text-warning',
-        iconBg: 'bg-warning/10',
+        title: 'إدارة دورات وحصص مباشرة',
+        description: 'بناء مناهج، جدولة حصص، بث مباشر، تسجيل تلقائي، واجبات، وتصحيح آلي — كل شيء في مكان واحد.',
       },
       {
         icon: Gamepad2,
-        title: 'تقدّم الطلاب بطريقة ممتعة وتفاعلية',
-        description: 'حوّل التعلّم إلى مغامرة مع نقاط خبرة، شارات إنجاز، سلاسل نجاح يومية، مكافآت مراحل، ولوحات متصدرين تنافسية. الطلاب يبقون متحمسين، يحتفلون بتقدّمهم، ويبنون عادات دراسية صحية — وهم يستمتعون.',
-        iconColor: 'text-error',
-        iconBg: 'bg-error/10',
+        title: 'تقدّم تفاعلي وممتع',
+        description: 'نقاط خبرة وشارات إنجاز وسلاسل نجاح ولوحات متصدرين تبقي الطلاب متحمسين.',
       },
       {
         icon: MessageCircle,
-        title: 'مركز تواصل ذكي وموحّد',
-        description: 'مركز رسائل موحّد يربط المعلمين وأولياء الأمور والطلاب. أرسل إعلانات، شارك تقارير التقدّم، جدوِل اجتماعات أولياء الأمور، واحصل على إشعارات فورية — كل شيء في مكان واحد آمن ومنظّم. لا مزيد من مجموعات الواتساب المتناثرة.',
-        iconColor: 'text-royal',
-        iconBg: 'bg-royal/10',
+        title: 'تواصل ذكي وموحّد',
+        description: 'مركز رسائل يربط المعلمين والأهالي والطلاب. إعلانات وتقارير واجتماعات — بلا مجموعات واتساب متناثرة.',
       },
     ],
   },
@@ -123,55 +97,43 @@ export default function Features({ lang }: { lang: Lang }) {
   const t = content[lang];
 
   return (
-    <section id="features" className="relative py-24 md:py-32 px-4 bg-navy">
-      {/* Top separator */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
-
-      <div className="max-w-7xl mx-auto">
+    <section id="features" className="relative py-20 md:py-28 px-6 bg-navy">
+      <div className="max-w-5xl mx-auto">
+        {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-16"
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.4 }}
+          className="mb-14"
         >
-          <span className="inline-block px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider bg-royal/10 dark:bg-bright/10 text-royal dark:text-bright border border-royal/20 dark:border-bright/20 mb-4">
-            {t.badge}
-          </span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading font-extrabold text-heading mt-4">
+          <p className="text-xs font-semibold uppercase tracking-widest text-royal dark:text-bright/60 mb-3">
+            {t.eyebrow}
+          </p>
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-heading font-bold text-heading">
             {t.title}
           </h2>
-          <p className="text-muted text-lg mt-4 max-w-2xl mx-auto">{t.subtitle}</p>
+          <p className="text-muted text-[15px] mt-3 max-w-md">{t.subtitle}</p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
+        {/* 3-column grid — clean cards, no gradient accent lines */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
           {t.features.map((feature, i) => {
             const Icon = feature.icon;
             return (
               <motion.div
                 key={i}
-                initial={{ opacity: 0, y: 24 }}
+                initial={{ opacity: 0, y: 14 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.08, duration: 0.4 }}
-                className={`card-dark p-7 group relative overflow-hidden`}
+                transition={{ delay: i * 0.05, duration: 0.35 }}
+                className="group p-6 rounded-xl bg-surface/50 dark:bg-card-dark/60 border border-border/40 hover:border-border/70 transition-colors duration-200"
               >
-                {/* Top gradient accent line */}
-                <div className={`absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r ${
-                  i === 0 ? 'from-sky to-bright' :
-                  i === 1 ? 'from-bright to-royal' :
-                  i === 2 ? 'from-success to-sky' :
-                  i === 3 ? 'from-warning to-error' :
-                  i === 4 ? 'from-error to-bright' :
-                  'from-royal to-sky'
-                } opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
-
-                <div className={`w-12 h-12 rounded-xl ${feature.iconBg} flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300`}>
-                  <Icon size={24} className={feature.iconColor} />
+                <div className="w-9 h-9 rounded-lg bg-royal/6 dark:bg-bright/6 flex items-center justify-center mb-4">
+                  <Icon size={18} className="text-royal dark:text-bright/80" />
                 </div>
-
-                <h3 className="text-base font-bold text-heading mb-2">{feature.title}</h3>
-                <p className="text-sm text-muted leading-relaxed">{feature.description}</p>
+                <h3 className="text-[15px] font-semibold text-heading mb-2">{feature.title}</h3>
+                <p className="text-[13px] text-muted leading-[1.65]">{feature.description}</p>
               </motion.div>
             );
           })}

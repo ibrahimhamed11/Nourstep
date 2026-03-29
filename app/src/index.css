@@ -31,26 +31,26 @@
 
 /* ─── Light Theme (default) ─── */
 :root {
-  --theme-navy: #FFFFFF;
-  --theme-darkblue: #F0F4FF;
+  --theme-navy: #FAFBFE;
+  --theme-darkblue: #EEF2FA;
   --theme-card: #FFFFFF;
-  --theme-lightblue: #1E293B;
-  --theme-muted: #475569;
-  --theme-surface: #F8FAFC;
-  --theme-heading: #0F172A;
-  --theme-border: rgba(30, 64, 175, 0.12);
+  --theme-lightblue: #1A2340;
+  --theme-muted: #556178;
+  --theme-surface: #F4F6FB;
+  --theme-heading: #0C1325;
+  --theme-border: rgba(30, 64, 175, 0.10);
 }
 
 /* ─── Dark Theme ─── */
 .dark {
-  --theme-navy: #030D2E;
-  --theme-darkblue: #0A1F6E;
-  --theme-card: #112044;
-  --theme-lightblue: #C8DCFF;
-  --theme-muted: #6B8BAF;
-  --theme-surface: #0A1F6E;
-  --theme-heading: #FFFFFF;
-  --theme-border: rgba(59, 139, 255, 0.12);
+  --theme-navy: #060E28;
+  --theme-darkblue: #0B1A4A;
+  --theme-card: #0F2050;
+  --theme-lightblue: #C1D4F4;
+  --theme-muted: #7A94B8;
+  --theme-surface: #0B1A4A;
+  --theme-heading: #F0F4FF;
+  --theme-border: rgba(61, 139, 255, 0.10);
 }
 
 html {
@@ -141,34 +141,34 @@ body {
 .card-dark {
   background: var(--theme-card);
   border: 1px solid var(--theme-border);
-  border-radius: 1.25rem;
-  transition: all 0.3s ease;
+  border-radius: 1rem;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
 }
 .card-dark:hover {
-  border-color: rgba(59, 139, 255, 0.3);
-  box-shadow: 0 8px 32px rgba(27, 79, 216, 0.15);
-  transform: translateY(-4px);
+  border-color: rgba(59, 139, 255, 0.18);
+  box-shadow: 0 4px 24px rgba(27, 79, 216, 0.08);
+  transform: translateY(-2px);
 }
 
 /* Light mode card shadow */
 :root:not(.dark) .card-dark {
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(30, 64, 175, 0.06);
-  border-color: rgba(30, 64, 175, 0.10);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 2px 8px rgba(30, 64, 175, 0.04);
+  border-color: rgba(30, 64, 175, 0.08);
 }
 :root:not(.dark) .card-dark:hover {
-  box-shadow: 0 12px 40px rgba(27, 79, 216, 0.14);
-  border-color: rgba(30, 64, 175, 0.20);
+  box-shadow: 0 6px 24px rgba(27, 79, 216, 0.10);
+  border-color: rgba(30, 64, 175, 0.16);
 }
 
 /* Gradient text utility */
 .text-gradient {
-  background: linear-gradient(135deg, #1440A8, #1B4FD8);
+  background: linear-gradient(140deg, #1440A8 20%, #2B6CD9 80%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 .dark .text-gradient {
-  background: linear-gradient(135deg, #3D8BFF, #5BC4FF);
+  background: linear-gradient(140deg, #5BA8FF 10%, #8ED0FF 90%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -284,11 +284,9 @@ button:focus-visible {
   border-radius: 4px;
 }
 
-/* Smooth theme transition for all elements */
-*, *::before, *::after {
-  transition-property: background-color, border-color, box-shadow;
-  transition-duration: 0.3s;
-  transition-timing-function: ease;
+/* Smooth theme transition for key elements */
+body, .card-dark, nav, section, footer {
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 /* ─── Navbar Logo Entrance Animations ─── */

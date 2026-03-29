@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowDown, CheckCircle, GraduationCap, BookOpen, Users, School } from 'lucide-react';
+import { ArrowDown, CheckCircle } from 'lucide-react';
 import type { Lang, I18n } from '../types';
 
-/* ─────────────────── Typewriter — types once then stops ─────────────────── */
+/* ── Typewriter ── */
 function useTypeOnce(text: string, speed = 50, startDelay = 600) {
   const [charIndex, setCharIndex] = useState(0);
   const [done, setDone] = useState(false);
@@ -11,26 +11,20 @@ function useTypeOnce(text: string, speed = 50, startDelay = 600) {
   useEffect(() => {
     setCharIndex(0);
     setDone(false);
-
     const delayTimer = setTimeout(() => {
       let i = 0;
       const interval = setInterval(() => {
         i++;
         setCharIndex(i);
-        if (i >= text.length) {
-          clearInterval(interval);
-          setDone(true);
-        }
+        if (i >= text.length) { clearInterval(interval); setDone(true); }
       }, speed);
     }, startDelay);
-
     return () => clearTimeout(delayTimer);
   }, [text, speed, startDelay]);
 
   return { displayed: text.slice(0, charIndex), done };
 }
 
-/* ─────────────────── Content ─────────────────── */
 interface HeroContent {
   badge: string;
   titleStatic: string;
@@ -67,17 +61,6 @@ const content: I18n<HeroContent> = {
   },
 };
 
-/* ─────────────────── Animation Variants ─────────────────── */
-const fadeUp = (delay = 0) => ({
-  hidden: { opacity: 0, y: 28 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.7, delay, ease: 'easeOut' as const },
-  },
-});
-
-/* ─────────────────── Component ─────────────────── */
 export default function Hero({ lang }: { lang: Lang }) {
   const t = content[lang];
   const { displayed, done } = useTypeOnce(t.highlightWord, lang === 'ar' ? 55 : 45, 800);
@@ -87,167 +70,111 @@ export default function Hero({ lang }: { lang: Lang }) {
       id="hero"
       className="relative min-h-screen flex items-center justify-center overflow-hidden bg-navy"
     >
-      {/* ── Background layers ── */}
-      <div className="absolute inset-0 hidden dark:block bg-gradient-to-br from-navy via-darkblue to-navy" />
-      <div className="absolute inset-0 dark:hidden bg-gradient-to-b from-royal/[0.03] via-transparent to-sky/[0.03]" />
+      {/* BG — one subtle radial, no multiple orbs */}
+      <div className="absolute inset-0 dark:block hidden bg-gradient-to-b from-navy via-[#081840] to-navy" />
+      <div className="absolute inset-0 dark:hidden bg-[radial-gradient(ellipse_80%_50%_at_50%_-5%,rgba(27,79,216,0.05),transparent)]" />
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] hidden dark:block bg-royal/6 rounded-full blur-[100px]" />
 
-      {/* Glowing orbs — dark only */}
-      <div className="absolute top-20 right-[10%] w-72 h-72 hidden dark:block bg-royal/20 rounded-full blur-3xl animate-pulse" />
-      <div className="absolute bottom-20 left-[5%] w-96 h-96 hidden dark:block bg-bright/10 rounded-full blur-3xl animate-pulse" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] hidden dark:block bg-darkblue/40 rounded-full blur-3xl" />
-
-      {/* Dot patterns */}
-      <div
-        className="absolute inset-0 hidden dark:block opacity-[0.04]"
-        style={{
-          backgroundImage: 'radial-gradient(circle, #3D8BFF 1px, transparent 1px)',
-          backgroundSize: '32px 32px',
-        }}
-      />
-      <div
-        className="absolute inset-0 dark:hidden opacity-[0.06]"
-        style={{
-          backgroundImage: 'radial-gradient(circle, #1B4FD8 1px, transparent 1px)',
-          backgroundSize: '40px 40px',
-        }}
-      />
-
-      {/* ── Main content ── */}
-      <div className="relative z-10 max-w-5xl mx-auto px-5 sm:px-8 lg:px-10 w-full py-32 md:py-40">
-        <div className="flex flex-col items-center text-center gap-0">
+      <div className="relative z-10 max-w-3xl mx-auto px-6 sm:px-8 w-full pt-28 pb-20 md:pt-40 md:pb-28">
+        <div className="flex flex-col items-center text-center">
 
           {/* Badge */}
           <motion.div
-            variants={fadeUp(0)}
-            initial="hidden"
-            animate="visible"
-            className="mb-10 md:mb-12"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, delay: 0.15 }}
+            className="mb-7"
           >
-            <span className="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-royal/10 dark:bg-royal/15 border border-royal/20 dark:border-bright/20 text-sm font-semibold text-royal dark:text-sky backdrop-blur-sm">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky opacity-75" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-royal dark:bg-sky" />
-              </span>
+            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-royal/6 dark:bg-bright/6 border border-royal/10 dark:border-bright/10 text-xs font-medium text-royal dark:text-sky/80 tracking-wide">
+              <span className="w-1.5 h-1.5 rounded-full bg-royal dark:bg-sky/80" />
               {t.badge}
             </span>
           </motion.div>
 
-          {/* Title with typewriter */}
+          {/* Title */}
           <motion.h1
-            variants={fadeUp(0.15)}
-            initial="hidden"
-            animate="visible"
-            className={`font-heading font-extrabold tracking-tight text-heading leading-[1.12] ${
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
+            className={`font-heading font-extrabold tracking-tight text-heading leading-[1.08] ${
               lang === 'ar'
-                ? 'text-[2.5rem] md:text-5xl xl:text-6xl'
-                : 'text-[2.75rem] sm:text-5xl md:text-6xl xl:text-7xl'
+                ? 'text-[2.25rem] md:text-5xl lg:text-[3.25rem]'
+                : 'text-[2.5rem] sm:text-5xl md:text-[3.5rem] lg:text-[4rem]'
             }`}
           >
             <span className="block">{t.titleStatic}</span>
-            <span className="block mt-3 md:mt-5">
-              <span className="text-gradient inline-block min-w-[3ch]">
-                {displayed}
-              </span>
+            <span className="block mt-1.5 md:mt-2.5">
+              <span className="text-gradient inline-block min-w-[2ch]">{displayed}</span>
               {!done && (
-                <span className="inline-block w-[3px] h-[0.8em] bg-bright dark:bg-sky align-baseline ms-1 rounded-sm animate-[blink_1s_steps(2)_infinite]" />
+                <span className="inline-block w-[2px] h-[0.72em] bg-royal dark:bg-sky/70 align-baseline ms-0.5 rounded-sm animate-[blink_1s_steps(2)_infinite]" />
               )}
             </span>
           </motion.h1>
 
           {/* Subtitle */}
           <motion.p
-            variants={fadeUp(0.35)}
-            initial="hidden"
-            animate="visible"
-            className="mt-8 md:mt-10 text-base sm:text-lg md:text-xl text-muted leading-relaxed md:leading-[1.85] max-w-2xl"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.45, delay: 0.5 }}
+            className="mt-5 md:mt-7 text-[15px] md:text-base text-muted leading-[1.7] max-w-lg"
           >
             {t.subtitle}
           </motion.p>
 
           {/* CTAs */}
           <motion.div
-            variants={fadeUp(0.55)}
-            initial="hidden"
-            animate="visible"
-            className="mt-12 md:mt-14 flex flex-col sm:flex-row gap-4 sm:gap-5 justify-center w-full sm:w-auto"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.65 }}
+            className="mt-9 flex flex-col sm:flex-row gap-3 justify-center w-full sm:w-auto"
           >
             <a
               href="#countdown"
-              className="group relative inline-flex items-center justify-center gap-2 px-9 py-4 rounded-2xl font-semibold text-white bg-gradient-to-r from-royal to-bright hover:from-bright hover:to-sky shadow-lg shadow-royal/25 hover:shadow-bright/40 hover:-translate-y-0.5 transition-all duration-300 overflow-hidden"
+              className="group inline-flex items-center justify-center gap-2 px-7 py-3 rounded-xl text-[15px] font-semibold text-white bg-royal hover:bg-bright transition-colors duration-200 shadow-sm"
             >
-              <span className="relative z-10">{t.cta1}</span>
-              <span className="relative z-10 transition-transform duration-300 group-hover:translate-x-1 rtl:group-hover:-translate-x-1">
-                →
-              </span>
-              <div className="absolute inset-0 bg-gradient-to-r from-bright to-sky opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              {t.cta1}
+              <span className="text-white/60 group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 transition-transform duration-150">→</span>
             </a>
             <a
               href="#about"
-              className="group inline-flex items-center justify-center gap-2 px-9 py-4 rounded-2xl font-semibold text-lightblue bg-card-dark border border-border hover:border-bright/40 hover:bg-darkblue hover:text-heading transition-all duration-300"
+              className="inline-flex items-center justify-center px-7 py-3 rounded-xl text-[15px] font-semibold text-heading border border-border hover:border-royal/20 dark:hover:border-bright/15 transition-colors duration-200"
             >
               {t.cta2}
-              <span className="opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:translate-y-0.5">
-                ↓
-              </span>
             </a>
           </motion.div>
 
-          {/* Trust indicators */}
+          {/* Trust — clean, minimal */}
           <motion.div
-            variants={fadeUp(0.75)}
-            initial="hidden"
-            animate="visible"
-            className="mt-14 md:mt-16 flex flex-col sm:flex-row items-center gap-6 sm:gap-8 justify-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.4, delay: 0.85 }}
+            className="mt-11 flex items-center gap-4 text-[13px] text-muted/60"
           >
-            {/* Signups */}
-            <div className="flex items-center gap-3">
-              <div className="flex -space-x-2 rtl:space-x-reverse">
-                {(
-                  [
-                    { Icon: GraduationCap, color: 'text-bright' },
-                    { Icon: BookOpen, color: 'text-sky' },
-                    { Icon: Users, color: 'text-success' },
-                    { Icon: School, color: 'text-warning' },
-                  ] as const
-                ).map(({ Icon, color }, i) => (
-                  <div
-                    key={i}
-                    className="w-9 h-9 rounded-full bg-card-dark border-2 border-navy flex items-center justify-center shadow-sm"
-                  >
-                    <Icon size={14} className={color} />
-                  </div>
-                ))}
-              </div>
-              <p className="text-sm text-muted font-medium">{t.trustSignups}</p>
-            </div>
-
-            <div className="hidden sm:block w-px h-5 bg-border" />
-
-            {/* Free */}
-            <div className="flex items-center gap-2">
-              <CheckCircle size={14} className="text-success" />
-              <p className="text-sm text-muted font-medium">{t.trustFree}</p>
-            </div>
+            <span className="flex items-center gap-1.5">
+              <CheckCircle size={12} className="text-success/60" />
+              {t.trustSignups}
+            </span>
+            <span className="w-px h-3 bg-border/60" />
+            <span className="flex items-center gap-1.5">
+              <CheckCircle size={12} className="text-success/60" />
+              {t.trustFree}
+            </span>
           </motion.div>
         </div>
       </div>
 
-      {/* ── Scroll indicator ── */}
-      <motion.div
+      {/* Scroll hint */}
+      <motion.a
+        href="#about"
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5"
+        animate={{ opacity: 0.4 }}
+        transition={{ delay: 1.8 }}
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 hover:opacity-70 transition-opacity"
       >
-        <motion.a
-          href="#about"
-          animate={{ y: [0, 6, 0] }}
-          transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
-          className="block text-muted/50 hover:text-muted transition-colors"
-        >
-          <ArrowDown size={20} />
-        </motion.a>
-      </motion.div>
+        <motion.div animate={{ y: [0, 4, 0] }} transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}>
+          <ArrowDown size={16} className="text-muted" />
+        </motion.div>
+      </motion.a>
     </section>
   );
 }
