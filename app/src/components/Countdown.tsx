@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Rocket, Calendar, User, Phone, MapPin, CheckCircle } from 'lucide-react';
+import { Rocket, Calendar, User, Phone, MapPin, CheckCircle, Crown, Zap, Star, Clock, AlertTriangle } from 'lucide-react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import type { Lang, I18n } from '../types';
@@ -55,6 +55,20 @@ interface CountdownContent {
   locationLabel: string;
   locationPlaceholder: string;
   successMessage: string;
+  duplicatePhone: string;
+  networkError: string;
+  rateLimitError: string;
+  urgencyBadge: string;
+  urgencyTitle: string;
+  urgencySubtitle: string;
+  spotsLeft: string;
+  spotsTotal: string;
+  spotsProgress: string;
+  vipTitle: string;
+  vipSubtitle: string;
+  vipBenefits: string[];
+  vipBadge: string;
+  hurryNote: string;
   validation: {
     nameRequired: string;
     nameMin: string;
@@ -85,6 +99,26 @@ const content: I18n<CountdownContent> = {
     locationLabel: 'Location',
     locationPlaceholder: 'Enter your city / area',
     successMessage: 'You\'re on the list! We\'ll notify you at launch 🚀',
+    duplicatePhone: 'This phone number is already registered',
+    networkError: 'Connection error. Please try again.',
+    rateLimitError: 'Too many attempts. Please try again later.',
+    urgencyBadge: 'Hurry Up & Register!',
+    urgencyTitle: 'Limited Spots Available',
+    urgencySubtitle: 'Priority is given to early registrants — only a limited number of teachers will get VIP access with exclusive benefits.',
+    spotsLeft: 'spots remaining',
+    spotsTotal: 'out of 100 VIP spots',
+    spotsProgress: 'Filling up fast!',
+    vipTitle: 'VIP Teachers Get Exclusive Benefits',
+    vipSubtitle: 'Only a limited number of teachers — be one of them',
+    vipBenefits: [
+      'Priority access before public launch',
+      'Free premium features for the first year',
+      'Dedicated support & personal onboarding',
+      'Exclusive VIP badge on your profile',
+      'Early access to all new features',
+    ],
+    vipBadge: 'VIP Access',
+    hurryNote: 'Don\'t miss out — spots are filling fast!',
     validation: {
       nameRequired: 'Name is required',
       nameMin: 'Name must be at least 3 characters',
@@ -100,7 +134,7 @@ const content: I18n<CountdownContent> = {
     title: 'مستقبل التعليم',
     titleHighlight: 'يبدأ هنا',
     subtitle: 'كن من أوائل من يختبرون طريقة أذكى للتعلّم والتعليم والنمو. سجّل في قائمة الوصول المبكر وتلقَّ إشعارًا فور إطلاقنا.',
-    cta: 'أبلغني عند الإطلاق',
+    cta: 'سجّل للوصول المبكر',
     date: '١٢ يونيو ٢٠٢٦',
     formTitle: 'سجّل للوصول المبكر',
     nameLabel: 'اسم المعلم',
@@ -113,6 +147,26 @@ const content: I18n<CountdownContent> = {
     locationLabel: 'الموقع',
     locationPlaceholder: 'أدخل مدينتك / منطقتك',
     successMessage: 'تم التسجيل بنجاح! سنُبلغك فور الإطلاق 🚀',
+    duplicatePhone: 'رقم الهاتف مسجّل بالفعل',
+    networkError: 'خطأ في الاتصال. حاول مرة أخرى.',
+    rateLimitError: 'محاولات كثيرة. حاول مرة أخرى لاحقًا.',
+    urgencyBadge: 'الحق سجّل!',
+    urgencyTitle: 'الأماكن محدودة',
+    urgencySubtitle: 'الأولوية للمسجّلين الأوائل — عدد المدرسين VIP محدود مع مميزات حصرية لهم فقط.',
+    spotsLeft: 'مكان متبقي',
+    spotsTotal: 'من أصل ١٠٠ مكان VIP',
+    spotsProgress: 'الأماكن تنفد بسرعة!',
+    vipTitle: 'مميزات حصرية لمدرسي VIP فقط',
+    vipSubtitle: 'عدد المدرسين محدود — كن واحدًا منهم',
+    vipBenefits: [
+      'أولوية الوصول قبل الإطلاق العام',
+      'ميزات بريميوم مجانية لأول سنة',
+      'دعم مخصص وتدريب شخصي',
+      'شارة VIP حصرية على ملفك',
+      'وصول مبكر لكل الميزات الجديدة',
+    ],
+    vipBadge: 'وصول VIP',
+    hurryNote: 'لا تفوّت الفرصة — الأماكن تنفد بسرعة!',
     validation: {
       nameRequired: 'الاسم مطلوب',
       nameMin: 'الاسم يجب أن يكون ٣ أحرف على الأقل',
@@ -127,9 +181,14 @@ const content: I18n<CountdownContent> = {
 
 const phoneRegex = /^[+]?[\d\s\-()]{8,20}$/;
 
+const API_BASE_URL = import.meta.env.DEV
+  ? '/api'
+  : 'https://api.lezz-app.com';
+
 export default function Countdown({ lang }: { lang: Lang }) {
   const [timeLeft, setTimeLeft] = useState<TimeLeft>(calculateTimeLeft());
   const [submitted, setSubmitted] = useState(false);
+  const [apiError, setApiError] = useState<string | null>(null);
   const t = content[lang];
   const l = labels[lang];
 
@@ -164,8 +223,45 @@ export default function Countdown({ lang }: { lang: Lang }) {
       }),
       location: Yup.string().required(t.validation.locationRequired),
     }),
-    onSubmit: () => {
-      setSubmitted(true);
+    onSubmit: async (values, { setSubmitting }) => {
+      setApiError(null);
+      try {
+        const payload = {
+          name: values.name.trim(),
+          phone: values.phone.trim(),
+          whatsapp_same: values.whatsappSame,
+          whatsapp: values.whatsappSame ? '' : values.whatsapp.trim(),
+          location: values.location.trim(),
+        };
+
+        const res = await fetch(`${API_BASE_URL}/early-access/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+
+        if (res.status === 409) {
+          setApiError(t.duplicatePhone);
+          return;
+        }
+
+        if (res.status === 429) {
+          setApiError(t.rateLimitError);
+          return;
+        }
+
+        if (!res.ok) {
+          const data = await res.json().catch(() => null);
+          setApiError(data?.message_ar || data?.message || t.networkError);
+          return;
+        }
+
+        setSubmitted(true);
+      } catch {
+        setApiError(t.networkError);
+      } finally {
+        setSubmitting(false);
+      }
     },
   });
 
@@ -191,7 +287,7 @@ export default function Countdown({ lang }: { lang: Lang }) {
       {/* Glow effects */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-royal/3 dark:bg-royal/10 rounded-full blur-3xl" />
 
-      <div className="max-w-4xl mx-auto relative">
+      <div className="max-w-5xl mx-auto relative">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -245,14 +341,117 @@ export default function Countdown({ lang }: { lang: Lang }) {
           </div>
         </motion.div>
 
-        {/* Registration Form */}
+        {/* ── Urgency Banner ── */}
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.3, duration: 0.5 }}
-          className="max-w-lg mx-auto"
+          className="mb-10"
         >
+          <div className="relative overflow-hidden rounded-2xl border border-warning/30 bg-gradient-to-r from-warning/5 via-warning/10 to-warning/5 dark:from-warning/10 dark:via-warning/15 dark:to-warning/10 p-6 md:p-8">
+            {/* Pulsing glow */}
+            <div className="absolute top-0 right-0 w-32 h-32 bg-warning/10 rounded-full blur-3xl animate-pulse" />
+            <div className="absolute bottom-0 left-0 w-24 h-24 bg-warning/8 rounded-full blur-2xl animate-pulse" />
+
+            <div className="relative flex flex-col md:flex-row items-center gap-5 md:gap-8">
+              {/* Urgency icon */}
+              <div className="shrink-0">
+                <div className="w-16 h-16 rounded-2xl bg-warning/15 border border-warning/25 flex items-center justify-center animate-count-pulse">
+                  <AlertTriangle size={28} className="text-warning" />
+                </div>
+              </div>
+
+              <div className="flex-1 text-center md:text-start">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-warning/15 text-warning border border-warning/25 mb-3">
+                  <Clock size={12} />
+                  {t.urgencyBadge}
+                </div>
+                <h3 className="text-xl md:text-2xl font-heading font-extrabold text-heading mb-2">
+                  {t.urgencyTitle}
+                </h3>
+                <p className="text-muted text-sm md:text-base leading-relaxed">
+                  {t.urgencySubtitle}
+                </p>
+              </div>
+            </div>
+
+
+          </div>
+        </motion.div>
+
+        {/* ── VIP Benefits + Form Grid ── */}
+        <div className="grid md:grid-cols-2 gap-6 md:gap-8 max-w-5xl mx-auto">
+
+          {/* VIP Benefits Card */}
+          <motion.div
+            initial={{ opacity: 0, x: lang === 'ar' ? 30 : -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.35, duration: 0.5 }}
+          >
+            <div className="relative overflow-hidden rounded-2xl border border-bright/20 bg-card-dark/80 dark:bg-card-dark backdrop-blur-sm shadow-xl shadow-royal/5 dark:shadow-black/20 p-8 md:p-10 h-full">
+              {/* Top accent line */}
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-warning via-bright to-sky" />
+
+              {/* VIP badge */}
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-warning/20 to-bright/20 border border-warning/25 flex items-center justify-center">
+                  <Crown size={24} className="text-warning" />
+                </div>
+                <div>
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-warning/15 text-warning border border-warning/25 mb-1">
+                    <Star size={10} />
+                    {t.vipBadge}
+                  </div>
+                  <h3 className="text-lg md:text-xl font-heading font-extrabold text-heading leading-tight">
+                    {t.vipTitle}
+                  </h3>
+                </div>
+              </div>
+
+              <p className="text-muted text-sm mb-6 leading-relaxed">{t.vipSubtitle}</p>
+
+              {/* Benefits list */}
+              <ul className="space-y-4">
+                {t.vipBenefits.map((benefit, i) => (
+                  <motion.li
+                    key={i}
+                    initial={{ opacity: 0, x: lang === 'ar' ? 16 : -16 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.4 + i * 0.08 }}
+                    className="flex items-start gap-3 group/item"
+                  >
+                    <div className="shrink-0 mt-0.5 w-6 h-6 rounded-full bg-success/15 border border-success/25 flex items-center justify-center group-hover/item:scale-110 transition-transform duration-200">
+                      <CheckCircle size={14} className="text-success" />
+                    </div>
+                    <span className="text-sm text-heading font-medium leading-relaxed">{benefit}</span>
+                  </motion.li>
+                ))}
+              </ul>
+
+              {/* Bottom hurry note */}
+              <div className="mt-8 pt-5 border-t border-border/30">
+                <div className="flex items-center gap-2.5 justify-center">
+                  <Zap size={16} className="text-warning animate-pulse" />
+                  <span className="text-sm font-bold text-warning">{t.hurryNote}</span>
+                  <Zap size={16} className="text-warning animate-pulse" />
+                </div>
+              </div>
+
+              {/* Decorative corner glow */}
+              <div className="absolute -bottom-8 -right-8 w-32 h-32 bg-warning/5 dark:bg-warning/10 rounded-full blur-2xl" />
+            </div>
+          </motion.div>
+
+          {/* Registration Form */}
+          <motion.div
+            initial={{ opacity: 0, x: lang === 'ar' ? -30 : 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.4, duration: 0.5 }}
+          >
           <div className="relative overflow-hidden rounded-2xl border border-border/60 bg-card-dark/80 dark:bg-card-dark backdrop-blur-sm shadow-xl shadow-royal/5 dark:shadow-black/20 p-8 md:p-10">
             {/* Top accent line */}
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-royal via-bright to-sky" />
@@ -386,19 +585,33 @@ export default function Countdown({ lang }: { lang: Lang }) {
                   )}
                 </div>
 
+                {/* API Error */}
+                {apiError && (
+                  <div className="flex items-center gap-2 p-3 rounded-xl bg-error/10 border border-error/20 text-error text-sm font-medium">
+                    <span className="shrink-0">⚠️</span>
+                    {apiError}
+                  </div>
+                )}
+
                 {/* Submit */}
                 <button
                   type="submit"
                   disabled={formik.isSubmitting}
                   className="w-full group inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl font-bold text-white bg-gradient-to-r from-royal via-bright to-sky hover:from-bright hover:via-sky hover:to-royal transition-all duration-500 shadow-lg shadow-bright/20 hover:shadow-sky/30 hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed mt-2"
                 >
-                  <Rocket size={18} className="group-hover:rotate-12 transition-transform duration-300" />
+                  {formik.isSubmitting ? (
+                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : (
+                    <Rocket size={18} className="group-hover:rotate-12 transition-transform duration-300" />
+                  )}
                   {t.cta}
                 </button>
               </form>
             )}
           </div>
         </motion.div>
+
+        </div>{/* End grid */}
       </div>
     </section>
   );
