@@ -72,7 +72,8 @@ export default function Hero({ lang }: { lang: Lang }) {
     >
       {/* BG — one subtle radial, no multiple orbs */}
       <div className="absolute inset-0 dark:block hidden bg-gradient-to-b from-navy via-[#081840] to-navy" />
-      <div className="absolute inset-0 dark:hidden bg-[radial-gradient(ellipse_80%_50%_at_50%_-5%,rgba(27,79,216,0.05),transparent)]" />
+      <div className="absolute inset-0 dark:hidden bg-[radial-gradient(ellipse_80%_50%_at_50%_-5%,rgba(27,79,216,0.08),transparent)]" />
+      <div className="absolute inset-0 dark:hidden bg-[radial-gradient(ellipse_60%_40%_at_80%_80%,rgba(91,196,255,0.04),transparent)]" />
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] hidden dark:block bg-royal/6 rounded-full blur-[100px]" />
 
       <div className="relative z-10 max-w-3xl mx-auto px-6 sm:px-8 w-full pt-28 pb-20 md:pt-40 md:pb-28">
@@ -130,14 +131,14 @@ export default function Hero({ lang }: { lang: Lang }) {
           >
             <a
               href="#countdown"
-              className="group inline-flex items-center justify-center gap-2 px-7 py-3 rounded-xl text-[15px] font-semibold text-white bg-royal hover:bg-bright transition-colors duration-200 shadow-sm"
+              className="group inline-flex items-center justify-center gap-2 px-7 py-3 rounded-xl text-[15px] font-semibold text-white bg-royal hover:bg-bright transition-colors duration-200 shadow-md shadow-royal/20 dark:shadow-royal/10"
             >
               {t.cta1}
               <span className="text-white/60 group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 transition-transform duration-150">→</span>
             </a>
             <a
               href="#about"
-              className="inline-flex items-center justify-center px-7 py-3 rounded-xl text-[15px] font-semibold text-heading border border-border hover:border-royal/20 dark:hover:border-bright/15 transition-colors duration-200"
+              className="inline-flex items-center justify-center px-7 py-3 rounded-xl text-[15px] font-semibold text-heading border border-border hover:border-royal/25 dark:hover:border-bright/15 hover:bg-royal/4 dark:hover:bg-bright/4 transition-all duration-200"
             >
               {t.cta2}
             </a>
