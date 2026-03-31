@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Smartphone, Bell, Zap, Shield, Globe, Fingerprint, CalendarClock } from 'lucide-react';
 import type { Lang, I18n } from '../types';
 
@@ -127,7 +127,7 @@ export default function MobileApp({ lang }: { lang: Lang }) {
       <div className="max-w-5xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 lg:gap-16 items-center">
           {/* Text */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-60px' }}
@@ -148,7 +148,7 @@ export default function MobileApp({ lang }: { lang: Lang }) {
               {t.features.map((feat, i) => {
                 const Icon = feat.icon;
                 return (
-                  <motion.div
+                  <m.div
                     key={i}
                     initial={{ opacity: 0, y: 8 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -158,7 +158,7 @@ export default function MobileApp({ lang }: { lang: Lang }) {
                   >
                     <Icon size={14} className="text-royal/50 dark:text-bright/40 shrink-0" />
                     <span className="text-[13px] text-muted">{feat.text}</span>
-                  </motion.div>
+                  </m.div>
                 );
               })}
             </div>
@@ -186,10 +186,10 @@ export default function MobileApp({ lang }: { lang: Lang }) {
                 </div>
               </button>
             </div>
-          </motion.div>
+          </m.div>
 
           {/* Phone */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-60px' }}
@@ -197,7 +197,7 @@ export default function MobileApp({ lang }: { lang: Lang }) {
             className="order-1 lg:order-2 flex justify-center"
           >
             <PhoneMockup />
-          </motion.div>
+          </m.div>
         </div>
       </div>
     </section>

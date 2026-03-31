@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { UserX, EyeOff, Layers, ClipboardList } from 'lucide-react';
 import type { Lang, I18n } from '../types';
 import type { LucideIcon } from 'lucide-react';
@@ -107,7 +107,7 @@ export default function Problems({ lang }: { lang: Lang }) {
     <section id="problems" className="relative py-16 md:py-20 px-6 bg-navy">
       <div className="max-w-5xl mx-auto">
         {/* Header — centered for impact */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-60px' }}
@@ -121,14 +121,14 @@ export default function Problems({ lang }: { lang: Lang }) {
             {t.title}
           </h2>
           <p className="text-muted text-[15px] mt-2 max-w-lg mx-auto">{t.subtitle}</p>
-        </motion.div>
+        </m.div>
 
         {/* 2×2 Card Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
           {t.problems.map((problem, i) => {
             const Icon = problem.icon;
             return (
-              <motion.div
+              <m.div
                 key={i}
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -153,7 +153,7 @@ export default function Problems({ lang }: { lang: Lang }) {
                 <p className="text-[13px] text-muted leading-relaxed">
                   {problem.description}
                 </p>
-              </motion.div>
+              </m.div>
             );
           })}
         </div>

@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Brain, BadgeCheck, BarChart3, BookOpenCheck, Gamepad2, MessageCircle } from 'lucide-react';
 import type { Lang, I18n } from '../types';
 import type { LucideIcon } from 'lucide-react';
@@ -100,7 +100,7 @@ export default function Features({ lang }: { lang: Lang }) {
     <section id="features" className="relative py-20 md:py-28 px-6 bg-navy">
       <div className="max-w-5xl mx-auto">
         {/* Header */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-60px' }}
@@ -114,14 +114,14 @@ export default function Features({ lang }: { lang: Lang }) {
             {t.title}
           </h2>
           <p className="text-muted text-[15px] mt-3 max-w-md">{t.subtitle}</p>
-        </motion.div>
+        </m.div>
 
         {/* 3-column grid — clean cards, no gradient accent lines */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
           {t.features.map((feature, i) => {
             const Icon = feature.icon;
             return (
-              <motion.div
+              <m.div
                 key={i}
                 initial={{ opacity: 0, y: 14 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -134,7 +134,7 @@ export default function Features({ lang }: { lang: Lang }) {
                 </div>
                 <h3 className="text-[15px] font-semibold text-heading mb-2">{feature.title}</h3>
                 <p className="text-[13px] text-muted leading-[1.65]">{feature.description}</p>
-              </motion.div>
+              </m.div>
             );
           })}
         </div>

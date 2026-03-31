@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Menu, X, Globe, Sun, Moon, Sparkles } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import type { Lang, Theme, I18n } from '../types';
 import NavbarLogo from './NavbarLogo';
 
@@ -113,16 +113,14 @@ export default function Navbar({ lang, setLang, theme, setTheme }: Props) {
                           : 'text-muted hover:text-heading'
                     }`}
                   >
-                    {/* Active pill background with spring animation */}
-                    {isActive && (
-                      <motion.span
-                        layoutId="nav-active"
-                        className={`absolute inset-0 rounded-xl bg-gradient-to-r from-royal to-bright ${
-                          isDark ? 'shadow-md shadow-bright/20' : 'shadow-md shadow-royal/25'
-                        }`}
-                        transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                      />
-                    )}
+                    {/* Active pill background with CSS transition */}
+                    <span
+                      className={`absolute inset-0 rounded-xl bg-gradient-to-r from-royal to-bright transition-all duration-300 ${
+                        isActive
+                          ? `opacity-100 scale-100 ${isDark ? 'shadow-md shadow-bright/20' : 'shadow-md shadow-royal/25'}`
+                          : 'opacity-0 scale-95'
+                      }`}
+                    />
                     <span className="relative z-10">{item.label}</span>
                   </a>
                 );
@@ -161,7 +159,7 @@ export default function Navbar({ lang, setLang, theme, setTheme }: Props) {
               <span className={`absolute inset-0 rounded-xl transition-colors duration-300 ${
                 isDark ? 'bg-bright/0 group-hover/btn:bg-bright/10' : 'bg-royal/0 group-hover/btn:bg-royal/6'
               }`} />
-              <motion.span
+              <m.span
                 key={theme}
                 initial={{ rotate: -90, opacity: 0, scale: 0.5 }}
                 animate={{ rotate: 0, opacity: 1, scale: 1 }}
@@ -169,7 +167,7 @@ export default function Navbar({ lang, setLang, theme, setTheme }: Props) {
                 className="relative z-10"
               >
                 {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
-              </motion.span>
+              </m.span>
             </button>
 
             {/* Separator */}
@@ -227,7 +225,7 @@ export default function Navbar({ lang, setLang, theme, setTheme }: Props) {
               }`}
             >
               <AnimatePresence mode="wait">
-                <motion.span
+                <m.span
                   key={mobileOpen ? 'close' : 'open'}
                   initial={{ rotate: -90, opacity: 0 }}
                   animate={{ rotate: 0, opacity: 1 }}
@@ -236,7 +234,7 @@ export default function Navbar({ lang, setLang, theme, setTheme }: Props) {
                   className="block"
                 >
                   {mobileOpen ? <X size={22} /> : <Menu size={22} />}
-                </motion.span>
+                </m.span>
               </AnimatePresence>
             </button>
           </div>
@@ -246,7 +244,7 @@ export default function Navbar({ lang, setLang, theme, setTheme }: Props) {
       {/* Mobile menu */}
       <AnimatePresence>
         {mobileOpen && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
@@ -262,7 +260,7 @@ export default function Navbar({ lang, setLang, theme, setTheme }: Props) {
                 {items.map((item, i) => {
                   const isActive = activeSection === item.href;
                   return (
-                    <motion.a
+                    <m.a
                       key={item.href}
                       href={item.href}
                       onClick={() => setMobileOpen(false)}
@@ -278,7 +276,7 @@ export default function Navbar({ lang, setLang, theme, setTheme }: Props) {
                       }`}
                     >
                       {item.label}
-                    </motion.a>
+                    </m.a>
                   );
                 })}
 
@@ -286,7 +284,7 @@ export default function Navbar({ lang, setLang, theme, setTheme }: Props) {
                 <div className="!my-3 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
 
                 {/* CTA */}
-                <motion.a
+                <m.a
                   href="#countdown"
                   onClick={() => setMobileOpen(false)}
                   initial={{ opacity: 0, y: 10 }}
@@ -299,10 +297,10 @@ export default function Navbar({ lang, setLang, theme, setTheme }: Props) {
                     <Sparkles size={16} />
                     {lang === 'ar' ? 'ابدأ الآن' : 'Get Started'}
                   </span>
-                </motion.a>
+                </m.a>
               </div>
             </div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </nav>

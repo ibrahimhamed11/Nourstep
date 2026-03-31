@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import type { Theme } from '../types';
 import Logo from './logo';
 
@@ -69,7 +69,7 @@ export default function NavbarLogo({ theme }: NavbarLogoProps) {
         >
           {mounted && (
             <>
-              <motion.span
+              <m.span
                 initial={{ opacity: 0, y: 14, filter: 'blur(6px)' }}
                 animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
                 transition={{
@@ -80,9 +80,9 @@ export default function NavbarLogo({ theme }: NavbarLogoProps) {
                 className={`inline-block navbar-title-char ${theme === 'dark' ? 'text-white' : 'text-royal'}`}
               >
                 خطوة
-              </motion.span>
+              </m.span>
               {' '}
-              <motion.span
+              <m.span
                 initial={{ opacity: 0, y: 14, filter: 'blur(6px)' }}
                 animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
                 transition={{
@@ -93,7 +93,7 @@ export default function NavbarLogo({ theme }: NavbarLogoProps) {
                 className={`inline-block navbar-title-char ${theme === 'dark' ? 'text-bright' : 'text-sky'}`}
               >
                 للنور
-              </motion.span>
+              </m.span>
             </>
           )}
         </span>
@@ -109,7 +109,7 @@ export default function NavbarLogo({ theme }: NavbarLogoProps) {
         >
           {mounted && (
             'خطوة بخطوة في الكورسات'.split(' ').map((word, i) => (
-              <motion.span
+              <m.span
                 key={`s-${i}`}
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -121,7 +121,7 @@ export default function NavbarLogo({ theme }: NavbarLogoProps) {
                 className="inline-block"
               >
                 {word}{i < 3 ? '\u00A0' : ''}
-              </motion.span>
+              </m.span>
             ))
           )}
         </span>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Rocket, Calendar, User, Phone, MapPin, CheckCircle, Crown, Zap, Star, Clock, AlertTriangle } from 'lucide-react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -206,7 +206,7 @@ export default function Countdown({ lang }: { lang: Lang }) {
     <section id="countdown" className="relative py-20 md:py-28 px-6 bg-surface dark:bg-darkblue">
       <div className="max-w-5xl mx-auto">
         {/* Header + countdown timer */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-60px' }}
@@ -222,10 +222,10 @@ export default function Countdown({ lang }: { lang: Lang }) {
             <span className="text-gradient">{t.titleHL}</span>
           </h2>
           <p className="text-muted text-[15px] mt-3 max-w-md mx-auto">{t.subtitle}</p>
-        </motion.div>
+        </m.div>
 
         {/* Timer */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -242,7 +242,7 @@ export default function Countdown({ lang }: { lang: Lang }) {
               </div>
             </div>
           ))}
-        </motion.div>
+        </m.div>
 
         <div className="text-center mb-12">
           <span className="inline-flex items-center gap-1.5 text-xs text-muted/40">
@@ -252,7 +252,7 @@ export default function Countdown({ lang }: { lang: Lang }) {
         </div>
 
         {/* Urgency note — compact, not a big banner */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -272,13 +272,13 @@ export default function Countdown({ lang }: { lang: Lang }) {
               <p className="text-[13px] text-muted leading-relaxed">{t.urgencySub}</p>
             </div>
           </div>
-        </motion.div>
+        </m.div>
 
         {/* Two-column: VIP benefits + Form */}
         <div className="grid md:grid-cols-2 gap-5 md:gap-6 max-w-4xl mx-auto">
 
           {/* VIP Benefits */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 14 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -301,7 +301,7 @@ export default function Countdown({ lang }: { lang: Lang }) {
 
             <ul className="space-y-3">
               {t.vipBenefits.map((b, i) => (
-                <motion.li
+                <m.li
                   key={i}
                   initial={{ opacity: 0, x: lang === 'ar' ? 8 : -8 }}
                   whileInView={{ opacity: 1, x: 0 }}
@@ -311,7 +311,7 @@ export default function Countdown({ lang }: { lang: Lang }) {
                 >
                   <CheckCircle size={14} className="text-success/60 shrink-0 mt-0.5" />
                   <span className="text-[13px] text-heading/80 leading-relaxed">{b}</span>
-                </motion.li>
+                </m.li>
               ))}
             </ul>
 
@@ -321,10 +321,10 @@ export default function Countdown({ lang }: { lang: Lang }) {
                 {t.hurryNote}
               </span>
             </div>
-          </motion.div>
+          </m.div>
 
           {/* Registration Form */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 14 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -334,7 +334,7 @@ export default function Countdown({ lang }: { lang: Lang }) {
             <h3 className="text-[15px] font-bold text-heading text-center mb-6">{t.formTitle}</h3>
 
             {submitted ? (
-              <motion.div
+              <m.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 className="text-center py-8"
@@ -343,7 +343,7 @@ export default function Countdown({ lang }: { lang: Lang }) {
                   <CheckCircle size={24} className="text-success/70" />
                 </div>
                 <p className="text-sm font-medium text-heading">{t.successMsg}</p>
-              </motion.div>
+              </m.div>
             ) : (
               <form className="space-y-4" onSubmit={formik.handleSubmit} noValidate>
                 {/* Name */}
@@ -401,7 +401,7 @@ export default function Countdown({ lang }: { lang: Lang }) {
 
                 {/* WhatsApp field */}
                 {!formik.values.whatsappSame && (
-                  <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} transition={{ duration: 0.2 }}>
+                  <m.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} transition={{ duration: 0.2 }}>
                     <label className="flex items-center gap-1.5 text-[13px] font-medium text-heading/70 mb-1.5">
                       <Phone size={12} className="text-muted/40" />
                       {t.whatsappLabel}
@@ -415,7 +415,7 @@ export default function Countdown({ lang }: { lang: Lang }) {
                     {formik.touched.whatsapp && formik.errors.whatsapp && (
                       <p className="text-error text-[11px] mt-1 font-medium">{formik.errors.whatsapp}</p>
                     )}
-                  </motion.div>
+                  </m.div>
                 )}
 
                 {/* Location */}
@@ -458,7 +458,7 @@ export default function Countdown({ lang }: { lang: Lang }) {
                 </button>
               </form>
             )}
-          </motion.div>
+          </m.div>
         </div>
       </div>
     </section>

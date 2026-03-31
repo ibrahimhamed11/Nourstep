@@ -19,6 +19,9 @@ export default defineConfig({
           if (id.includes('node_modules/formik') || id.includes('node_modules/yup')) {
             return 'vendor-form'
           }
+          if (id.includes('node_modules/lucide-react')) {
+            return 'vendor-icons'
+          }
         },
       },
     },

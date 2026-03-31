@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { ArrowDown, CheckCircle } from 'lucide-react';
 import type { Lang, I18n } from '../types';
 
@@ -80,7 +80,7 @@ export default function Hero({ lang }: { lang: Lang }) {
         <div className="flex flex-col items-center text-center">
 
           {/* Badge */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45, delay: 0.15 }}
@@ -90,10 +90,10 @@ export default function Hero({ lang }: { lang: Lang }) {
               <span className="w-1.5 h-1.5 rounded-full bg-royal dark:bg-sky/80" />
               {t.badge}
             </span>
-          </motion.div>
+          </m.div>
 
           {/* Title */}
-          <motion.h1
+          <m.h1
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
@@ -110,20 +110,20 @@ export default function Hero({ lang }: { lang: Lang }) {
                 <span className="inline-block w-[2px] h-[0.72em] bg-royal dark:bg-sky/70 align-baseline ms-0.5 rounded-sm animate-[blink_1s_steps(2)_infinite]" />
               )}
             </span>
-          </motion.h1>
+          </m.h1>
 
           {/* Subtitle */}
-          <motion.p
+          <m.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.45, delay: 0.5 }}
             className="mt-5 md:mt-7 text-[15px] md:text-base text-muted leading-[1.7] max-w-lg"
           >
             {t.subtitle}
-          </motion.p>
+          </m.p>
 
           {/* CTAs */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.65 }}
@@ -142,10 +142,10 @@ export default function Hero({ lang }: { lang: Lang }) {
             >
               {t.cta2}
             </a>
-          </motion.div>
+          </m.div>
 
           {/* Trust — clean, minimal */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.4, delay: 0.85 }}
@@ -160,22 +160,22 @@ export default function Hero({ lang }: { lang: Lang }) {
               <CheckCircle size={12} className="text-success/60" />
               {t.trustFree}
             </span>
-          </motion.div>
+          </m.div>
         </div>
       </div>
 
       {/* Scroll hint */}
-      <motion.a
+      <m.a
         href="#about"
         initial={{ opacity: 0 }}
         animate={{ opacity: 0.4 }}
         transition={{ delay: 1.8 }}
         className="absolute bottom-6 left-1/2 -translate-x-1/2 hover:opacity-70 transition-opacity"
       >
-        <motion.div animate={{ y: [0, 4, 0] }} transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}>
+        <m.div animate={{ y: [0, 4, 0] }} transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}>
           <ArrowDown size={16} className="text-muted" />
-        </motion.div>
-      </motion.a>
+        </m.div>
+      </m.a>
     </section>
   );
 }

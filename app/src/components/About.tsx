@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Lightbulb, TrendingUp, Users } from 'lucide-react';
 import type { Lang, I18n } from '../types';
 import type { LucideIcon } from 'lucide-react';
@@ -44,7 +44,7 @@ export default function About({ lang }: { lang: Lang }) {
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16 items-start">
 
           {/* Text — takes more space */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-60px' }}
@@ -60,14 +60,14 @@ export default function About({ lang }: { lang: Lang }) {
             <p className="mt-5 text-[15px] text-muted leading-[1.75] max-w-xl">
               {t.description}
             </p>
-          </motion.div>
+          </m.div>
 
           {/* Stats — vertical stack on the side */}
           <div className="lg:col-span-2 flex flex-col gap-4">
             {t.stats.map((stat, i) => {
               const Icon = stat.icon;
               return (
-                <motion.div
+                <m.div
                   key={i}
                   initial={{ opacity: 0, x: lang === 'ar' ? -12 : 12 }}
                   whileInView={{ opacity: 1, x: 0 }}
@@ -82,7 +82,7 @@ export default function About({ lang }: { lang: Lang }) {
                     <p className="text-sm font-bold text-heading leading-tight">{stat.value}</p>
                     <p className="text-xs text-muted mt-0.5">{stat.label}</p>
                   </div>
-                </motion.div>
+                </m.div>
               );
             })}
           </div>

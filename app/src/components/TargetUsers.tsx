@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { GraduationCap, BookOpen, Users, Building2 } from 'lucide-react';
 import type { Lang, I18n } from '../types';
 import type { LucideIcon } from 'lucide-react';
@@ -98,7 +98,7 @@ export default function TargetUsers({ lang }: { lang: Lang }) {
     <section id="users" className="relative py-20 md:py-28 px-6 bg-surface dark:bg-darkblue">
       <div className="max-w-5xl mx-auto">
         {/* Header */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-60px' }}
@@ -112,14 +112,14 @@ export default function TargetUsers({ lang }: { lang: Lang }) {
             {t.title}
           </h2>
           <p className="text-muted text-[15px] mt-3 max-w-md mx-auto">{t.subtitle}</p>
-        </motion.div>
+        </m.div>
 
         {/* 2x2 grid — but with varied card inner layouts */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-5">
           {t.users.map((user, i) => {
             const Icon = user.icon;
             return (
-              <motion.div
+              <m.div
                 key={i}
                 initial={{ opacity: 0, y: 14 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -146,7 +146,7 @@ export default function TargetUsers({ lang }: { lang: Lang }) {
                     </div>
                   </div>
                 </div>
-              </motion.div>
+              </m.div>
             );
           })}
         </div>
