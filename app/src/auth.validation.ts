@@ -73,6 +73,26 @@ export const teacherRegistrationSchema = (lang: Lang) =>
       .min(2, msg('Location is too short', 'الموقع قصير جدًا', lang))
       .max(200, msg('Location is too long', 'الموقع طويل جدًا', lang))
       .required(msg('Location is required', 'الموقع مطلوب', lang)),
+    degree: Yup.string()
+      .required(msg('Degree is required', 'المؤهل الدراسي مطلوب', lang)),
+    whatsapp: Yup.string()
+      .matches(
+        /^[+]?[\d\s\-()]{8,20}$/,
+        msg('Enter a valid WhatsApp number', 'أدخل رقم واتساب صالح', lang)
+      )
+      .notRequired(),
+    age: Yup.number()
+      .typeError(msg('Age must be a number', 'السن يجب أن يكون رقمًا', lang))
+      .min(18, msg('Minimum age is 18', 'الحد الأدنى للسن هو ١٨', lang))
+      .max(80, msg('Maximum age is 80', 'الحد الأقصى للسن هو ٨٠', lang))
+      .required(msg('Age is required', 'السن مطلوب', lang)),
+    schoolName: Yup.string()
+      .trim()
+      .max(200, msg('School name is too long', 'اسم المدرسة طويل جدًا', lang))
+      .notRequired(),
+    teachingMode: Yup.string()
+      .oneOf(['online', 'offline', 'both'], msg('Select a teaching mode', 'اختر طريقة التدريس', lang))
+      .required(msg('Teaching mode is required', 'طريقة التدريس مطلوبة', lang)),
   });
 
 /* ─── Student Registration Schema ─── */

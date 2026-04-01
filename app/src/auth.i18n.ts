@@ -31,6 +31,19 @@ interface AuthI18n {
   experience: string;
   location: string;
   locationPlaceholder: string;
+  degree: string;
+  degreePlaceholder: string;
+  whatsapp: string;
+  whatsappPlaceholder: string;
+  whatsappHelper: string;
+  age: string;
+  agePlaceholder: string;
+  schoolName: string;
+  schoolNamePlaceholder: string;
+  teachingMode: string;
+  teachingModeOnline: string;
+  teachingModeOffline: string;
+  teachingModeBoth: string;
 
   /* ─── Student Fields ─── */
   gradeLevel: string;
@@ -110,6 +123,19 @@ export const authI18n: I18n<AuthI18n> = {
     experience: 'Years of Experience',
     location: 'City / Area',
     locationPlaceholder: 'e.g. Cairo, Egypt',
+    degree: 'Degree / Graduation',
+    degreePlaceholder: 'Select your degree',
+    whatsapp: 'WhatsApp Number (optional)',
+    whatsappPlaceholder: 'e.g. +20 100 000 0000',
+    whatsappHelper: 'Students can reach you directly via WhatsApp',
+    age: 'Age',
+    agePlaceholder: 'e.g. 28',
+    schoolName: 'School / Institution (optional)',
+    schoolNamePlaceholder: 'e.g. Al-Nour Private School',
+    teachingMode: 'Teaching Mode',
+    teachingModeOnline: 'Online Only',
+    teachingModeOffline: 'In-person / Center',
+    teachingModeBoth: 'Both Online & In-person',
 
     gradeLevel: 'Education Level',
     parentEmail: 'Parent Email (optional)',
@@ -180,6 +206,19 @@ export const authI18n: I18n<AuthI18n> = {
     experience: 'سنوات الخبرة',
     location: 'المدينة / المنطقة',
     locationPlaceholder: 'مثال: القاهرة، مصر',
+    degree: 'الدرجة العلمية / المؤهل',
+    degreePlaceholder: 'اختر مؤهلك الدراسي',
+    whatsapp: 'رقم واتساب (اختياري)',
+    whatsappPlaceholder: 'مثال: +20 100 000 0000',
+    whatsappHelper: 'يتيح للطلاب التواصل معك مباشرة عبر واتساب',
+    age: 'السن',
+    agePlaceholder: 'مثال: ٢٨',
+    schoolName: 'المدرسة / المؤسسة (اختياري)',
+    schoolNamePlaceholder: 'مثال: مدرسة النور الخاصة',
+    teachingMode: 'طريقة التدريس',
+    teachingModeOnline: 'أونلاين فقط',
+    teachingModeOffline: 'حضوري / مركز',
+    teachingModeBoth: 'أونلاين وحضوري',
 
     gradeLevel: 'المرحلة الدراسية',
     parentEmail: 'بريد ولي الأمر (اختياري)',

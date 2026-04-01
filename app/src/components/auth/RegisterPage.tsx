@@ -5,10 +5,10 @@
 import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useFormik } from 'formik';
-import { Mail, Lock, User, Phone, MapPin, BookOpen, AlertCircle, Loader2, ArrowLeft, ArrowRight } from 'lucide-react';
+import { Mail, Lock, User, Phone, MapPin, BookOpen, AlertCircle, Loader2, ArrowLeft, ArrowRight, Smartphone, Hash, Building2 } from 'lucide-react';
 import type { Lang, Theme } from '../../types';
 import type { UserRole } from '../../auth.types';
-import { ROLE_OPTIONS, EXPERIENCE_OPTIONS, GRADE_LEVEL_OPTIONS } from '../../auth.types';
+import { ROLE_OPTIONS, EXPERIENCE_OPTIONS, GRADE_LEVEL_OPTIONS, DEGREE_OPTIONS, TEACHING_MODE_OPTIONS } from '../../auth.types';
 import { authI18n } from '../../auth.i18n';
 import {
   teacherRegistrationSchema,
@@ -57,6 +57,7 @@ export default function RegisterPage({ lang, theme, setLang, setTheme }: Props) 
     teacher: {
       fullName: '', email: '', password: '', confirmPassword: '',
       phone: '', subject: '', experience: '', location: '',
+      degree: '', whatsapp: '', age: '', schoolName: '', teachingMode: '',
     },
     student: {
       fullName: '', email: '', password: '', confirmPassword: '',
@@ -192,6 +193,22 @@ export default function RegisterPage({ lang, theme, setLang, setTheme }: Props) 
               />
 
               <AuthSelect
+                id="degree"
+                name="degree"
+                label={t.degree}
+                value={(formik.values as typeof initialValuesMap.teacher).degree}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={(formik.errors as Record<string, string>).degree}
+                touched={(formik.touched as Record<string, boolean>).degree}
+                options={DEGREE_OPTIONS.map((o) => ({
+                  value: o.value,
+                  label: o.label[lang],
+                }))}
+                placeholder={t.degreePlaceholder}
+              />
+
+              <AuthSelect
                 id="experience"
                 name="experience"
                 label={t.experience}
@@ -208,6 +225,36 @@ export default function RegisterPage({ lang, theme, setLang, setTheme }: Props) 
               />
 
               <AuthInput
+                id="age"
+                name="age"
+                label={t.age}
+                type="number"
+                icon={Hash}
+                placeholder={t.agePlaceholder}
+                value={(formik.values as typeof initialValuesMap.teacher).age}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={(formik.errors as Record<string, string>).age}
+                touched={(formik.touched as Record<string, boolean>).age}
+              />
+
+              <AuthSelect
+                id="teachingMode"
+                name="teachingMode"
+                label={t.teachingMode}
+                value={(formik.values as typeof initialValuesMap.teacher).teachingMode}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={(formik.errors as Record<string, string>).teachingMode}
+                touched={(formik.touched as Record<string, boolean>).teachingMode}
+                options={TEACHING_MODE_OPTIONS.map((o) => ({
+                  value: o.value,
+                  label: o.label[lang],
+                }))}
+                placeholder={lang === 'ar' ? 'اختر طريقة التدريس' : 'Select teaching mode'}
+              />
+
+              <AuthInput
                 id="location"
                 name="location"
                 label={t.location}
@@ -218,6 +265,35 @@ export default function RegisterPage({ lang, theme, setLang, setTheme }: Props) 
                 onBlur={formik.handleBlur}
                 error={(formik.errors as Record<string, string>).location}
                 touched={(formik.touched as Record<string, boolean>).location}
+              />
+
+              <AuthInput
+                id="schoolName"
+                name="schoolName"
+                label={t.schoolName}
+                icon={Building2}
+                placeholder={t.schoolNamePlaceholder}
+                value={(formik.values as typeof initialValuesMap.teacher).schoolName}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={(formik.errors as Record<string, string>).schoolName}
+                touched={(formik.touched as Record<string, boolean>).schoolName}
+              />
+
+              <AuthInput
+                id="whatsapp"
+                name="whatsapp"
+                label={t.whatsapp}
+                type="tel"
+                icon={Smartphone}
+                placeholder={t.whatsappPlaceholder}
+                value={(formik.values as typeof initialValuesMap.teacher).whatsapp}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={(formik.errors as Record<string, string>).whatsapp}
+                touched={(formik.touched as Record<string, boolean>).whatsapp}
+                dir="ltr"
+                helper={t.whatsappHelper}
               />
             </>
           )}

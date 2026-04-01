@@ -32,8 +32,13 @@ TeacherProfile {
   id              UUID        PK
   user_id         UUID        FK → User.id, UNIQUE
   subject         String      NOT NULL
-  experience      String      NOT NULL   // e.g. '1-3', '3-5', '5-10', '10+'
+  experience      String      NOT NULL   // e.g. '0-1', '1-3', '3-5', '5-10', '10+'
   location        String      NOT NULL
+  degree          String      NOT NULL   // e.g. 'bachelor', 'master', 'phd', 'diploma', 'other'
+  age             Integer     NOT NULL   // min 18, max 80
+  teaching_mode   Enum        ['online', 'offline', 'both']  NOT NULL
+  whatsapp        String?                // optional direct contact number
+  school_name     String?                // optional affiliated school/institution
   bio             Text?
   rating          Decimal?    DEFAULT 0
   total_students  Integer     DEFAULT 0
@@ -125,6 +130,8 @@ User/Parent (1) ──── (0..*) User/Student   [parent-child link]
 | User               | email               | UNIQUE  | Login lookup               |
 | User               | role, status        | INDEX   | Filtered queries           |
 | TeacherProfile     | user_id             | UNIQUE  | 1:1 with User              |
+| TeacherProfile     | teaching_mode       | INDEX   | Filter by mode             |
+| TeacherProfile     | subject             | INDEX   | Subject search             |
 | StudentProfile     | user_id             | UNIQUE  | 1:1 with User              |
 | StudentProfile     | parent_id           | INDEX   | Parent's children lookup   |
 | ParentProfile      | user_id             | UNIQUE  | 1:1 with User              |

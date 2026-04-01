@@ -30,11 +30,18 @@ export interface BaseRegistration {
   phone: string;
 }
 
+export type TeachingMode = 'online' | 'offline' | 'both';
+
 export interface TeacherRegistration extends BaseRegistration {
   role: 'teacher';
   subject: string;
   experience: string;
   location: string;
+  degree: string;
+  whatsapp?: string;
+  age: string;
+  schoolName?: string;
+  teachingMode: TeachingMode | '';
 }
 
 export interface StudentRegistration extends BaseRegistration {
@@ -140,6 +147,22 @@ export const EXPERIENCE_OPTIONS: { value: string; label: I18n<string> }[] = [
   { value: '3-5', label: { en: '3–5 years', ar: '٣–٥ سنوات' } },
   { value: '5-10', label: { en: '5–10 years', ar: '٥–١٠ سنوات' } },
   { value: '10+', label: { en: '10+ years', ar: 'أكثر من ١٠ سنوات' } },
+];
+
+/* ─── Degree Options ─── */
+export const DEGREE_OPTIONS: { value: string; label: I18n<string> }[] = [
+  { value: 'diploma', label: { en: 'Diploma', ar: 'دبلوم' } },
+  { value: 'bachelor', label: { en: "Bachelor's Degree", ar: 'بكالوريوس' } },
+  { value: 'master', label: { en: "Master's Degree", ar: 'ماجستير' } },
+  { value: 'phd', label: { en: 'PhD', ar: 'دكتوراه' } },
+  { value: 'other', label: { en: 'Other', ar: 'أخرى' } },
+];
+
+/* ─── Teaching Mode Options ─── */
+export const TEACHING_MODE_OPTIONS: { value: TeachingMode; label: I18n<string> }[] = [
+  { value: 'online', label: { en: 'Online Only', ar: 'أونلاين فقط' } },
+  { value: 'offline', label: { en: 'In-person / Center', ar: 'حضوري / مركز' } },
+  { value: 'both', label: { en: 'Both Online & In-person', ar: 'أونلاين وحضوري' } },
 ];
 
 /* ─── Grade Level Options ─── */

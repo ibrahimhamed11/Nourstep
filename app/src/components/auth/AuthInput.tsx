@@ -20,6 +20,9 @@ interface Props {
   icon?: LucideIcon;
   helper?: string;
   dir?: 'ltr' | 'rtl';
+  inputMode?: React.HTMLAttributes<HTMLInputElement>['inputMode'];
+  min?: number;
+  max?: number;
 }
 
 export default function AuthInput({
@@ -36,10 +39,14 @@ export default function AuthInput({
   icon: Icon,
   helper,
   dir,
+  inputMode,
+  min,
+  max,
 }: Props) {
   const [showPassword, setShowPassword] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const isPassword = type === 'password';
+  const isNumeric = type === 'number';
   const inputType = isPassword ? (showPassword ? 'text' : 'password') : type;
   const hasError = touched && error;
 
@@ -72,13 +79,20 @@ export default function AuthInput({
           onChange={onChange}
           onBlur={(e) => { setIsFocused(false); onBlur?.(e); }}
           onFocus={() => setIsFocused(true)}
+          onKeyDown={isNumeric ? (e) => {
+            if (['-', '+', 'e', 'E', '.'].includes(e.key)) e.preventDefault();
+          } : undefined}
           dir={dir}
+          inputMode={inputMode}
+          min={min}
+          max={max}
           autoComplete={isPassword ? 'new-password' : 'on'}
           className={`
             w-full px-4 py-3 rounded-xl text-[14px] text-heading
             bg-white/70 dark:bg-white/[0.04]
             border transition-all duration-200 outline-none
             placeholder:text-muted/40 placeholder:text-[13px]
+            [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none
             ${Icon ? 'ps-11' : ''}
             ${isPassword ? 'pe-11' : ''}
             ${

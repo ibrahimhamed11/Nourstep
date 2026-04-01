@@ -29,8 +29,13 @@ NourStep supports **4 primary user roles**. Each role has distinct capabilities,
 - Password
 - Phone number
 - Subject specialization
-- Experience level
-- Location/city
+- Degree / graduation level
+- Years of experience
+- Age
+- Teaching mode (online / in-person / both)
+- Location / city
+- School or institution name (optional)
+- WhatsApp number (optional)
 
 ---
 

@@ -24,6 +24,9 @@ const RegisterPage = lazy(() => import('./components/auth/RegisterPage'));
 const ConfirmAccountPage = lazy(() => import('./components/auth/ConfirmAccountPage'));
 const ForgotPasswordPage = lazy(() => import('./components/auth/ForgotPasswordPage'));
 const ResetPasswordPage = lazy(() => import('./components/auth/ResetPasswordPage'));
+const BusinessPage = lazy(() => import('./components/BusinessPage'));
+const ModuleDetailPage = lazy(() => import('./components/ModuleDetailPage'));
+const RoadmapPage = lazy(() => import('./components/RoadmapPage'));
 
 /** Minimal placeholder for lazy sections */
 const SectionFallback = () => <div className="min-h-[30vh]" />;
@@ -99,6 +102,36 @@ function App() {
           element={
             <Suspense fallback={<SectionFallback />}>
               <ResetPasswordPage lang={lang} theme={theme} setLang={setLang} setTheme={setTheme} />
+            </Suspense>
+          }
+        />
+
+        {/* ── Business Docs Route ── */}
+        <Route
+          path="/business"
+          element={
+            <Suspense fallback={<SectionFallback />}>
+              <BusinessPage />
+            </Suspense>
+          }
+        />
+
+        {/* ── Module Detail Route ── */}
+        <Route
+          path="/business/modules/:moduleId"
+          element={
+            <Suspense fallback={<SectionFallback />}>
+              <ModuleDetailPage />
+            </Suspense>
+          }
+        />
+
+        {/* ── Roadmap / Sprint Tracker Route ── */}
+        <Route
+          path="/roadmap"
+          element={
+            <Suspense fallback={<SectionFallback />}>
+              <RoadmapPage />
             </Suspense>
           }
         />

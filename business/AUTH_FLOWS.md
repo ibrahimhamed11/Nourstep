@@ -27,16 +27,21 @@ User selects their role:
 Each role has a tailored form:
 
 #### Teacher Form Fields
-| Field              | Type     | Required | Validation                     |
-| ------------------ | -------- | -------- | ------------------------------ |
-| `fullName`         | string   | ✅        | 3-100 chars                    |
-| `email`            | string   | ✅        | Valid email, unique             |
-| `password`         | string   | ✅        | Min 8 chars, mixed case + digit |
-| `confirmPassword`  | string   | ✅        | Must match password             |
-| `phone`            | string   | ✅        | Valid phone format              |
-| `subject`          | string   | ✅        | Subject specialization          |
-| `experience`       | select   | ✅        | Years of experience range       |
-| `location`         | string   | ✅        | City/area                       |
+| Field              | Type     | Required | Validation                              |
+| ------------------ | -------- | -------- | --------------------------------------- |
+| `fullName`         | string   | ✅        | 3–100 chars                             |
+| `email`            | string   | ✅        | Valid email, unique                     |
+| `password`         | string   | ✅        | Min 8 chars, mixed case + digit         |
+| `confirmPassword`  | string   | ✅        | Must match password                     |
+| `phone`            | string   | ✅        | Valid phone format                      |
+| `subject`          | string   | ✅        | Subject specialization                  |
+| `degree`           | select   | ✅        | diploma / bachelor / master / phd / other |
+| `experience`       | select   | ✅        | Years of experience range               |
+| `age`              | number   | ✅        | Integer, min 18, max 80                 |
+| `teachingMode`     | select   | ✅        | online / offline / both                 |
+| `location`         | string   | ✅        | City / area                             |
+| `schoolName`       | string   | ❌        | Affiliated school or institution        |
+| `whatsapp`         | string   | ❌        | Valid phone format                      |
 
 #### Student Form Fields
 | Field              | Type     | Required | Validation                     |
