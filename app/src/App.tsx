@@ -1,8 +1,9 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { LazyMotion } from 'framer-motion';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
+import PrivateRoute from './components/PrivateRoute';
 import type { Lang, Theme } from './types';
 
 // Load framer-motion features lazily (domAnimation is lighter than domMax)
@@ -19,6 +20,7 @@ const Footer = lazy(() => import('./components/Footer'));
 
 // Lazy load auth pages
 const LoginPage = lazy(() => import('./components/auth/LoginPage'));
+const StaticLoginPage = lazy(() => import('./components/auth/StaticLoginPage'));
 const RegisterTypePage = lazy(() => import('./components/auth/RegisterTypePage'));
 const RegisterPage = lazy(() => import('./components/auth/RegisterPage'));
 const ConfirmAccountPage = lazy(() => import('./components/auth/ConfirmAccountPage'));
@@ -27,6 +29,7 @@ const ResetPasswordPage = lazy(() => import('./components/auth/ResetPasswordPage
 const BusinessPage = lazy(() => import('./components/BusinessPage'));
 const ModuleDetailPage = lazy(() => import('./components/ModuleDetailPage'));
 const RoadmapPage = lazy(() => import('./components/RoadmapPage'));
+const TasksPage = lazy(() => import('./modules/tasks/TasksPage'));
 
 /** Minimal placeholder for lazy sections */
 const SectionFallback = () => <div className="min-h-[30vh]" />;
@@ -56,6 +59,16 @@ function App() {
   return (
     <LazyMotion features={loadFeatures} strict>
       <Routes>
+        {/* ── Static Login (Business / Tasks guard) ── */}
+        <Route
+          path="/login"
+          element={
+            <Suspense fallback={<SectionFallback />}>
+              <StaticLoginPage />
+            </Suspense>
+          }
+        />
+
         {/* ── Auth Routes ── */}
         <Route
           path="/auth/login"
@@ -106,40 +119,57 @@ function App() {
           }
         />
 
-        {/* ── Business Docs Route ── */}
+        {/* ── Business Docs Route (protected) ── */}
         <Route
           path="/business"
           element={
             <Suspense fallback={<SectionFallback />}>
-              <BusinessPage />
+              <PrivateRoute>
+                <BusinessPage />
+              </PrivateRoute>
             </Suspense>
           }
         />
 
-        {/* ── Module Detail Route ── */}
+        {/* ── Module Detail Route (protected) ── */}
         <Route
           path="/business/modules/:moduleId"
           element={
             <Suspense fallback={<SectionFallback />}>
-              <ModuleDetailPage />
+              <PrivateRoute>
+                <ModuleDetailPage />
+              </PrivateRoute>
             </Suspense>
           }
         />
 
-        {/* ── Tasks Board Route ── */}
+        {/* ── Roadmap Board Route (protected) ── */}
         <Route
           path="/roadmap"
           element={
             <Suspense fallback={<SectionFallback />}>
-              <div dir="ltr" className="font-body">
-                <RoadmapPage />
-              </div>
+              <PrivateRoute>
+                <div dir="ltr" className="font-body">
+                  <RoadmapPage />
+                </div>
+              </PrivateRoute>
             </Suspense>
           }
         />
 
-        {/* ── /tasks also goes to Tasks Board ── */}
-        <Route path="/tasks" element={<Navigate to="/roadmap" replace />} />
+        {/* ── Tasks Board Route (protected) ── */}
+        <Route
+          path="/tasks"
+          element={
+            <Suspense fallback={<SectionFallback />}>
+              <PrivateRoute>
+                <div dir="ltr" className="font-body">
+                  <TasksPage />
+                </div>
+              </PrivateRoute>
+            </Suspense>
+          }
+        />
 
         {/* ── Landing Page (default) ── */}
         <Route
