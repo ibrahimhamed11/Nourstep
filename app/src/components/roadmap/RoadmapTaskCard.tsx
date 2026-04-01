@@ -5,7 +5,7 @@ import { useState } from 'react';
 import {
   CheckCircle2, Circle, ChevronDown, ChevronUp,
   Edit2, Trash2, Clock, User, Link2, AlertTriangle,
-  ArrowRight,
+  ArrowRight, Copy, Check, Hash,
 } from 'lucide-react';
 import type { RoadmapTask } from './roadmap.types';
 import { TRACKS, STATUS_CONFIG, TASK_TYPE_CONFIG, TAG_CONFIG } from './roadmap.types';
@@ -20,6 +20,14 @@ interface Props {
 
 export default function RoadmapTaskCard({ task, allTasks, onToggleStatus, onEdit, onDelete }: Props) {
   const [expanded, setExpanded] = useState(false);
+  const [copied, setCopied] = useState<'id' | 'num' | null>(null);
+
+  const copyText = (text: string, key: 'id' | 'num') => {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(key);
+      setTimeout(() => setCopied(null), 1500);
+    });
+  };
 
   const track      = TRACKS.find(t => t.id === task.track);
   const statusCfg  = STATUS_CONFIG[task.status];
@@ -62,9 +70,32 @@ export default function RoadmapTaskCard({ task, allTasks, onToggleStatus, onEdit
         <div className="flex-1 min-w-0">
           {/* Task ID + type */}
           <div className="flex items-center gap-1.5 mb-0.5">
-            <span className={`text-[9px] font-black uppercase tracking-widest ${typeCfg.cls}`}>
+            <button
+              onClick={e => { e.stopPropagation(); copyText(task.id, 'id'); }}
+              title="Copy task ID"
+              className={`flex items-center gap-1 text-[9px] font-black font-mono tracking-widest px-1.5 py-0.5 rounded-md border transition-all cursor-pointer ${
+                copied === 'id'
+                  ? 'bg-success/15 text-success border-success/30'
+                  : `${typeCfg.cls} border-current/20 hover:bg-current/10`
+              }`}
+            >
+              {copied === 'id' ? <Check size={8} /> : <Copy size={8} />}
               {task.id}
-            </span>
+            </button>
+            {task.taskNumber != null && (
+              <button
+                onClick={e => { e.stopPropagation(); copyText(`#${task.taskNumber}`, 'num'); }}
+                title="Copy task number"
+                className={`flex items-center gap-0.5 text-[9px] font-bold px-1.5 py-0.5 rounded-md border transition-all cursor-pointer ${
+                  copied === 'num'
+                    ? 'bg-success/15 text-success border-success/30'
+                    : 'text-muted border-border/40 hover:text-heading hover:border-border/70'
+                }`}
+              >
+                {copied === 'num' ? <Check size={8} /> : <Hash size={8} />}
+                {task.taskNumber}
+              </button>
+            )}
             <span className={`flex items-center gap-0.5 text-[8px] font-bold px-1.5 py-0.5 rounded border ${typeCfg.badge}`}>
               <TypeIcon size={8} />{typeCfg.label}
             </span>
@@ -183,10 +214,34 @@ export default function RoadmapTaskCard({ task, allTasks, onToggleStatus, onEdit
 
           {/* Footer: linked IDs pill + actions */}
           <div className="flex items-center justify-between pt-1 border-t border-border/20">
-            <div className="flex items-center gap-1 text-[9px] text-muted/50">
-              <Link2 size={9} />
-              <span>{task.id}</span>
-              {task.taskNumber && <span>· #{task.taskNumber}</span>}
+            <div className="flex items-center gap-1.5">
+              <Link2 size={9} className="text-muted/40 flex-shrink-0" />
+              <button
+                onClick={() => copyText(task.id, 'id')}
+                title="Copy task ID"
+                className={`flex items-center gap-1 text-[9px] font-black font-mono px-1.5 py-0.5 rounded-md border transition-all cursor-pointer ${
+                  copied === 'id'
+                    ? 'bg-success/15 text-success border-success/30'
+                    : `${typeCfg.cls} border-current/20 hover:bg-current/10`
+                }`}
+              >
+                {copied === 'id' ? <Check size={8} /> : <Copy size={8} />}
+                {task.id}
+              </button>
+              {task.taskNumber != null && (
+                <button
+                  onClick={() => copyText(`#${task.taskNumber}`, 'num')}
+                  title="Copy task number"
+                  className={`flex items-center gap-0.5 text-[9px] font-bold px-1.5 py-0.5 rounded-md border transition-all cursor-pointer ${
+                    copied === 'num'
+                      ? 'bg-success/15 text-success border-success/30'
+                      : 'text-muted border-border/40 hover:text-heading hover:border-border/70'
+                  }`}
+                >
+                  {copied === 'num' ? <Check size={8} /> : <Hash size={8} />}
+                  #{task.taskNumber}
+                </button>
+              )}
             </div>
             <div className="flex gap-1.5">
               <button
