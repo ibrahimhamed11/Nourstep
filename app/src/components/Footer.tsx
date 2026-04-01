@@ -113,8 +113,27 @@ export default function Footer({ lang, theme }: { lang: Lang; theme: Theme }) {
         </div>
 
         {/* Bottom bar */}
-        <div className="flex items-center justify-between pt-6 border-t border-royal/8 dark:border-bright/10">
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-6 border-t border-royal/8 dark:border-bright/10">
           <p className={`${fontSize.xs} text-muted/60 dark:text-lightblue/40`}>{t.copyright}</p>
+
+          {/* Developer credit */}
+          <a
+            href="https://ibrahimtoulba.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group inline-flex items-center gap-1.5"
+          >
+            <span className={`${fontSize.xs} text-muted/40 dark:text-lightblue/25`}>
+              {lang === 'ar' ? 'تطوير' : 'Developed by'}
+            </span>
+            <span className={`${fontSize.xs} font-semibold text-royal/70 dark:text-bright/60 group-hover:text-royal dark:group-hover:text-bright transition-colors duration-200`}>
+              Ibrahim H Toulba
+            </span>
+            <span className={`${fontSize.xs} text-muted/35 dark:text-lightblue/20 group-hover:text-royal/60 dark:group-hover:text-bright/50 transition-colors duration-200`}>
+              · ibrahimtoulba.com
+            </span>
+          </a>
+
           <a
             href="#hero"
             className={`inline-flex items-center gap-1.5 ${fontSize.xs} font-medium text-muted/60 dark:text-lightblue/40 hover:text-royal dark:hover:text-white transition-colors duration-200`}
