@@ -50,6 +50,22 @@ function LoadingState() {
   );
 }
 
+function BackendUnavailableState() {
+  return (
+    <div className="min-h-screen bg-navy flex items-center justify-center">
+      <div className="text-center space-y-4 max-w-sm mx-4 card-dark rounded-2xl p-8">
+        <div className="w-14 h-14 rounded-2xl bg-royal/10 border border-royal/20 flex items-center justify-center mx-auto">
+          <span className="text-3xl">🚧</span>
+        </div>
+        <p className="text-heading font-bold text-lg">Backend Coming Soon</p>
+        <p className="text-muted text-sm leading-relaxed">
+          The roadmap API is not deployed yet.<br />Check back once the backend is live.
+        </p>
+      </div>
+    </div>
+  );
+}
+
 function ErrorState({ message, onRetry }: { message: string; onRetry: () => void }) {
   return (
     <div className="min-h-screen bg-navy flex items-center justify-center">
@@ -266,6 +282,7 @@ export default function RoadmapPage() {
 
   /* ── Render ── */
   if (loading) return <LoadingState />;
+  if (error === 'BACKEND_UNAVAILABLE') return <BackendUnavailableState />;
   if (error) return <ErrorState message={error} onRetry={loadTasks} />;
 
   return (

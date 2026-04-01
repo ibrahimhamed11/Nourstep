@@ -26,20 +26,4 @@ export default defineConfig({
       },
     },
   },
-  server: {
-    proxy: {
-      '/api': {
-        target: 'https://api.lezz-app.com',
-        changeOrigin: true,
-        secure: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
-      },
-      '/nourstep-api': {
-        target: 'https://api.lezz-app.com',
-        changeOrigin: true,
-        secure: true,
-        rewrite: (path) => path.replace(/^\/nourstep-api/, ''),
-      },
-    },
-  },
 })

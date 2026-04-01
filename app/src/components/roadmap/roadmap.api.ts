@@ -1,20 +1,11 @@
 /**
  * NourStep — Roadmap Module API Service
  * All HTTP calls for the Roadmap feature
- * Backend route: /api/v1/roadmap/tasks
+ * Backend route: /nourstep-api/roadmap/tasks
  */
 
+import apiClient from '../../lib/apiClient';
 import type { RoadmapTask, Status, Track, Week, TaskType, Tag } from './roadmap.types';
-
-const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api/v1';
-
-function getAuthHeaders(): HeadersInit {
-  const token = localStorage.getItem('nourstep-auth-token');
-  return {
-    'Content-Type': 'application/json',
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
-  };
-}
 
 // ─── Response Types ───────────────────────────────────────────────────────────
 
@@ -138,54 +129,34 @@ export function mapBackendTask(t: RoadmapTaskBackend): RoadmapTask {
 export async function fetchRoadmapTasks(
   filters: RoadmapFilters = {}
 ): Promise<RoadmapListResponse> {
-  const params = new URLSearchParams();
+  const params: Record<string, string> = {};
   Object.entries(filters).forEach(([key, value]) => {
     if (value !== undefined && value !== null && value !== '' && value !== 'all') {
-      params.set(key, String(value));
+      params[key] = String(value);
     }
   });
-  const res = await fetch(`${API_BASE}/roadmap/tasks?${params}`, {
-    headers: getAuthHeaders(),
-  });
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.message || 'Failed to fetch roadmap tasks');
-  }
-  return res.json();
+  const { data } = await apiClient.get<RoadmapListResponse>('/roadmap/tasks', { params });
+  return data;
 }
 
 /** GET /roadmap/tasks/stats */
 export async function fetchRoadmapStats(): Promise<RoadmapStatsResponse> {
-  const res = await fetch(`${API_BASE}/roadmap/tasks/stats`, {
-    headers: getAuthHeaders(),
-  });
-  if (!res.ok) throw new Error('Failed to fetch roadmap stats');
-  return res.json();
+  const { data } = await apiClient.get<RoadmapStatsResponse>('/roadmap/tasks/stats');
+  return data;
 }
 
 /** GET /roadmap/tasks/:id */
 export async function fetchRoadmapTask(id: string): Promise<RoadmapSingleResponse> {
-  const res = await fetch(`${API_BASE}/roadmap/tasks/${id}`, {
-    headers: getAuthHeaders(),
-  });
-  if (!res.ok) throw new Error('Roadmap task not found');
-  return res.json();
+  const { data } = await apiClient.get<RoadmapSingleResponse>(`/roadmap/tasks/${id}`);
+  return data;
 }
 
 /** POST /roadmap/tasks */
 export async function createRoadmapTask(
   payload: CreateRoadmapPayload
 ): Promise<RoadmapSingleResponse> {
-  const res = await fetch(`${API_BASE}/roadmap/tasks`, {
-    method: 'POST',
-    headers: getAuthHeaders(),
-    body: JSON.stringify(payload),
-  });
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.message_ar || err.message || 'Failed to create roadmap task');
-  }
-  return res.json();
+  const { data } = await apiClient.post<RoadmapSingleResponse>('/roadmap/tasks', payload);
+  return data;
 }
 
 /** PUT /roadmap/tasks/:id */
@@ -193,16 +164,8 @@ export async function updateRoadmapTask(
   id: string,
   payload: UpdateRoadmapPayload
 ): Promise<RoadmapSingleResponse> {
-  const res = await fetch(`${API_BASE}/roadmap/tasks/${id}`, {
-    method: 'PUT',
-    headers: getAuthHeaders(),
-    body: JSON.stringify(payload),
-  });
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.message_ar || err.message || 'Failed to update roadmap task');
-  }
-  return res.json();
+  const { data } = await apiClient.put<RoadmapSingleResponse>(`/roadmap/tasks/${id}`, payload);
+  return data;
 }
 
 /** PATCH /roadmap/tasks/:id/status */
@@ -210,38 +173,19 @@ export async function toggleRoadmapTaskStatus(
   id: string,
   status: Status
 ): Promise<RoadmapSingleResponse> {
-  const res = await fetch(`${API_BASE}/roadmap/tasks/${id}/status`, {
-    method: 'PATCH',
-    headers: getAuthHeaders(),
-    body: JSON.stringify({ status }),
-  });
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.message || 'Failed to update status');
-  }
-  return res.json();
+  const { data } = await apiClient.patch<RoadmapSingleResponse>(`/roadmap/tasks/${id}/status`, { status });
+  return data;
 }
 
 /** DELETE /roadmap/tasks/:id */
 export async function deleteRoadmapTask(id: string): Promise<boolean> {
-  const res = await fetch(`${API_BASE}/roadmap/tasks/${id}`, {
-    method: 'DELETE',
-    headers: getAuthHeaders(),
-  });
-  return res.ok;
+  const res = await apiClient.delete(`/roadmap/tasks/${id}`);
+  return res.status >= 200 && res.status < 300;
 }
 
 /** POST /roadmap/tasks/seed (admin only) */
 export async function seedRoadmapTasks(): Promise<{ inserted: number }> {
-  const res = await fetch(`${API_BASE}/roadmap/tasks/seed`, {
-    method: 'POST',
-    headers: getAuthHeaders(),
-  });
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.message || 'Failed to seed roadmap tasks');
-  }
-  const data = await res.json();
+  const { data } = await apiClient.post<{ data: { inserted: number } }>('/roadmap/tasks/seed');
   return data.data;
 }
 

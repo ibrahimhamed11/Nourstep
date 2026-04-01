@@ -619,8 +619,23 @@ export default function TasksPage() {
         </div>
       )}
 
+      {/* Backend Unavailable State */}
+      {!loading && error === 'BACKEND_UNAVAILABLE' && (
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center space-y-4 max-w-sm mx-4 bg-white rounded-2xl border border-gray-200 p-8 shadow-sm">
+            <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center mx-auto">
+              <span className="text-3xl">🚧</span>
+            </div>
+            <p className="text-gray-800 font-bold text-lg">Backend Coming Soon</p>
+            <p className="text-gray-400 text-sm leading-relaxed">
+              The tasks API is not deployed yet.<br />Check back once the backend is live.
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Error State */}
-      {!loading && error && (
+      {!loading && error && error !== 'BACKEND_UNAVAILABLE' && (
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center space-y-4 max-w-sm mx-4 bg-white rounded-2xl border border-gray-200 p-8 shadow-sm">
             <div className="w-12 h-12 rounded-2xl bg-red-50 border border-red-100 flex items-center justify-center mx-auto">

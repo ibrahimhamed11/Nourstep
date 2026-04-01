@@ -3,6 +3,8 @@ import { m } from 'framer-motion';
 import { Rocket, Calendar, User, Phone, MapPin, CheckCircle, Crown, Zap, Star, Clock, AlertTriangle } from 'lucide-react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import axios from 'axios';
+import apiClient from '../lib/apiClient';
 import type { Lang, I18n } from '../types';
 import { fontSize, textColor, spacing, sectionHeadingStyle } from '../design-tokens';
 
@@ -138,7 +140,6 @@ const txt: I18n<Txt> = {
 };
 
 const phoneRx = /^[+]?[\d\s\-()]{8,20}$/;
-const API = import.meta.env.DEV ? '/api' : 'https://api.lezz-app.com';
 
 export default function Countdown({ lang }: { lang: Lang }) {
   const [timeLeft, setTimeLeft] = useState<TimeLeft>(calculateTimeLeft());
@@ -168,26 +169,24 @@ export default function Countdown({ lang }: { lang: Lang }) {
     onSubmit: async (values, { setSubmitting }) => {
       setApiError(null);
       try {
-        const res = await fetch(`${API}/early-access/register`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name: values.name.trim(),
-            phone: values.phone.trim(),
-            whatsapp_same: values.whatsappSame,
-            whatsapp: values.whatsappSame ? '' : values.whatsapp.trim(),
-            location: values.location.trim(),
-          }),
+        await apiClient.post('/early-access/register', {
+          name: values.name.trim(),
+          phone: values.phone.trim(),
+          whatsapp_same: values.whatsappSame,
+          whatsapp: values.whatsappSame ? '' : values.whatsapp.trim(),
+          location: values.location.trim(),
         });
-        if (res.status === 409) { setApiError(t.dupPhone); return; }
-        if (res.status === 429) { setApiError(t.rateErr); return; }
-        if (!res.ok) {
-          const d = await res.json().catch(() => null);
-          setApiError(d?.message_ar || d?.message || t.netErr);
-          return;
-        }
         setSubmitted(true);
-      } catch { setApiError(t.netErr); }
+      } catch (err: unknown) {
+        if (axios.isAxiosError(err)) {
+          if (err.response?.status === 409) { setApiError(t.dupPhone); return; }
+          if (err.response?.status === 429) { setApiError(t.rateErr); return; }
+          const d = err.response?.data;
+          setApiError(d?.message_ar || d?.message || t.netErr);
+        } else {
+          setApiError(t.netErr);
+        }
+      }
       finally { setSubmitting(false); }
     },
   });
