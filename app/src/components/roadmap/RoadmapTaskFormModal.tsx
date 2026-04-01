@@ -226,7 +226,7 @@ export default function RoadmapTaskFormModal({ open, initial, defaultWeek, allTa
           <div>
             <label className={labelCls}>Description</label>
             <textarea value={form.desc} onChange={e => set('desc', e.target.value)}
-              placeholder="Optional details..." rows={2} className={`${inputCls} resize-none`} />
+              placeholder="Optional details, steps, links, notes…" rows={5} className={`${inputCls} resize-y min-h-[100px] max-h-[400px]`} />
           </div>
 
           {/* Track + Week */}
