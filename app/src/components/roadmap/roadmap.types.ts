@@ -106,6 +106,17 @@ export const STATUS_CONFIG: Record<Status, { label: string; icon: React.ElementT
 export const STATUS_CYCLE: Status[] = ['todo', 'in-progress', 'done', 'blocked'];
 
 /* ─────────────────────────────────────────────────────────────
+   TRACKS — convenience array for components
+───────────────────────────────────────────────────────────── */
+export const TRACKS: { id: Track; name: string; color: string }[] = (
+  Object.keys(TRACK_CONFIG) as Track[]
+).map(key => ({
+  id: key,
+  name: TRACK_CONFIG[key].label,
+  color: TRACK_CONFIG[key].color,
+}));
+
+/* ─────────────────────────────────────────────────────────────
    HELPERS
 ───────────────────────────────────────────────────────────── */
 export function taskDisplayId(task: RoadmapTask): string {

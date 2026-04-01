@@ -1,179 +1,185 @@
 /**
- * RoadmapTaskFormModal — Add / Edit modal for roadmap tasks
+ * RoadmapTaskFormModal — NourStep theme
  */
-import { useState } from 'react';
-import { Plus, X, Save, Pencil } from 'lucide-react';
-import type { RoadmapTask, Status, Track, Week, TaskType, Tag } from './roadmap.types';
-import {
-  DEFAULT_ASSIGNEE, TASK_TYPE_CONFIG, TRACK_CONFIG, STATUS_CONFIG, TAG_CONFIG,
-} from './roadmap.types';
+import { useState, useEffect } from 'react';
+import { X } from 'lucide-react';
+import type { RoadmapTask, Track, Week, Tag } from './roadmap.types';
+import { TRACKS, WEEKS, TAG_CONFIG } from './roadmap.types';
+
+interface FormState {
+  title: string;
+  desc: string;
+  track: Track;
+  week: Week;
+  status: RoadmapTask['status'];
+  assignee: string;
+  estimate: string;
+  tags: Tag[];
+}
+
+const BLANK: FormState = {
+  title: '', desc: '', track: 'backend', week: 1,
+  status: 'todo', assignee: '', estimate: '', tags: [],
+};
 
 interface Props {
-  /** null = add mode, RoadmapTask = edit mode */
-  task: Partial<RoadmapTask> | null;
+  open: boolean;
+  initial?: RoadmapTask | null;
+  defaultWeek?: Week;
   onSave: (data: Partial<RoadmapTask>) => void;
   onClose: () => void;
 }
 
-export default function RoadmapTaskFormModal({ task, onSave, onClose }: Props) {
-  const isEdit = task !== null && !!task.id;
+export default function RoadmapTaskFormModal({ open, initial, defaultWeek, onSave, onClose }: Props) {
+  const [form, setForm] = useState<FormState>(BLANK);
 
-  const [title, setTitle] = useState(task?.title ?? '');
-  const [desc, setDesc] = useState(task?.desc ?? '');
-  const [taskType, setTaskType] = useState<TaskType>(task?.taskType ?? 'task');
-  const [status, setStatus] = useState<Status>(task?.status ?? 'todo');
-  const [track, setTrack] = useState<Track>(task?.track ?? 'backend');
-  const [week, setWeek] = useState<Week>(task?.week ?? 1);
-  const [estimate, setEstimate] = useState(task?.estimate ?? '');
-  const [assignee, setAssignee] = useState(task?.assignee ?? DEFAULT_ASSIGNEE);
-  const [tags, setTags] = useState<Tag[]>(task?.tags ?? []);
+  useEffect(() => {
+    if (!open) return;
+    if (initial) {
+      setForm({
+        title: initial.title,
+        desc: initial.desc ?? '',
+        track: initial.track,
+        week: initial.week,
+        status: initial.status,
+        assignee: initial.assignee ?? '',
+        estimate: initial.estimate ?? '',
+        tags: (initial.tags ?? []) as Tag[],
+      });
+    } else {
+      setForm({ ...BLANK, week: defaultWeek ?? 1 });
+    }
+  }, [open, initial, defaultWeek]);
 
-  const toggleTag = (tag: Tag) => {
-    setTags(prev => prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]);
-  };
+  if (!open) return null;
 
-  const handleSubmit = () => {
-    if (!title.trim()) return;
+  const set = <K extends keyof FormState>(k: K, v: FormState[K]) =>
+    setForm(f => ({ ...f, [k]: v }));
+
+  const toggleTag = (tag: Tag) =>
+    set('tags', form.tags.includes(tag) ? form.tags.filter(t => t !== tag) : [...form.tags, tag]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!form.title.trim()) return;
     onSave({
-      ...task,
-      title: title.trim(),
-      desc: desc.trim(),
-      taskType,
-      status,
-      track,
-      week,
-      estimate: estimate.trim() || '—',
-      assignee: assignee.trim() || DEFAULT_ASSIGNEE,
-      tags,
+      ...(initial ?? {}),
+      title: form.title.trim(),
+      desc: form.desc.trim(),
+      track: form.track,
+      week: form.week,
+      status: form.status,
+      assignee: form.assignee.trim() || initial?.assignee,
+      estimate: form.estimate.trim() || initial?.estimate,
+      tags: form.tags,
     });
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" onClick={onClose}>
-      <div className="bg-white rounded-2xl shadow-2xl border border-gray-200 w-full max-w-md mx-4 p-6 space-y-4 max-h-[90vh] overflow-y-auto"
-        onClick={e => e.stopPropagation()}>
+  const inputCls = "w-full bg-surface/60 dark:bg-darkblue/60 border border-border/50 text-heading text-sm rounded-xl px-3 py-2.5 placeholder:text-muted/40 focus:outline-none focus:ring-2 focus:ring-royal/30 focus:border-royal/40 transition-all";
+  const labelCls = "block text-[10px] font-black text-muted uppercase tracking-widest mb-1.5";
 
-        {/* Title bar */}
-        <div className="flex items-center justify-between">
-          <h2 className="text-gray-900 font-bold text-base flex items-center gap-2">
-            {isEdit ? (
-              <>
-                <Pencil size={16} className="text-blue-500" /> Edit Task
-                {task?.taskNumber != null && task?.taskType && (
-                  <span className={`text-[10px] font-black px-1.5 py-0.5 rounded border font-mono ${TASK_TYPE_CONFIG[task.taskType]?.badge ?? ''}`}>
-                    {TASK_TYPE_CONFIG[task.taskType]?.prefix}-{task.taskNumber}
-                  </span>
-                )}
-              </>
-            ) : (
-              <><Plus size={16} className="text-blue-500" /> New Task</>
-            )}
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
+
+      <div className="relative z-10 w-full max-w-lg bg-[var(--theme-card)] border border-[var(--theme-border)] rounded-2xl shadow-2xl overflow-hidden">
+        {/* Header */}
+        <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--theme-border)]">
+          <h2 className="text-heading font-bold text-base">
+            {initial ? 'Edit Task' : 'Add New Task'}
           </h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 cursor-pointer"><X size={18} /></button>
+          <button onClick={onClose}
+            className="w-8 h-8 flex items-center justify-center rounded-xl text-muted hover:text-heading hover:bg-surface dark:hover:bg-darkblue transition-all cursor-pointer">
+            <X size={16} />
+          </button>
         </div>
 
-        <div className="space-y-3">
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="p-5 space-y-4 max-h-[70vh] overflow-y-auto">
           {/* Title */}
           <div>
-            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1 block">Title *</label>
-            <input value={title} onChange={e => setTitle(e.target.value)} placeholder="What needs to be done?"
-              className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent" autoFocus />
+            <label className={labelCls}>Task Title *</label>
+            <input value={form.title} onChange={e => set('title', e.target.value)}
+              placeholder="What needs to be done?" className={inputCls} required />
           </div>
 
           {/* Description */}
           <div>
-            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1 block">Description</label>
-            <textarea value={desc} onChange={e => setDesc(e.target.value)} placeholder="Details..."
-              className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent" rows={2} />
-          </div>
-
-          {/* Type + Status */}
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1 block">Type</label>
-              <select value={taskType} onChange={e => setTaskType(e.target.value as TaskType)}
-                className="w-full text-xs border border-gray-200 rounded-lg px-2 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
-                {(Object.keys(TASK_TYPE_CONFIG) as TaskType[]).map(t => (
-                  <option key={t} value={t}>{TASK_TYPE_CONFIG[t].prefix} — {TASK_TYPE_CONFIG[t].label}</option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1 block">Status</label>
-              <select value={status} onChange={e => setStatus(e.target.value as Status)}
-                className="w-full text-xs border border-gray-200 rounded-lg px-2 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
-                {(Object.keys(STATUS_CONFIG) as Status[]).map(s => (
-                  <option key={s} value={s}>{STATUS_CONFIG[s].label}</option>
-                ))}
-              </select>
-            </div>
+            <label className={labelCls}>Description</label>
+            <textarea value={form.desc} onChange={e => set('desc', e.target.value)}
+              placeholder="Optional details..." rows={2} className={`${inputCls} resize-none`} />
           </div>
 
           {/* Track + Week */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1 block">Track</label>
-              <select value={track} onChange={e => setTrack(e.target.value as Track)}
-                className="w-full text-xs border border-gray-200 rounded-lg px-2 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
-                {(Object.keys(TRACK_CONFIG) as Track[]).map(tr => (
-                  <option key={tr} value={tr}>{TRACK_CONFIG[tr].label}</option>
-                ))}
+              <label className={labelCls}>Track</label>
+              <select value={form.track} onChange={e => set('track', e.target.value as Track)} className={inputCls}>
+                {TRACKS.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
               </select>
             </div>
             <div>
-              <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1 block">Week</label>
-              <select value={week} onChange={e => setWeek(Number(e.target.value) as Week)}
-                className="w-full text-xs border border-gray-200 rounded-lg px-2 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
-                {([1,2,3,4,5,6,7,8] as Week[]).map(w => (
-                  <option key={w} value={w}>Week {w}</option>
-                ))}
+              <label className={labelCls}>Week</label>
+              <select value={form.week} onChange={e => set('week', Number(e.target.value) as Week)} className={inputCls}>
+                {WEEKS.map(w => <option key={w.week} value={w.week}>{w.label}</option>)}
               </select>
             </div>
           </div>
 
-          {/* Estimate + Assigned To */}
+          {/* Status */}
+          <div>
+            <label className={labelCls}>Status</label>
+            <select value={form.status} onChange={e => set('status', e.target.value as RoadmapTask['status'])} className={inputCls}>
+              <option value="todo">To Do</option>
+              <option value="in-progress">In Progress</option>
+              <option value="done">Done</option>
+              <option value="blocked">Blocked</option>
+            </select>
+          </div>
+
+          {/* Assignee + Estimate */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1 block">Estimate</label>
-              <input value={estimate} onChange={e => setEstimate(e.target.value)} placeholder="e.g. 2d, 4h"
-                className="w-full text-xs border border-gray-200 rounded-lg px-2 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" />
+              <label className={labelCls}>Assignee</label>
+              <input value={form.assignee} onChange={e => set('assignee', e.target.value)}
+                placeholder="e.g. Islam" className={inputCls} />
             </div>
             <div>
-              <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1 block">Assigned To</label>
-              <input value={assignee} onChange={e => setAssignee(e.target.value)} placeholder={DEFAULT_ASSIGNEE}
-                className="w-full text-xs border border-gray-200 rounded-lg px-2 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" />
+              <label className={labelCls}>Estimate</label>
+              <input value={form.estimate} onChange={e => set('estimate', e.target.value)}
+                placeholder="e.g. 3d" className={inputCls} />
             </div>
           </div>
 
           {/* Tags */}
           <div>
-            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5 block">Tags</label>
+            <label className={labelCls}>Tags</label>
             <div className="flex flex-wrap gap-1.5">
-              {(Object.keys(TAG_CONFIG) as Tag[]).map(tag => {
-                const cfg = TAG_CONFIG[tag];
-                const active = tags.includes(tag);
-                return (
-                  <button key={tag} type="button" onClick={() => toggleTag(tag)}
-                    className={`px-2 py-1 rounded-lg text-[9px] font-bold border transition-all cursor-pointer ${active ? cfg.cls : 'bg-white text-gray-400 border-gray-200 hover:border-gray-300'}`}>
-                    {cfg.label}
-                  </button>
-                );
-              })}
+              {(Object.keys(TAG_CONFIG) as Tag[]).map(key => (
+                <button key={key} type="button" onClick={() => toggleTag(key)}
+                  className={`text-[10px] font-bold px-2.5 py-1 rounded-lg border cursor-pointer transition-all ${
+                    form.tags.includes(key)
+                      ? 'bg-royal/15 text-royal dark:bg-bright/15 dark:text-bright border-royal/25 dark:border-bright/20'
+                      : 'text-muted border-border/40 hover:border-royal/25 dark:hover:border-bright/25 hover:text-heading'
+                  }`}>
+                  {TAG_CONFIG[key].label}
+                </button>
+              ))}
             </div>
           </div>
-        </div>
 
-        {/* Buttons */}
-        <div className="flex items-center gap-3 pt-2">
-          <button onClick={handleSubmit} disabled={!title.trim()}
-            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer">
-            {isEdit ? <><Save size={14} /> Save Changes</> : <><Plus size={14} /> Add Task</>}
-          </button>
-          <button onClick={onClose}
-            className="px-4 py-2.5 rounded-xl text-sm font-bold text-gray-500 border border-gray-200 hover:border-gray-300 transition-all cursor-pointer">
-            Cancel
-          </button>
-        </div>
+          {/* Actions */}
+          <div className="flex gap-2 pt-2 border-t border-[var(--theme-border)]">
+            <button type="submit"
+              className="flex-1 bg-gradient-to-r from-royal to-bright text-white font-bold text-sm py-2.5 rounded-xl hover:opacity-90 active:scale-[0.98] transition-all cursor-pointer">
+              {initial ? 'Save Changes' : 'Add Task'}
+            </button>
+            <button type="button" onClick={onClose}
+              className="px-5 text-muted border border-border/40 font-semibold text-sm rounded-xl hover:text-heading hover:border-border/70 transition-all cursor-pointer">
+              Cancel
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

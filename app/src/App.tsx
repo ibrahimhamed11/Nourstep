@@ -132,7 +132,9 @@ function App() {
           path="/roadmap"
           element={
             <Suspense fallback={<SectionFallback />}>
-              <RoadmapPage />
+              <div dir="ltr" className="font-body">
+                <RoadmapPage />
+              </div>
             </Suspense>
           }
         />

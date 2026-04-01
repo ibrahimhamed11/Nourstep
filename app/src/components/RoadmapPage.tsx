@@ -41,10 +41,10 @@ import RoadmapTaskFormModal from './roadmap/RoadmapTaskFormModal';
 
 function LoadingState() {
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+    <div className="min-h-screen bg-navy flex items-center justify-center">
       <div className="text-center space-y-4">
-        <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto" />
-        <p className="text-gray-500 text-sm">Loading roadmap…</p>
+        <div className="w-12 h-12 border-4 border-royal/20 border-t-royal rounded-full animate-spin mx-auto" />
+        <p className="text-muted text-sm font-medium">Loading roadmap…</p>
       </div>
     </div>
   );
@@ -52,14 +52,16 @@ function LoadingState() {
 
 function ErrorState({ message, onRetry }: { message: string; onRetry: () => void }) {
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-      <div className="text-center space-y-4 max-w-sm mx-4">
-        <div className="text-red-500 text-5xl">⚠</div>
-        <p className="text-gray-700 font-semibold">Failed to load roadmap</p>
-        <p className="text-gray-400 text-sm">{message}</p>
+    <div className="min-h-screen bg-navy flex items-center justify-center">
+      <div className="text-center space-y-4 max-w-sm mx-4 card-dark rounded-2xl p-8">
+        <div className="w-14 h-14 rounded-2xl bg-error/10 border border-error/20 flex items-center justify-center mx-auto">
+          <span className="text-error text-2xl">⚠</span>
+        </div>
+        <p className="text-heading font-semibold">Failed to load roadmap</p>
+        <p className="text-muted text-sm">{message}</p>
         <button
           onClick={onRetry}
-          className="px-4 py-2 bg-blue-600 text-white rounded-xl text-sm font-medium hover:bg-blue-700 transition-colors"
+          className="px-5 py-2 bg-gradient-to-r from-royal to-bright text-white rounded-xl text-sm font-bold hover:opacity-90 transition-all"
         >
           Retry
         </button>
@@ -257,8 +259,8 @@ export default function RoadmapPage() {
   if (error) return <ErrorState message={error} onRetry={loadTasks} />;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header with search, status filter, tag filter, view toggle */}
+    <div className="min-h-screen bg-navy">
+      {/* Header */}
       <RoadmapHeader
         stats={stats}
         view={view}
@@ -273,7 +275,7 @@ export default function RoadmapPage() {
         onAddTask={handleAddTask}
       />
 
-      <main className="max-w-screen-2xl mx-auto px-4 py-8 space-y-8">
+      <main className="max-w-screen-2xl mx-auto px-4 py-8 space-y-6">
         {/* Stats + Milestones + Track Filter Pills */}
         <RoadmapStats
           tasks={filteredTasks}
@@ -302,12 +304,24 @@ export default function RoadmapPage() {
 
         {/* ── TABLE VIEW ── */}
         {view === 'table' && (
-          <RoadmapTableView tasks={filteredTasks} activeTrack={activeTrack} />
+          <RoadmapTableView
+            tasks={filteredTasks}
+            activeTrack={activeTrack}
+            onToggleStatus={handleToggleStatus}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
         )}
 
         {/* ── PARALLEL VIEW ── */}
         {view === 'parallel' && (
-          <RoadmapParallelView tasks={filteredTasks} />
+          <RoadmapParallelView
+            tasks={filteredTasks}
+            activeTrack={activeTrack}
+            onToggleStatus={handleToggleStatus}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
         )}
 
         {/* ── Bottom Summary ── */}
@@ -315,20 +329,20 @@ export default function RoadmapPage() {
       </main>
 
       {/* ── Add/Edit Modal ── */}
-      {modalTask !== null && (
-        <RoadmapTaskFormModal
-          task={modalTask}
-          onSave={handleSave}
-          onClose={handleCloseModal}
-        />
-      )}
+      <RoadmapTaskFormModal
+        open={modalTask !== null}
+        initial={modalTask && 'id' in modalTask ? (modalTask as RoadmapTask) : null}
+        defaultWeek={modalTask?.week as Week | undefined}
+        onSave={handleSave}
+        onClose={handleCloseModal}
+      />
 
       {/* ── Saving overlay ── */}
       {saving && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/20 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl shadow-xl px-8 py-5 flex items-center gap-3">
-            <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
-            <span className="text-gray-700 text-sm font-medium">Saving…</span>
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/30 backdrop-blur-sm">
+          <div className="bg-[var(--theme-card)] border border-[var(--theme-border)] rounded-2xl shadow-2xl px-8 py-5 flex items-center gap-3">
+            <div className="w-5 h-5 border-2 border-royal/25 border-t-royal rounded-full animate-spin" />
+            <span className="text-heading text-sm font-semibold">Saving…</span>
           </div>
         </div>
       )}

@@ -1,5 +1,5 @@
 /**
- * RoadmapWeekColumn — A single week column in the Board view
+ * RoadmapWeekColumn — Board week column (NourStep theme)
  */
 import { Plus } from 'lucide-react';
 import type { RoadmapTask, Track, Week } from './roadmap.types';
@@ -22,37 +22,62 @@ export default function RoadmapWeekColumn({
 }: Props) {
   const filtered = activeTrack === 'all' ? tasks : tasks.filter(t => t.track === activeTrack);
   const stats = getStats(filtered);
-  const isCurrentWeek = week.week === 1; // April 1–7 = current week (today = Apr 1, 2026)
+  const isCurrent = week.week === 1;
 
   return (
-    <div className={`rounded-2xl border bg-white shadow-sm overflow-hidden ${isCurrentWeek ? 'ring-2 ring-blue-400 ring-offset-1' : ''}`}>
+    <div className={`card-dark rounded-2xl overflow-hidden flex flex-col transition-all duration-200 ${
+      isCurrent ? 'ring-2 ring-royal/40 dark:ring-bright/30 shadow-lg shadow-royal/10' : ''
+    }`}>
       {/* Header */}
-      <div className={`px-4 py-3 flex items-center justify-between ${isCurrentWeek ? 'bg-blue-600' : 'bg-gray-50 border-b border-gray-100'}`}>
+      <div className={`px-4 py-3 flex items-center justify-between border-b border-border/30 ${
+        isCurrent
+          ? 'bg-gradient-to-r from-royal/15 to-bright/10 dark:from-royal/20 dark:to-bright/10'
+          : 'bg-surface/50 dark:bg-darkblue/40'
+      }`}>
         <div>
-          <div className={`font-bold text-sm ${isCurrentWeek ? 'text-white' : 'text-gray-800'}`}>{week.label}</div>
-          <div className={`text-[10px] ${isCurrentWeek ? 'text-blue-200' : 'text-gray-400'}`}>{week.dates}</div>
+          <div className="flex items-center gap-2">
+            <span className={`font-bold text-sm ${isCurrent ? 'text-royal dark:text-bright' : 'text-heading'}`}>
+              {week.label}
+            </span>
+            {isCurrent && (
+              <span className="text-[9px] font-black bg-royal/15 text-royal dark:bg-bright/15 dark:text-bright border border-royal/25 dark:border-bright/25 px-1.5 py-0.5 rounded-md tracking-widest">
+                NOW
+              </span>
+            )}
+          </div>
+          <p className="text-muted text-[10px] mt-0.5">{week.dates}</p>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={() => onAddTask(week.week)}
-            className={`p-1 rounded-lg transition-all cursor-pointer hover:scale-110 ${isCurrentWeek ? 'text-blue-200 hover:text-white' : 'text-gray-300 hover:text-gray-500'}`}
+          <button
+            onClick={() => onAddTask(week.week)}
+            className="p-1.5 rounded-lg text-muted hover:text-royal dark:hover:text-bright hover:bg-royal/8 transition-all cursor-pointer"
             title="Add task to this week">
-            <Plus size={14} />
+            <Plus size={13} />
           </button>
           <div className="text-right">
-            {isCurrentWeek && <div className="text-[9px] font-bold text-blue-200 mb-0.5">NOW</div>}
-            <div className={`text-xs font-bold ${isCurrentWeek ? 'text-white' : 'text-gray-600'}`}>{stats.done}/{stats.total}</div>
-            <div className={`text-[9px] ${isCurrentWeek ? 'text-blue-200' : 'text-gray-400'}`}>{stats.pct}% done</div>
+            <p className="text-xs font-bold text-heading">{stats.done}/{stats.total}</p>
+            <p className="text-[9px] text-muted">{stats.pct}%</p>
           </div>
         </div>
       </div>
+
       {/* Progress bar */}
-      <div className="h-1 bg-gray-100">
-        <div className="h-1 bg-emerald-400 transition-all" style={{ width: `${stats.pct}%` }} />
+      <div className="h-0.5 bg-surface dark:bg-navy">
+        <div
+          className={`h-0.5 transition-all duration-700 ${isCurrent ? 'bg-gradient-to-r from-royal to-bright' : 'bg-success/60'}`}
+          style={{ width: `${stats.pct}%` }}
+        />
       </div>
+
       {/* Tasks */}
-      <div className="p-3 space-y-2 min-h-[80px]">
+      <div className="p-3 space-y-2 flex-1 min-h-[80px]">
         {filtered.length === 0 ? (
-          <p className="text-gray-300 text-[10px] text-center py-4">No tasks for this track</p>
+          <div className="flex flex-col items-center justify-center py-6 gap-1.5">
+            <div className="w-8 h-8 rounded-xl bg-surface dark:bg-darkblue border border-border/30 flex items-center justify-center">
+              <Plus size={13} className="text-muted/40" />
+            </div>
+            <p className="text-muted/40 text-[10px]">No tasks</p>
+          </div>
         ) : (
           filtered.map(t => (
             <RoadmapTaskCard key={t.id} task={t} allTasks={allTasks}
