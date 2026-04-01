@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Menu, X, Globe, Sun, Moon, Sparkles } from 'lucide-react';
+import { Menu, X, Globe, Sun, Moon, Sparkles, LogIn, UserPlus } from 'lucide-react';
 import { m, AnimatePresence } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import type { Lang, Theme, I18n } from '../types';
 import NavbarLogo from './NavbarLogo';
 import { fontSize } from '../design-tokens';
@@ -174,9 +175,22 @@ export default function Navbar({ lang, setLang, theme, setTheme }: Props) {
             {/* Separator */}
             <div className="w-px h-6 mx-1 bg-gradient-to-b from-transparent via-border to-transparent" />
 
-            {/* CTA Button */}
-            <a
-              href="#countdown"
+            {/* Login Button */}
+            <Link
+              to="/auth/login"
+              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl ${fontSize.nav} transition-all duration-300 ${
+                isDark
+                  ? 'text-lightblue/80 hover:text-white hover:bg-bright/10'
+                  : 'text-muted hover:text-royal hover:bg-royal/6'
+              }`}
+            >
+              <LogIn size={15} />
+              {lang === 'ar' ? 'دخول' : 'Login'}
+            </Link>
+
+            {/* Register / CTA Button */}
+            <Link
+              to="/auth/register"
               className={`group/cta relative ms-1 px-5 py-2.5 rounded-xl ${fontSize.nav} font-bold text-white overflow-hidden transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] ${
                 isDark
                   ? 'hover:shadow-lg hover:shadow-bright/20'
@@ -189,7 +203,7 @@ export default function Navbar({ lang, setLang, theme, setTheme }: Props) {
                 <Sparkles size={14} className="opacity-80" />
                 {lang === 'ar' ? 'ابدأ الآن' : 'Get Started'}
               </span>
-            </a>
+            </Link>
           </div>
 
           {/* Mobile toggle */}
@@ -284,21 +298,44 @@ export default function Navbar({ lang, setLang, theme, setTheme }: Props) {
                 {/* Divider */}
                 <div className="!my-3 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
 
-                {/* CTA */}
-                <m.a
-                  href="#countdown"
-                  onClick={() => setMobileOpen(false)}
+                {/* Login */}
+                <m.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.25, duration: 0.25 }}
+                >
+                  <Link
+                    to="/auth/login"
+                    onClick={() => setMobileOpen(false)}
+                    className={`flex items-center gap-2 px-4 py-3 rounded-xl text-[15px] font-semibold transition-all duration-300 ${
+                      isDark
+                        ? 'text-lightblue/80 hover:text-white hover:bg-card-dark/70'
+                        : 'text-muted hover:text-royal hover:bg-royal/6'
+                    }`}
+                  >
+                    <LogIn size={18} />
+                    {lang === 'ar' ? 'تسجيل الدخول' : 'Login'}
+                  </Link>
+                </m.div>
+
+                {/* Register CTA */}
+                <m.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3, duration: 0.25 }}
-                  className="relative block px-4 py-3.5 rounded-xl text-center font-bold text-white overflow-hidden"
                 >
-                  <span className="absolute inset-0 bg-gradient-to-r from-royal via-bright to-sky bg-[length:200%_100%] animate-gradient-x" />
-                  <span className="relative z-10 flex items-center justify-center gap-2">
-                    <Sparkles size={16} />
-                    {lang === 'ar' ? 'ابدأ الآن' : 'Get Started'}
-                  </span>
-                </m.a>
+                  <Link
+                    to="/auth/register"
+                    onClick={() => setMobileOpen(false)}
+                    className="relative block px-4 py-3.5 rounded-xl text-center font-bold text-white overflow-hidden"
+                  >
+                    <span className="absolute inset-0 bg-gradient-to-r from-royal via-bright to-sky bg-[length:200%_100%] animate-gradient-x" />
+                    <span className="relative z-10 flex items-center justify-center gap-2">
+                      <UserPlus size={16} />
+                      {lang === 'ar' ? 'إنشاء حساب' : 'Create Account'}
+                    </span>
+                  </Link>
+                </m.div>
               </div>
             </div>
           </m.div>
