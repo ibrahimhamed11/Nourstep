@@ -1,12 +1,13 @@
 /**
  * Shared Axios instance for all NourStep API calls.
- * Base URL: https://api.lezz-app.com
+ * Dev:  requests go to /api/... → Vite proxy forwards to https://api.lezz-app.com (no CORS)
+ * Prod: requests go directly to https://api.lezz-app.com (server must allow the origin)
  * Auth token is injected automatically from localStorage on every request.
  */
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: 'https://api.lezz-app.com',
+  baseURL: import.meta.env.DEV ? '/api' : 'https://api.lezz-app.com',
   headers: { 'Content-Type': 'application/json' },
 });
 
