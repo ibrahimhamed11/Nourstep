@@ -47,7 +47,7 @@ export default function RoadmapHeader({
             <Home size={10} /> Home
           </Link>
           <ChevronRight size={9} className="text-border/50" />
-          <span className="text-bright font-bold">Roadmap</span>
+          <span className="text-bright font-bold">Tasks Board</span>
           <span className="ml-auto flex items-center gap-2">
             <Link to="/"
               className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-border/40 hover:border-royal/40 hover:text-heading bg-surface/40 dark:bg-darkblue/40 hover:bg-royal/5 transition-all font-semibold cursor-pointer">
@@ -69,7 +69,7 @@ export default function RoadmapHeader({
               <Rocket size={18} className="text-white" />
             </div>
             <div>
-              <p className="text-heading font-bold text-sm">2-Month Sprint Roadmap</p>
+              <p className="text-heading font-bold text-sm">Tasks Board</p>
               <p className="text-muted text-[10px]">Apr 1 – Jun 2, 2026 · Website · Backend · Mobile</p>
             </div>
           </div>

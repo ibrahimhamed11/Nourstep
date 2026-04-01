@@ -44,7 +44,7 @@ function LoadingState() {
     <div className="min-h-screen bg-navy flex items-center justify-center">
       <div className="text-center space-y-4">
         <div className="w-12 h-12 border-4 border-royal/20 border-t-royal rounded-full animate-spin mx-auto" />
-        <p className="text-muted text-sm font-medium">Loading roadmap…</p>
+        <p className="text-muted text-sm font-medium">Loading tasks board…</p>
       </div>
     </div>
   );
@@ -57,7 +57,7 @@ function ErrorState({ message, onRetry }: { message: string; onRetry: () => void
         <div className="w-14 h-14 rounded-2xl bg-error/10 border border-error/20 flex items-center justify-center mx-auto">
           <span className="text-error text-2xl">⚠</span>
         </div>
-        <p className="text-heading font-semibold">Failed to load roadmap</p>
+        <p className="text-heading font-semibold">Failed to load tasks board</p>
         <p className="text-muted text-sm">{message}</p>
         <button
           onClick={onRetry}

@@ -126,7 +126,7 @@ function App() {
           }
         />
 
-        {/* ── Roadmap / Sprint Tracker Route ── */}
+        {/* ── Tasks Board Route ── */}
         <Route
           path="/roadmap"
           element={
@@ -138,7 +138,7 @@ function App() {
           }
         />
 
-        {/* ── Tasks Module Route — redirects to Roadmap ── */}
+        {/* ── /tasks also goes to Tasks Board ── */}
         <Route path="/tasks" element={<Navigate to="/roadmap" replace />} />
 
         {/* ── Landing Page (default) ── */}

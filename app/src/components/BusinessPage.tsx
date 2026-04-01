@@ -674,12 +674,8 @@ export default function BusinessPage() {
               <ArrowRight size={13} className="rotate-180" /> الرئيسية
             </Link>
             <Link to="/roadmap"
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border border-blue-200 text-blue-600 hover:bg-blue-50 transition-all">
-              <Rocket size={13} /> خارطة الطريق
-            </Link>
-            <Link to="/tasks"
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-gradient-to-r from-blue-600 to-sky-500 text-white hover:from-sky-500 hover:to-blue-600 shadow-sm shadow-blue-200 transition-all">
-              <CheckCircle2 size={13} /> المهام
+              <Rocket size={13} /> Tasks Board
             </Link>
           </div>
         </div>
