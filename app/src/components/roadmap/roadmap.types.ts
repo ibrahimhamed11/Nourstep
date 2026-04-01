@@ -4,7 +4,7 @@
 import {
   CheckCircle2, Circle, Clock, AlertCircle,
   Globe, Server, Smartphone, Layers,
-  Bug, Lightbulb, Sparkles, SquareKanban,
+  Bug, Lightbulb, Sparkles, SquareKanban, Flame,
 } from 'lucide-react';
 
 /* ─────────────────────────────────────────────────────────────
@@ -13,7 +13,7 @@ import {
 export type Status = 'done' | 'in-progress' | 'todo' | 'blocked';
 export type Track = 'website' | 'backend' | 'mobile' | 'devops';
 export type Week = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
-export type TaskType = 'task' | 'bug' | 'feature' | 'improvement';
+export type TaskType = 'task' | 'bug' | 'feature' | 'improvement' | 'hotfix';
 export type ViewMode = 'board' | 'table' | 'parallel';
 export type Tag = 'frontend' | 'backend' | 'mobile' | 'devops' | 'firebase' | 'aws' | 'auth' | 'payment' | 'ui' | 'api' | 'database' | 'testing' | 'deploy' | 'security' | 'performance';
 
@@ -82,6 +82,7 @@ export const TASK_TYPE_CONFIG: Record<TaskType, { label: string; prefix: string;
   bug:         { label: 'Bug',         prefix: 'BUG',  icon: Bug,          cls: 'text-error',            badge: 'bg-error/10 text-error border-error/30' },
   feature:     { label: 'Feature',     prefix: 'FEAT', icon: Lightbulb,    cls: 'text-warning',          badge: 'bg-warning/10 text-warning border-warning/30' },
   improvement: { label: 'Improvement', prefix: 'IMP',  icon: Sparkles,     cls: 'text-violet-400',       badge: 'bg-violet-500/10 text-violet-400 border-violet-500/30' },
+  hotfix:      { label: 'Hotfix',      prefix: 'HOT',  icon: Flame,        cls: 'text-orange-400',       badge: 'bg-orange-500/10 text-orange-400 border-orange-500/30' },
 };
 
 /* ─────────────────────────────────────────────────────────────

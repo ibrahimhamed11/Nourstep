@@ -1,5 +1,5 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { LazyMotion } from 'framer-motion';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -27,7 +27,6 @@ const ResetPasswordPage = lazy(() => import('./components/auth/ResetPasswordPage
 const BusinessPage = lazy(() => import('./components/BusinessPage'));
 const ModuleDetailPage = lazy(() => import('./components/ModuleDetailPage'));
 const RoadmapPage = lazy(() => import('./components/RoadmapPage'));
-const TasksPage = lazy(() => import('./modules/tasks/TasksPage'));
 
 /** Minimal placeholder for lazy sections */
 const SectionFallback = () => <div className="min-h-[30vh]" />;
@@ -139,15 +138,8 @@ function App() {
           }
         />
 
-        {/* ── Tasks Module Route ── */}
-        <Route
-          path="/tasks"
-          element={
-            <Suspense fallback={<SectionFallback />}>
-              <TasksPage />
-            </Suspense>
-          }
-        />
+        {/* ── Tasks Module Route — redirects to Roadmap ── */}
+        <Route path="/tasks" element={<Navigate to="/roadmap" replace />} />
 
         {/* ── Landing Page (default) ── */}
         <Route

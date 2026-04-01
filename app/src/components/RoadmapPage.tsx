@@ -14,7 +14,7 @@
  *  - Board / Table / Parallel views
  */
 import { useState, useCallback, useMemo, useEffect } from 'react';
-import type { RoadmapTask, Track, ViewMode, Week, Status, Tag } from './roadmap/roadmap.types';
+import type { RoadmapTask, Track, ViewMode, Week, Status, Tag, TaskType } from './roadmap/roadmap.types';
 import {
   WEEKS, STATUS_CYCLE, getStats, taskDisplayId, TAG_CONFIG,
 } from './roadmap/roadmap.types';
@@ -84,6 +84,8 @@ export default function RoadmapPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<Status | 'all'>('all');
   const [tagFilter, setTagFilter] = useState<Tag | 'all'>('all');
+  const [weekFilter, setWeekFilter] = useState<Week | 'all'>('all');
+  const [typeFilter, setTypeFilter] = useState<TaskType | 'all'>('all');
 
   // Modal: null = closed, {} = add new, { ...task } = edit existing
   const [modalTask, setModalTask] = useState<Partial<RoadmapTask> | null>(null);
@@ -115,7 +117,7 @@ export default function RoadmapPage() {
     return allKeys.filter(k => tagSet.has(k));
   }, [tasks]);
 
-  /* ── Search + Status + Tag filter (client-side on top of fetched data) ── */
+  /* ── Search + Status + Tag + Week + Type filter ── */
   const filteredTasks = useMemo(() => {
     let result = tasks;
 
@@ -125,6 +127,14 @@ export default function RoadmapPage() {
 
     if (tagFilter !== 'all') {
       result = result.filter(t => (t.tags ?? []).includes(tagFilter));
+    }
+
+    if (weekFilter !== 'all') {
+      result = result.filter(t => t.week === weekFilter);
+    }
+
+    if (typeFilter !== 'all') {
+      result = result.filter(t => t.taskType === typeFilter);
     }
 
     if (searchQuery.trim()) {
@@ -142,7 +152,7 @@ export default function RoadmapPage() {
     }
 
     return result;
-  }, [tasks, searchQuery, statusFilter, tagFilter]);
+  }, [tasks, searchQuery, statusFilter, tagFilter, weekFilter, typeFilter]);
 
   const stats = useMemo(() => getStats(filteredTasks), [filteredTasks]);
 
@@ -271,6 +281,10 @@ export default function RoadmapPage() {
         setStatusFilter={setStatusFilter}
         tagFilter={tagFilter}
         setTagFilter={setTagFilter}
+        weekFilter={weekFilter}
+        setWeekFilter={setWeekFilter}
+        typeFilter={typeFilter}
+        setTypeFilter={setTypeFilter}
         activeTags={activeTags}
         onAddTask={handleAddTask}
       />

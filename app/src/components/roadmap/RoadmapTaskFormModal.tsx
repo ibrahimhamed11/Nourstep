@@ -3,12 +3,13 @@
  */
 import { useState, useEffect, useRef } from 'react';
 import { X, GitBranch, ChevronDown } from 'lucide-react';
-import type { RoadmapTask, Track, Week, Tag } from './roadmap.types';
-import { TRACKS, WEEKS, TAG_CONFIG } from './roadmap.types';
+import type { RoadmapTask, Track, Week, Tag, TaskType } from './roadmap.types';
+import { TRACKS, WEEKS, TAG_CONFIG, TASK_TYPE_CONFIG } from './roadmap.types';
 
 interface FormState {
   title: string;
   desc: string;
+  taskType: TaskType;
   track: Track;
   week: Week;
   status: RoadmapTask['status'];
@@ -20,7 +21,7 @@ interface FormState {
 }
 
 const BLANK: FormState = {
-  title: '', desc: '', track: 'backend', week: 1,
+  title: '', desc: '', taskType: 'task', track: 'backend', week: 1,
   status: 'todo', assignee: '', estimate: '', tags: [],
   blockedBy: [], parallel: [],
 };
@@ -132,6 +133,7 @@ export default function RoadmapTaskFormModal({ open, initial, defaultWeek, allTa
       setForm({
         title: initial.title,
         desc: initial.desc ?? '',
+        taskType: initial.taskType ?? 'task',
         track: initial.track,
         week: initial.week,
         status: initial.status,
@@ -161,6 +163,7 @@ export default function RoadmapTaskFormModal({ open, initial, defaultWeek, allTa
       ...(initial ?? {}),
       title: form.title.trim(),
       desc: form.desc.trim(),
+      taskType: form.taskType,
       track: form.track,
       week: form.week,
       status: form.status,
@@ -198,6 +201,25 @@ export default function RoadmapTaskFormModal({ open, initial, defaultWeek, allTa
             <label className={labelCls}>Task Title *</label>
             <input value={form.title} onChange={e => set('title', e.target.value)}
               placeholder="What needs to be done?" className={inputCls} required />
+          </div>
+
+          {/* Task Type */}
+          <div>
+            <label className={labelCls}>Task Type</label>
+            <div className="flex flex-wrap gap-1.5">
+              {(Object.keys(TASK_TYPE_CONFIG) as TaskType[]).map(type => {
+                const cfg = TASK_TYPE_CONFIG[type];
+                const Icon = cfg.icon;
+                return (
+                  <button key={type} type="button" onClick={() => set('taskType', type)}
+                    className={`inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-1 rounded-lg border cursor-pointer transition-all ${
+                      form.taskType === type ? cfg.badge : 'text-muted border-border/40 hover:border-royal/25 dark:hover:border-bright/25 hover:text-heading'
+                    }`}>
+                    <Icon size={11} /> {cfg.label}
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           {/* Description */}

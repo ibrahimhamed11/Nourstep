@@ -252,6 +252,7 @@ export function generateTaskId(taskType: TaskType, taskNumber: number): string {
     bug: 'BUG',
     feature: 'FEAT',
     improvement: 'IMP',
+    hotfix: 'HOT',
   };
   return `${prefixes[taskType] ?? 'TASK'}-${taskNumber}`;
 }

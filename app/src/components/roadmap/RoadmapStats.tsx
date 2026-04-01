@@ -35,7 +35,7 @@ export default function RoadmapStats({ tasks, activeTrack, setActiveTrack }: Pro
               className={`card-dark rounded-2xl p-4 text-left transition-all duration-200 cursor-pointer group relative overflow-hidden ${
                 isActive ? 'ring-2' : ''
               }`}
-              style={isActive ? { ringColor: t.color, boxShadow: `0 0 0 2px ${t.color}50, 0 8px 32px ${t.color}15` } : {}}
+              style={isActive ? { boxShadow: `0 0 0 2px ${t.color}50, 0 8px 32px ${t.color}15` } : {}}
             >
               {/* Glow accent top-right */}
               <div

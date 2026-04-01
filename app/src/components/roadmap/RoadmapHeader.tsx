@@ -1,10 +1,10 @@
 /**
  * RoadmapHeader — matches NourStep site theme (bg-navy, dark/light tokens)
  */
-import { Rocket, Search, X, Plus, Filter, LayoutDashboard, TableProperties, GitBranch, Home, Briefcase, ChevronRight } from 'lucide-react';
+import { Rocket, Search, X, Plus, Filter, LayoutDashboard, TableProperties, GitBranch, Home, Briefcase, ChevronRight, Calendar, Layers } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import type { ViewMode, Status, Tag } from './roadmap.types';
-import { STATUS_CONFIG, TAG_CONFIG } from './roadmap.types';
+import type { ViewMode, Status, Tag, Week, TaskType } from './roadmap.types';
+import { STATUS_CONFIG, TAG_CONFIG, WEEKS, TASK_TYPE_CONFIG } from './roadmap.types';
 
 interface Props {
   stats: { total: number; done: number; pct: number };
@@ -16,6 +16,10 @@ interface Props {
   setStatusFilter: (s: Status | 'all') => void;
   tagFilter: Tag | 'all';
   setTagFilter: (t: Tag | 'all') => void;
+  weekFilter: Week | 'all';
+  setWeekFilter: (w: Week | 'all') => void;
+  typeFilter: TaskType | 'all';
+  setTypeFilter: (t: TaskType | 'all') => void;
   activeTags: Tag[];
   onAddTask: () => void;
 }
@@ -28,7 +32,9 @@ const VIEW_META = {
 
 export default function RoadmapHeader({
   stats, view, setView, searchQuery, setSearchQuery,
-  statusFilter, setStatusFilter, tagFilter, setTagFilter, activeTags, onAddTask,
+  statusFilter, setStatusFilter, tagFilter, setTagFilter,
+  weekFilter, setWeekFilter, typeFilter, setTypeFilter,
+  activeTags, onAddTask,
 }: Props) {
   return (
     <header className="sticky top-0 z-40 bg-navy/95 backdrop-blur-2xl border-b border-border/40 shadow-[0_1px_0_0_rgba(61,139,255,0.1),0_4px_24px_-4px_rgba(0,0,0,0.12)]">
@@ -166,6 +172,56 @@ export default function RoadmapHeader({
                   tagFilter === tag ? cfg.cls : 'text-muted border-border/40 hover:border-royal/25 hover:text-royal dark:hover:text-bright'
                 }`}>
                 {cfg.label}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Row 3: Week filter + Task type filter */}
+        <div className="flex flex-wrap items-center gap-1.5">
+          <Calendar size={11} className="text-muted/60 mr-1" />
+
+          {/* Week filters */}
+          <button onClick={() => setWeekFilter('all')}
+            className={`px-2.5 py-1 rounded-lg text-[10px] font-bold border transition-all cursor-pointer ${
+              weekFilter === 'all'
+                ? 'bg-royal/10 text-royal border-royal/25 dark:bg-bright/10 dark:text-bright dark:border-bright/25'
+                : 'text-muted border-border/40 hover:border-royal/25 hover:text-royal dark:hover:text-bright'
+            }`}>
+            All Weeks
+          </button>
+          {WEEKS.map(w => (
+            <button key={w.week} onClick={() => setWeekFilter(weekFilter === w.week ? 'all' : w.week)}
+              className={`px-2.5 py-1 rounded-lg text-[10px] font-bold border transition-all cursor-pointer ${
+                weekFilter === w.week
+                  ? 'bg-royal/10 text-royal border-royal/25 dark:bg-bright/10 dark:text-bright dark:border-bright/25'
+                  : 'text-muted border-border/40 hover:border-royal/25 hover:text-royal dark:hover:text-bright'
+              }`}>
+              {w.label}
+            </button>
+          ))}
+
+          <span className="text-border/50 mx-1 select-none">·</span>
+
+          {/* Task type filters */}
+          <Layers size={11} className="text-muted/60 mr-0.5" />
+          <button onClick={() => setTypeFilter('all')}
+            className={`px-2.5 py-1 rounded-lg text-[10px] font-bold border transition-all cursor-pointer ${
+              typeFilter === 'all'
+                ? 'bg-royal/10 text-royal border-royal/25 dark:bg-bright/10 dark:text-bright dark:border-bright/25'
+                : 'text-muted border-border/40 hover:border-royal/25 hover:text-royal dark:hover:text-bright'
+            }`}>
+            All Types
+          </button>
+          {(Object.keys(TASK_TYPE_CONFIG) as TaskType[]).map(type => {
+            const cfg = TASK_TYPE_CONFIG[type];
+            const Icon = cfg.icon;
+            return (
+              <button key={type} onClick={() => setTypeFilter(typeFilter === type ? 'all' : type)}
+                className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-bold border transition-all cursor-pointer ${
+                  typeFilter === type ? cfg.badge : 'text-muted border-border/40 hover:border-royal/25 hover:text-royal dark:hover:text-bright'
+                }`}>
+                <Icon size={10} /> {cfg.label}
               </button>
             );
           })}
