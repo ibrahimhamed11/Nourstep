@@ -128,6 +128,7 @@ export function mapBackendTask(t: RoadmapTaskBackend): RoadmapTask {
     tags: t.tags,
     parallel: t.parallel,
     blockedBy: t.blockedBy,
+    completedAt: t.completedAt,
   };
 }
 

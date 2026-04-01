@@ -3,7 +3,7 @@
  * رؤية الأعمال، كيفية الربح، خطة الإطلاق، تدفقات النظام
  */
 import { useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import ReactFlow, {
   Background,
   Controls,
@@ -667,7 +667,21 @@ export default function BusinessPage() {
               <div className="text-gray-400 text-[10px]">وثيقة نموذج العمل</div>
             </div>
           </div>
-          <Badge color="green">نسخة أبريل ٢٠٢٦</Badge>
+          <div className="flex items-center gap-2">
+            <Badge color="green">نسخة أبريل ٢٠٢٦</Badge>
+            <Link to="/"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border border-gray-200 text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-all">
+              <ArrowRight size={13} className="rotate-180" /> الرئيسية
+            </Link>
+            <Link to="/roadmap"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border border-blue-200 text-blue-600 hover:bg-blue-50 transition-all">
+              <Rocket size={13} /> خارطة الطريق
+            </Link>
+            <Link to="/tasks"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-gradient-to-r from-blue-600 to-sky-500 text-white hover:from-sky-500 hover:to-blue-600 shadow-sm shadow-blue-200 transition-all">
+              <CheckCircle2 size={13} /> المهام
+            </Link>
+          </div>
         </div>
         <div className="max-w-7xl mx-auto px-4 flex gap-1 overflow-x-auto pb-2 scrollbar-hide">
           {NAV_ITEMS.map(({ id, label, icon: Icon }) => (

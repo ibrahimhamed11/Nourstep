@@ -1,7 +1,8 @@
 /**
  * RoadmapHeader — matches NourStep site theme (bg-navy, dark/light tokens)
  */
-import { Rocket, Search, X, Plus, Filter, LayoutDashboard, TableProperties, GitBranch } from 'lucide-react';
+import { Rocket, Search, X, Plus, Filter, LayoutDashboard, TableProperties, GitBranch, Home, Briefcase, ChevronRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import type { ViewMode, Status, Tag } from './roadmap.types';
 import { STATUS_CONFIG, TAG_CONFIG } from './roadmap.types';
 
@@ -32,6 +33,26 @@ export default function RoadmapHeader({
   return (
     <header className="sticky top-0 z-40 bg-navy/95 backdrop-blur-2xl border-b border-border/40 shadow-[0_1px_0_0_rgba(61,139,255,0.1),0_4px_24px_-4px_rgba(0,0,0,0.12)]">
       <div className="max-w-screen-2xl mx-auto px-4 py-3 space-y-2.5">
+
+        {/* ── Top nav strip: breadcrumb + back links ── */}
+        <div className="flex items-center gap-1.5 text-[10px] text-muted/60 pb-1 border-b border-border/20">
+          <Link to="/"
+            className="flex items-center gap-1 hover:text-heading transition-colors cursor-pointer font-semibold">
+            <Home size={10} /> Home
+          </Link>
+          <ChevronRight size={9} className="text-border/50" />
+          <span className="text-bright font-bold">Roadmap</span>
+          <span className="ml-auto flex items-center gap-2">
+            <Link to="/"
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-border/40 hover:border-royal/40 hover:text-heading bg-surface/40 dark:bg-darkblue/40 hover:bg-royal/5 transition-all font-semibold cursor-pointer">
+              <Home size={10} /> Go to Home
+            </Link>
+            <Link to="/business"
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-bright/30 text-bright hover:bg-bright/10 hover:border-bright/50 bg-bright/5 transition-all font-semibold cursor-pointer">
+              <Briefcase size={10} /> Business
+            </Link>
+          </span>
+        </div>
 
         {/* Row 1 */}
         <div className="flex flex-wrap items-center gap-3">

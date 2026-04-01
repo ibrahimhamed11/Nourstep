@@ -1,8 +1,8 @@
 /**
  * RoadmapTaskFormModal — NourStep theme
  */
-import { useState, useEffect } from 'react';
-import { X } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { X, GitBranch, ChevronDown } from 'lucide-react';
 import type { RoadmapTask, Track, Week, Tag } from './roadmap.types';
 import { TRACKS, WEEKS, TAG_CONFIG } from './roadmap.types';
 
@@ -15,22 +15,115 @@ interface FormState {
   assignee: string;
   estimate: string;
   tags: Tag[];
+  blockedBy: string[];
+  parallel: string[];
 }
 
 const BLANK: FormState = {
   title: '', desc: '', track: 'backend', week: 1,
   status: 'todo', assignee: '', estimate: '', tags: [],
+  blockedBy: [], parallel: [],
 };
 
 interface Props {
   open: boolean;
   initial?: RoadmapTask | null;
   defaultWeek?: Week;
+  allTasks?: RoadmapTask[];
   onSave: (data: Partial<RoadmapTask>) => void;
   onClose: () => void;
 }
 
-export default function RoadmapTaskFormModal({ open, initial, defaultWeek, onSave, onClose }: Props) {
+/* ── Small multi-select dropdown for task IDs ── */
+function TaskMultiSelect({
+  label, icon: Icon, color, value, onChange, tasks, excludeId,
+}: {
+  label: string;
+  icon: React.ElementType;
+  color: string;
+  value: string[];
+  onChange: (v: string[]) => void;
+  tasks: RoadmapTask[];
+  excludeId?: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const options = tasks.filter(t => t.id !== excludeId);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  const toggle = (id: string) =>
+    onChange(value.includes(id) ? value.filter(v => v !== id) : [...value, id]);
+
+  return (
+    <div ref={ref} className="relative">
+      <label className="block text-[10px] font-black text-muted uppercase tracking-widest mb-1.5 flex items-center gap-1">
+        <Icon size={10} style={{ color }} /> {label}
+      </label>
+      <button
+        type="button"
+        onClick={() => setOpen(o => !o)}
+        className="w-full flex items-center justify-between bg-surface/60 dark:bg-darkblue/60 border border-border/50 text-sm rounded-xl px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-royal/30 focus:border-royal/40 transition-all cursor-pointer"
+      >
+        <span className="flex flex-wrap gap-1 flex-1 min-w-0">
+          {value.length === 0
+            ? <span className="text-muted/40 text-xs">None selected</span>
+            : value.map(id => (
+              <span key={id} className="text-[9px] font-bold px-1.5 py-0.5 rounded border"
+                style={{ background: `${color}18`, color, borderColor: `${color}40` }}>
+                {id}
+              </span>
+            ))}
+        </span>
+        <ChevronDown size={13} className={`text-muted/50 flex-shrink-0 ml-1 transition-transform ${open ? 'rotate-180' : ''}`} />
+      </button>
+
+      {open && (
+        <div className="absolute z-50 mt-1 w-full bg-[var(--theme-card)] border border-[var(--theme-border)] rounded-xl shadow-2xl max-h-52 overflow-y-auto">
+          {options.length === 0 ? (
+            <p className="text-muted/50 text-xs text-center py-4">No other tasks</p>
+          ) : (
+            options.map(t => (
+              <button
+                key={t.id}
+                type="button"
+                onClick={() => toggle(t.id)}
+                className={`w-full flex items-center gap-2.5 px-3 py-2 text-left transition-colors hover:bg-surface/60 dark:hover:bg-darkblue/60 ${
+                  value.includes(t.id) ? 'bg-surface/80 dark:bg-darkblue/80' : ''
+                }`}
+              >
+                <span className={`w-3.5 h-3.5 rounded flex items-center justify-center flex-shrink-0 border transition-colors ${
+                  value.includes(t.id)
+                    ? 'border-transparent'
+                    : 'border-border/50 bg-transparent'
+                }`}
+                  style={value.includes(t.id) ? { background: color, borderColor: color } : {}}>
+                  {value.includes(t.id) && (
+                    <svg viewBox="0 0 10 8" fill="none" className="w-2 h-2">
+                      <path d="M1 4l3 3 5-6" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  )}
+                </span>
+                <span className="flex-1 min-w-0">
+                  <span className="text-[9px] font-black mr-1.5" style={{ color }}>{t.id}</span>
+                  <span className="text-heading text-xs truncate">{t.title}</span>
+                </span>
+              </button>
+            ))
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default function RoadmapTaskFormModal({ open, initial, defaultWeek, allTasks = [], onSave, onClose }: Props) {
   const [form, setForm] = useState<FormState>(BLANK);
 
   useEffect(() => {
@@ -45,6 +138,8 @@ export default function RoadmapTaskFormModal({ open, initial, defaultWeek, onSav
         assignee: initial.assignee ?? '',
         estimate: initial.estimate ?? '',
         tags: (initial.tags ?? []) as Tag[],
+        blockedBy: initial.blockedBy ?? [],
+        parallel: initial.parallel ?? [],
       });
     } else {
       setForm({ ...BLANK, week: defaultWeek ?? 1 });
@@ -72,6 +167,8 @@ export default function RoadmapTaskFormModal({ open, initial, defaultWeek, onSav
       assignee: form.assignee.trim() || initial?.assignee,
       estimate: form.estimate.trim() || initial?.estimate,
       tags: form.tags,
+      blockedBy: form.blockedBy,
+      parallel: form.parallel,
     });
   };
 
@@ -166,6 +263,28 @@ export default function RoadmapTaskFormModal({ open, initial, defaultWeek, onSav
                 </button>
               ))}
             </div>
+          </div>
+
+          {/* Blocked By + Parallel */}
+          <div className="grid grid-cols-2 gap-3">
+            <TaskMultiSelect
+              label="Blocked By"
+              icon={GitBranch}
+              color="#FF4D4D"
+              value={form.blockedBy}
+              onChange={v => set('blockedBy', v)}
+              tasks={allTasks}
+              excludeId={initial?.id}
+            />
+            <TaskMultiSelect
+              label="Runs in Parallel"
+              icon={GitBranch}
+              color="#3D8BFF"
+              value={form.parallel}
+              onChange={v => set('parallel', v)}
+              tasks={allTasks}
+              excludeId={initial?.id}
+            />
           </div>
 
           {/* Actions */}

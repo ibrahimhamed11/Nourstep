@@ -2,14 +2,7 @@
  * RoadmapTableView — NourStep theme
  */
 import type { RoadmapTask, Track } from './roadmap.types';
-import { TRACKS, WEEKS } from './roadmap.types';
-
-const STATUS_CFG = {
-  done:          { label: 'Done',        cls: 'bg-success/15 text-success border-success/25' },
-  'in-progress': { label: 'In Progress', cls: 'bg-royal/15 text-royal dark:bg-bright/15 dark:text-bright border-royal/25 dark:border-bright/20' },
-  todo:          { label: 'To Do',       cls: 'bg-surface dark:bg-darkblue text-muted border-border/40' },
-  blocked:       { label: 'Blocked',     cls: 'bg-error/15 text-error border-error/25' },
-} as const;
+import { TRACKS, WEEKS, TAG_CONFIG, TASK_TYPE_CONFIG, STATUS_CONFIG } from './roadmap.types';
 
 interface Props {
   tasks: RoadmapTask[];
@@ -27,7 +20,7 @@ export default function RoadmapTableView({ tasks, activeTrack, onToggleStatus, o
       <table className="w-full border-collapse text-xs">
         <thead>
           <tr className="bg-surface dark:bg-darkblue border-b border-border/30">
-            {['Status', 'Task', 'Track', 'Week', 'Assignee', 'Estimate', 'Actions'].map(h => (
+            {['Status', 'Task', 'Tags', 'Track', 'Week', 'Assignee', 'Est.', 'Actions'].map(h => (
               <th key={h} className="text-left text-[9px] font-black text-muted uppercase tracking-widest px-4 py-3 whitespace-nowrap">
                 {h}
               </th>
@@ -38,15 +31,17 @@ export default function RoadmapTableView({ tasks, activeTrack, onToggleStatus, o
         <tbody>
           {filtered.length === 0 ? (
             <tr>
-              <td colSpan={7} className="text-center text-muted/50 py-12 text-xs">
+              <td colSpan={8} className="text-center text-muted/50 py-12 text-xs">
                 No tasks found
               </td>
             </tr>
           ) : (
             filtered.map((task, i) => {
-              const track = TRACKS.find(t => t.id === task.track);
-              const week  = WEEKS.find(w => w.week === task.week);
-              const sc    = STATUS_CFG[task.status];
+              const track   = TRACKS.find(t => t.id === task.track);
+              const week    = WEEKS.find(w => w.week === task.week);
+              const sc      = STATUS_CONFIG[task.status];
+              const typeCfg = TASK_TYPE_CONFIG[task.taskType];
+              const TypeIcon = typeCfg.icon;
 
               return (
                 <tr key={task.id}
@@ -57,19 +52,37 @@ export default function RoadmapTableView({ tasks, activeTrack, onToggleStatus, o
                   {/* Status toggle */}
                   <td className="px-4 py-2.5 whitespace-nowrap">
                     <button onClick={() => onToggleStatus(task.id)}
-                      className={`text-[9px] font-bold px-2 py-1 rounded-md border cursor-pointer transition-colors ${sc.cls}`}>
+                      className={`text-[9px] font-bold px-2 py-1 rounded-md border cursor-pointer transition-colors ${sc.badge}`}>
                       {sc.label}
                     </button>
                   </td>
 
-                  {/* Title + desc */}
-                  <td className="px-4 py-2.5 max-w-[200px]">
+                  {/* Title + type + id + desc */}
+                  <td className="px-4 py-2.5 max-w-[220px]">
+                    <div className="flex items-center gap-1.5 mb-0.5">
+                      <span className="text-[9px] font-black text-muted/50">{task.id}</span>
+                      <span className={`flex items-center gap-0.5 text-[8px] font-bold px-1.5 py-0.5 rounded border ${typeCfg.badge}`}>
+                        <TypeIcon size={7} />{typeCfg.label}
+                      </span>
+                    </div>
                     <p className={`font-semibold leading-snug truncate ${
                       task.status === 'done' ? 'line-through text-muted/50' : 'text-heading'
                     }`}>{task.title}</p>
                     {task.desc && (
-                      <p className="text-muted text-[10px] truncate mt-0.5">{task.desc}</p>
+                      <p className="text-muted text-[10px] truncate mt-0.5 max-w-[200px]">{task.desc}</p>
                     )}
+                  </td>
+
+                  {/* Tags */}
+                  <td className="px-4 py-2.5 max-w-[140px]">
+                    <div className="flex flex-wrap gap-1">
+                      {(task.tags ?? []).map(tag => (
+                        <span key={tag}
+                          className={`text-[8px] font-bold px-1.5 py-0.5 rounded border ${TAG_CONFIG[tag]?.cls ?? 'bg-surface text-muted border-border/40'}`}>
+                          {TAG_CONFIG[tag]?.label ?? tag}
+                        </span>
+                      ))}
+                    </div>
                   </td>
 
                   {/* Track */}
@@ -87,7 +100,7 @@ export default function RoadmapTableView({ tasks, activeTrack, onToggleStatus, o
 
                   {/* Assignee */}
                   <td className="px-4 py-2.5 whitespace-nowrap">
-                    <span className="text-muted text-[10px]">{task.assignee ?? '—'}</span>
+                    <span className="text-muted text-[10px] truncate max-w-[100px]">{task.assignee ?? '—'}</span>
                   </td>
 
                   {/* Estimate */}

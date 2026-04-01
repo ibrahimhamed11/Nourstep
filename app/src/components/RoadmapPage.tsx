@@ -333,6 +333,7 @@ export default function RoadmapPage() {
         open={modalTask !== null}
         initial={modalTask && 'id' in modalTask ? (modalTask as RoadmapTask) : null}
         defaultWeek={modalTask?.week as Week | undefined}
+        allTasks={tasks}
         onSave={handleSave}
         onClose={handleCloseModal}
       />
