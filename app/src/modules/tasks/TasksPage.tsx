@@ -5,7 +5,7 @@
  * Features: auto task-number, taskType (TASK/BUG/FEAT/IMP), assignedTo
  * Search by name, number, assignee, or tag.  Default assignee: Dev Ibrahim Hamed
  */
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { LucideIcon } from 'lucide-react';
 import {
@@ -21,7 +21,14 @@ import {
 import type {
   UserTask, TaskStatus, TaskPriority, TaskCategory, TaskType,
 } from './task.types';
-import { getDummyTasks, getNextTaskNumber } from './task.api';
+import {
+  fetchTasks,
+  createTask,
+  updateTask,
+  toggleTaskStatus,
+  updateTaskNotes,
+  deleteTask,
+} from './task.api';
 
 /* ─────────────────────────────────────────────────────────────
    CONSTANTS
@@ -430,7 +437,9 @@ function TaskFormModal({ task, onSave, onClose }: {
 ───────────────────────────────────────────────────────────── */
 export default function TasksPage() {
   const navigate = useNavigate();
-  const [tasks, setTasks] = useState<UserTask[]>(getDummyTasks);
+  const [tasks, setTasks] = useState<UserTask[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   // Filters
   const [statusFilter, setStatusFilter] = useState<TaskStatus | 'all'>('all');
@@ -443,71 +452,99 @@ export default function TasksPage() {
   // Modal state: undefined = closed, null = add, UserTask = edit
   const [modalTask, setModalTask] = useState<Partial<UserTask> | null | undefined>(undefined);
 
+  /* ── Load tasks from backend ── */
+  const loadTasks = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetchTasks({ limit: 200, page: 1 });
+      setTasks(res.data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadTasks();
+  }, [loadTasks]);
+
   /* ── Handlers ── */
-  const handleToggle = useCallback((id: string) => {
-    setTasks(prev => prev.map(t => {
-      if (t._id !== id) return t;
-      const idx = STATUS_CYCLE.indexOf(t.status);
-      const next = STATUS_CYCLE[(idx + 1) % STATUS_CYCLE.length];
-      return {
-        ...t,
-        status: next,
-        completedAt: next === 'done' ? new Date().toISOString() : null,
-        updatedAt: new Date().toISOString(),
-      };
-    }));
-  }, []);
+  const handleToggle = useCallback(async (id: string) => {
+    const task = tasks.find(t => t._id === id);
+    if (!task) return;
+    const idx = STATUS_CYCLE.indexOf(task.status);
+    const next = STATUS_CYCLE[(idx + 1) % STATUS_CYCLE.length];
+    // Optimistic update
+    setTasks(prev => prev.map(t => t._id === id
+      ? { ...t, status: next, completedAt: next === 'done' ? new Date().toISOString() : null, updatedAt: new Date().toISOString() }
+      : t
+    ));
+    try {
+      await toggleTaskStatus(id, next);
+    } catch {
+      // Revert on failure
+      setTasks(prev => prev.map(t => t._id === id ? task : t));
+    }
+  }, [tasks]);
 
-  const handleDelete = useCallback((id: string) => {
+  const handleDelete = useCallback(async (id: string) => {
+    const snapshot = tasks;
     setTasks(prev => prev.filter(t => t._id !== id));
-  }, []);
+    try {
+      await deleteTask(id);
+    } catch {
+      setTasks(snapshot);
+    }
+  }, [tasks]);
 
-  const handleUpdateNotes = useCallback((id: string, notes: string) => {
+  const handleUpdateNotes = useCallback(async (id: string, notes: string) => {
+    const snapshot = tasks;
     setTasks(prev => prev.map(t => t._id === id ? { ...t, notes, updatedAt: new Date().toISOString() } : t));
-  }, []);
+    try {
+      await updateTaskNotes(id, notes);
+    } catch {
+      setTasks(snapshot);
+    }
+  }, [tasks]);
 
-  const handleSaveModal = useCallback((data: Partial<UserTask>) => {
-    const now = new Date().toISOString();
-    if (data._id) {
-      // ── EDIT existing
-      setTasks(prev => prev.map(t => t._id === data._id ? {
-        ...t,
-        title: data.title ?? t.title,
-        description: data.description,
-        priority: data.priority ?? t.priority,
-        category: data.category ?? t.category,
-        taskType: data.taskType ?? t.taskType,
-        assignedTo: data.assignedTo ?? t.assignedTo,
-        dueDate: data.dueDate,
-        tags: data.tags ?? t.tags,
-        updatedAt: now,
-      } : t));
-    } else {
-      // ── ADD new
-      const task: UserTask = {
-        _id: `local-${Date.now()}`,
-        userId: 'u1',
-        taskNumber: getNextTaskNumber(),
-        taskType: data.taskType ?? 'task',
-        assignedTo: data.assignedTo ?? DEFAULT_ASSIGNEE,
-        title: data.title ?? 'Untitled',
-        description: data.description,
-        status: 'todo',
-        priority: data.priority ?? 'medium',
-        category: data.category ?? 'project',
-        tags: data.tags ?? [],
-        dueDate: data.dueDate,
-        completedAt: null,
-        notes: '',
-        attachments: [],
-        isArchived: false,
-        createdAt: now,
-        updatedAt: now,
-      };
-      setTasks(prev => [task, ...prev]);
+  const handleSaveModal = useCallback(async (data: Partial<UserTask>) => {
+    try {
+      if (data._id) {
+        // ── EDIT existing
+        const res = await updateTask(data._id, {
+          title: data.title,
+          description: data.description,
+          priority: data.priority,
+          category: data.category,
+          taskType: data.taskType,
+          assignedTo: data.assignedTo,
+          dueDate: data.dueDate,
+          tags: data.tags,
+        });
+        setTasks(prev => prev.map(t => t._id === data._id ? res.data : t));
+      } else {
+        // ── ADD new
+        const res = await createTask({
+          title: data.title ?? 'Untitled',
+          description: data.description,
+          priority: data.priority ?? 'medium',
+          category: data.category ?? 'project',
+          taskType: data.taskType ?? 'task',
+          assignedTo: data.assignedTo ?? DEFAULT_ASSIGNEE,
+          tags: data.tags ?? [],
+          dueDate: data.dueDate,
+        });
+        setTasks(prev => [res.data, ...prev]);
+      }
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Failed to save task');
     }
     setModalTask(undefined);
   }, []);
+
+
 
   /* ── Computed ── */
   const priorityOrder: Record<TaskPriority, number> = useMemo(() => ({ urgent: 0, high: 1, medium: 2, low: 3 }), []);
@@ -572,6 +609,36 @@ export default function TasksPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Loading State */}
+      {loading && (
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center space-y-4">
+            <div className="w-10 h-10 border-4 border-blue-100 border-t-blue-500 rounded-full animate-spin mx-auto" />
+            <p className="text-gray-400 text-sm font-medium">Loading tasks…</p>
+          </div>
+        </div>
+      )}
+
+      {/* Error State */}
+      {!loading && error && (
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center space-y-4 max-w-sm mx-4 bg-white rounded-2xl border border-gray-200 p-8 shadow-sm">
+            <div className="w-12 h-12 rounded-2xl bg-red-50 border border-red-100 flex items-center justify-center mx-auto">
+              <span className="text-red-500 text-2xl">⚠</span>
+            </div>
+            <p className="text-gray-800 font-semibold">Failed to load tasks</p>
+            <p className="text-gray-400 text-sm">{error}</p>
+            <button onClick={loadTasks}
+              className="px-5 py-2 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 transition-all">
+              Retry
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Main Content */}
+      {!loading && !error && (
+      <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-xl border-b border-gray-200 shadow-sm">
         <div className="max-w-3xl mx-auto px-4 py-3 flex items-center gap-3">
@@ -712,6 +779,8 @@ export default function TasksPage() {
       {/* Add / Edit Modal */}
       {modalTask !== undefined && (
         <TaskFormModal task={modalTask} onSave={handleSaveModal} onClose={() => setModalTask(undefined)} />
+      )}
+    </div>
       )}
     </div>
   );
