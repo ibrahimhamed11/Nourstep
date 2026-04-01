@@ -23,20 +23,17 @@ export default function NavbarLogo({ theme }: NavbarLogoProps) {
 
         {/* Glass-like container pill */}
         <div
-          className={`absolute inset-0 rounded-xl transition-all duration-500 ease-out
-            bg-gradient-to-br from-royal/8 to-bright/5 dark:from-bright/8 dark:to-sky/5
-            border border-royal/10 dark:border-bright/12
-            group-hover:border-royal/25 dark:group-hover:border-bright/25
-            group-hover:from-royal/12 group-hover:to-bright/10
-            dark:group-hover:from-bright/12 dark:group-hover:to-sky/10
-            group-hover:shadow-lg group-hover:shadow-royal/10 dark:group-hover:shadow-bright/10
-            backdrop-blur-sm
+          className={`absolute inset-0 rounded-xl transition-all duration-500 ease-out backdrop-blur-sm
+            ${theme === 'dark'
+              ? 'bg-gradient-to-br from-bright/8 to-sky/5 border border-bright/12 group-hover:border-bright/25 group-hover:from-bright/12 group-hover:to-sky/10 group-hover:shadow-lg group-hover:shadow-bright/10'
+              : 'bg-gradient-to-br from-royal/8 to-bright/5 border border-royal/10 group-hover:border-royal/25 group-hover:from-royal/12 group-hover:to-bright/10 group-hover:shadow-lg group-hover:shadow-royal/10'
+            }
             ${mounted ? 'navbar-container-enter' : 'opacity-0'}`}
         />
 
         {/* Breathing border accent — top-left corner highlight */}
         <div className="absolute -inset-px rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 navbar-logo-breathe overflow-hidden">
-          <div className="absolute inset-0 rounded-xl border border-transparent bg-gradient-to-br from-bright/30 via-transparent to-royal/20 dark:from-sky/30 dark:to-bright/20" style={{ WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)', WebkitMaskComposite: 'xor', maskComposite: 'exclude', padding: '1px' }} />
+          <div className={`absolute inset-0 rounded-xl border border-transparent bg-gradient-to-br ${theme === 'dark' ? 'from-sky/30 to-bright/20' : 'from-bright/30 via-transparent to-royal/20'}`} style={{ WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)', WebkitMaskComposite: 'xor', maskComposite: 'exclude', padding: '1px' }} />
         </div>
 
         {/* Logo mark */}
@@ -100,11 +97,13 @@ export default function NavbarLogo({ theme }: NavbarLogoProps) {
 
         {/* Subtitle tagline — per-word wave entrance */}
         <span
-          style={{ fontFamily: "'Noto Kufi Arabic', sans-serif" }}
+          style={{
+            fontFamily: "'Noto Kufi Arabic', sans-serif",
+            color: theme === 'dark' ? 'rgba(214,227,250,0.65)' : '#354968',
+          }}
           className={`mt-1 text-[11px] font-bold uppercase tracking-[0.14em] transition-all duration-500 ease-out
-            text-muted dark:text-lightblue/60
-            group-hover:text-royal dark:group-hover:text-sky
             group-hover:tracking-[0.18em]
+            ${theme === 'dark' ? 'group-hover:text-sky' : 'group-hover:text-royal'}
             ${mounted ? '' : 'opacity-0'}`}
         >
           {mounted && (

@@ -56,15 +56,15 @@ export default function AuthLayout({ lang, children, theme, setLang, setTheme }:
       {/* ── Left Panel ── */}
       <div className="hidden lg:flex lg:w-[45%] xl:w-[42%] relative overflow-hidden dark">
 
-        {/* Background — rich deep blue, not pitch black */}
-        <div className="absolute inset-0 bg-[#0D1F5C]" />
-        <div className="absolute inset-0 bg-[linear-gradient(160deg,#102272_0%,#0D1F5C_45%,#091850_100%)]" />
-        {/* Top royal sweep */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_90%_55%_at_50%_0%,rgba(61,139,255,0.28),transparent)]" />
-        {/* Bottom sky accent */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_45%_at_100%_100%,rgba(91,196,255,0.14),transparent)]" />
-        {/* Floating orb */}
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[420px] h-[300px] bg-[#1B4FD8]/[0.18] rounded-full blur-[90px] animate-float" />
+        {/* Background — deep navy matching the app's dark palette */}
+        <div className="absolute inset-0 bg-[#050D24]" />
+        <div className="absolute inset-0 bg-[linear-gradient(160deg,#0D1D4E_0%,#081840_50%,#050D24_100%)]" />
+        {/* Top royal accent glow */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_0%,rgba(27,79,216,0.35),transparent)]" />
+        {/* Bottom-right sky accent */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_100%_100%,rgba(61,139,255,0.18),transparent)]" />
+        {/* Center soft glow orb */}
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[380px] h-[260px] bg-[#1B4FD8]/[0.14] rounded-full blur-[80px] animate-float" />
 
         <div className="relative z-10 flex flex-col justify-between p-10 xl:p-14 w-full">
 
@@ -73,10 +73,10 @@ export default function AuthLayout({ lang, children, theme, setLang, setTheme }:
 
           {/* Center */}
           <div className="flex-1 flex items-center py-8">
-            <div className="max-w-sm">
+            <div className="max-w-md">
 
               {/* Badge */}
-              <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.1] border border-sky/[0.25] text-[11px] font-semibold text-sky tracking-wide mb-6">
+              <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.08] border border-white/[0.12] text-[11px] font-semibold text-sky tracking-wide mb-6">
                 <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse shadow-[0_0_6px_rgba(34,201,122,0.6)]" />
                 {lang === 'ar' ? 'منصة تعليمية متكاملة' : 'All-in-One EdTech Platform'}
               </span>
@@ -97,7 +97,7 @@ export default function AuthLayout({ lang, children, theme, setLang, setTheme }:
               </h1>
 
               {/* Subtitle */}
-              <p className="text-white/70 text-sm xl:text-base leading-relaxed mb-8">
+              <p className="text-white/60 text-sm xl:text-base leading-relaxed mb-8">
                 {lang === 'ar'
                   ? 'المنظومة المتكاملة التي توحّد المعلمين والطلاب وأولياء الأمور — مدعومة بالذكاء الاصطناعي.'
                   : 'The ecosystem uniting teachers, students, and parents — powered by AI.'}
@@ -108,13 +108,13 @@ export default function AuthLayout({ lang, children, theme, setLang, setTheme }:
                 {features.map((f, i) => {
                   const Icon = f.icon;
                   return (
-                    <div key={i} className="flex items-center gap-3 px-3.5 py-3 rounded-xl bg-white/[0.08] border border-white/[0.12] hover:bg-white/[0.12] transition-colors duration-200">
-                      <div className="w-8 h-8 rounded-lg bg-[#1B4FD8]/30 border border-sky/[0.25] flex items-center justify-center shrink-0">
+                    <div key={i} className="flex items-center gap-3 px-3.5 py-3 rounded-xl bg-white/[0.05] border border-white/[0.08] hover:bg-white/[0.09] transition-colors duration-200">
+                      <div className="w-8 h-8 rounded-lg bg-[#1B4FD8]/25 border border-bright/[0.2] flex items-center justify-center shrink-0">
                         <Icon size={14} className="text-sky" />
                       </div>
                       <div>
-                        <p className="text-[13px] font-semibold text-white">{f.title}</p>
-                        <p className="text-[11px] text-white/55">{f.desc}</p>
+                        <p className="text-[13px] font-semibold text-white/90">{f.title}</p>
+                        <p className="text-[11px] text-white/45">{f.desc}</p>
                       </div>
                     </div>
                   );
@@ -148,16 +148,16 @@ export default function AuthLayout({ lang, children, theme, setLang, setTheme }:
 
       {/* ── Right Panel: Auth Form ── */}
       <div className={`flex-1 flex flex-col min-h-screen relative ${isDark ? 'bg-[#050D24]' : 'bg-[#F5F7FF]'}`}>
-        {/* Unified subtle background — matches Hero section patterns */}
+        {/* Unified subtle background — consistent with left panel dark navy */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          {/* Dark mode: subtle gradient matching Hero dark bg */}
+          {/* Dark mode: very subtle tonal gradient */}
           {isDark && (
-            <div className="absolute inset-0 bg-gradient-to-b from-[#050D24] via-[#081840] to-[#050D24] opacity-30" />
+            <div className="absolute inset-0 bg-gradient-to-br from-[#081840]/40 via-[#050D24] to-[#050D24]" />
           )}
-          {/* Light mode: soft radials matching Hero light bg */}
+          {/* Light mode: soft radials */}
           {!isDark && (
             <>
-              <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-5%,rgba(27,79,216,0.08),transparent)]" />
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-5%,rgba(27,79,216,0.07),transparent)]" />
               <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_80%_80%,rgba(91,196,255,0.04),transparent)]" />
             </>
           )}
