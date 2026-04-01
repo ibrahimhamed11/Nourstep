@@ -1,4 +1,6 @@
 import type { I18n } from './types';
+import type { LucideIcon } from 'lucide-react';
+import { GraduationCap, BookOpen, Users } from 'lucide-react';
 
 /* ─── User Roles ─── */
 export type UserRole = 'teacher' | 'student' | 'parent';
@@ -92,7 +94,7 @@ export interface AuthResponse {
 /* ─── Role Display Info ─── */
 export interface RoleOption {
   role: UserRole;
-  icon: string;
+  icon: LucideIcon;
   label: I18n<string>;
   description: I18n<string>;
   color: string;
@@ -101,7 +103,7 @@ export interface RoleOption {
 export const ROLE_OPTIONS: RoleOption[] = [
   {
     role: 'teacher',
-    icon: '👨‍🏫',
+    icon: GraduationCap,
     label: { en: 'Teacher', ar: 'معلم' },
     description: {
       en: 'Create courses, track student progress, and build your professional profile',
@@ -111,7 +113,7 @@ export const ROLE_OPTIONS: RoleOption[] = [
   },
   {
     role: 'student',
-    icon: '👨‍🎓',
+    icon: BookOpen,
     label: { en: 'Student', ar: 'طالب' },
     description: {
       en: 'Access courses, get AI study help, and track your learning journey',
@@ -121,7 +123,7 @@ export const ROLE_OPTIONS: RoleOption[] = [
   },
   {
     role: 'parent',
-    icon: '👨‍👩‍👧',
+    icon: Users,
     label: { en: 'Parent', ar: 'ولي أمر' },
     description: {
       en: "Monitor your child's progress, get grade reports and instant alerts",

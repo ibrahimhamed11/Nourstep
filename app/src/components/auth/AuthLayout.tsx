@@ -1,6 +1,5 @@
 /**
  * AuthLayout — shared layout for all auth pages.
- * Full-screen split: left = immersive branding, right = glassmorphic form.
  */
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -54,124 +53,118 @@ export default function AuthLayout({ lang, children, theme, setLang, setTheme }:
         isDark ? 'dark' : ''
       }`}
     >
-      {/* ── Left Panel: Immersive Branding (hidden on mobile) ── */}
-      <div className="hidden lg:flex lg:w-[45%] xl:w-[42%] relative overflow-hidden">
-        {/* Layered gradient background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0a1e5e] via-royal to-[#1444B8]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_20%_120%,rgba(61,139,255,0.3),transparent)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_80%_-10%,rgba(91,196,255,0.15),transparent)]" />
+      {/* ── Left Panel ── */}
+      <div className="hidden lg:flex lg:w-[45%] xl:w-[42%] relative overflow-hidden dark">
 
-        {/* Animated mesh pattern */}
-        <div className="absolute inset-0 opacity-[0.03]" style={{
-          backgroundImage: `radial-gradient(circle at 1px 1px, white 1px, transparent 0)`,
-          backgroundSize: '32px 32px',
-        }} />
-
-        {/* Floating orbs */}
-        <div className="absolute top-16 left-8 w-64 h-64 bg-white/[0.04] rounded-full blur-3xl animate-float" />
-        <div className="absolute bottom-24 right-12 w-80 h-80 bg-sky/[0.06] rounded-full blur-[80px]" style={{ animationDelay: '2s', animationDuration: '8s' }} />
-        <div className="absolute top-1/2 left-1/3 w-48 h-48 bg-bright/[0.05] rounded-full blur-[60px]" style={{ animationDelay: '4s', animationDuration: '10s' }} />
-
-        {/* Decorative grid lines */}
-        <div className="absolute top-0 left-[20%] w-px h-full bg-gradient-to-b from-transparent via-white/[0.06] to-transparent" />
-        <div className="absolute top-0 left-[60%] w-px h-full bg-gradient-to-b from-transparent via-white/[0.04] to-transparent" />
+        {/* Background — rich deep blue, not pitch black */}
+        <div className="absolute inset-0 bg-[#0D1F5C]" />
+        <div className="absolute inset-0 bg-[linear-gradient(160deg,#102272_0%,#0D1F5C_45%,#091850_100%)]" />
+        {/* Top royal sweep */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_90%_55%_at_50%_0%,rgba(61,139,255,0.28),transparent)]" />
+        {/* Bottom sky accent */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_45%_at_100%_100%,rgba(91,196,255,0.14),transparent)]" />
+        {/* Floating orb */}
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[420px] h-[300px] bg-[#1B4FD8]/[0.18] rounded-full blur-[90px] animate-float" />
 
         <div className="relative z-10 flex flex-col justify-between p-10 xl:p-14 w-full">
+
           {/* Logo */}
-          <div className={`transition-all duration-700 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}`}>
-            <NavbarLogo theme="dark" />
-          </div>
+          <NavbarLogo theme="dark" />
 
-          {/* Center content */}
+          {/* Center */}
           <div className="flex-1 flex items-center py-8">
-            <div className="max-w-md">
-              {/* Eyebrow badge */}
-              <div className={`transition-all duration-700 delay-200 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-                <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.08] border border-white/[0.1] text-xs font-semibold text-sky tracking-wide backdrop-blur-sm mb-6">
-                  <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
-                  {lang === 'ar' ? 'منصة تعليمية متكاملة' : 'All-in-One EdTech Platform'}
-                </span>
-              </div>
+            <div className="max-w-sm">
 
-              {/* Main headline */}
-              <h1 className={`text-3xl xl:text-[2.5rem] font-heading font-bold text-white leading-[1.2] mb-4 transition-all duration-700 delay-300 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
-                {lang === 'ar'
-                  ? 'حيث يلتقي التعليم بالابتكار'
-                  : 'Where Education Meets Innovation'}
+              {/* Badge */}
+              <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.1] border border-sky/[0.25] text-[11px] font-semibold text-sky tracking-wide mb-6">
+                <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse shadow-[0_0_6px_rgba(34,201,122,0.6)]" />
+                {lang === 'ar' ? 'منصة تعليمية متكاملة' : 'All-in-One EdTech Platform'}
+              </span>
+
+              {/* Headline */}
+              <h1 className="text-3xl xl:text-4xl font-heading font-bold leading-snug mb-4">
+                {lang === 'ar' ? (
+                  <>
+                    <span className="text-gradient">حيث يلتقي التعليم</span>
+                    <span className="block text-white">بالابتكار</span>
+                  </>
+                ) : (
+                  <>
+                    <span className="text-gradient">Where Education</span>
+                    <span className="block text-white">Meets Innovation</span>
+                  </>
+                )}
               </h1>
 
-              <p className={`text-white/60 text-base xl:text-lg leading-relaxed mb-10 transition-all duration-700 delay-400 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
+              {/* Subtitle */}
+              <p className="text-white/70 text-sm xl:text-base leading-relaxed mb-8">
                 {lang === 'ar'
                   ? 'المنظومة المتكاملة التي توحّد المعلمين والطلاب وأولياء الأمور — مدعومة بالذكاء الاصطناعي.'
                   : 'The ecosystem uniting teachers, students, and parents — powered by AI.'}
               </p>
 
-              {/* Feature pills */}
-              <div className="space-y-3">
+              {/* Features */}
+              <div className="space-y-2.5">
                 {features.map((f, i) => {
                   const Icon = f.icon;
                   return (
-                    <div
-                      key={i}
-                      className={`flex items-center gap-3.5 p-3.5 rounded-xl bg-white/[0.05] border border-white/[0.07] backdrop-blur-sm transition-all duration-700 hover:bg-white/[0.08] hover:border-white/[0.12] ${
-                        mounted ? 'opacity-100 translate-x-0' : `opacity-0 ${isRTL ? 'translate-x-6' : '-translate-x-6'}`
-                      }`}
-                      style={{ transitionDelay: `${500 + i * 100}ms` }}
-                    >
-                      <div className="w-9 h-9 rounded-lg bg-white/[0.08] flex items-center justify-center shrink-0">
-                        <Icon size={16} className="text-sky" />
+                    <div key={i} className="flex items-center gap-3 px-3.5 py-3 rounded-xl bg-white/[0.08] border border-white/[0.12] hover:bg-white/[0.12] transition-colors duration-200">
+                      <div className="w-8 h-8 rounded-lg bg-[#1B4FD8]/30 border border-sky/[0.25] flex items-center justify-center shrink-0">
+                        <Icon size={14} className="text-sky" />
                       </div>
                       <div>
-                        <p className="text-sm font-semibold text-white/90">{f.title}</p>
-                        <p className="text-xs text-white/40">{f.desc}</p>
+                        <p className="text-[13px] font-semibold text-white">{f.title}</p>
+                        <p className="text-[11px] text-white/55">{f.desc}</p>
                       </div>
                     </div>
                   );
                 })}
               </div>
 
-              {/* Trust indicators */}
-              <div className={`flex items-center gap-6 mt-8 transition-all duration-700 delay-700 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-success shadow-[0_0_8px_rgba(34,201,122,0.4)]" />
-                  <span className="text-white/50 text-xs font-medium">
-                    {lang === 'ar' ? '٦٠+ مسجل مبكر' : '60+ early signups'}
-                  </span>
+              {/* Trust */}
+              <div className="flex items-center gap-5 mt-7 pt-5 border-t border-white/[0.1]">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-1.5 h-1.5 rounded-full bg-success shadow-[0_0_6px_rgba(34,201,122,0.5)]" />
+                  <span className="text-[11px] text-white/60">{lang === 'ar' ? '٦٠+ مسجل مبكر' : '60+ early signups'}</span>
                 </div>
-                <div className="w-px h-3 bg-white/10" />
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-sky shadow-[0_0_8px_rgba(91,196,255,0.4)]" />
-                  <span className="text-white/50 text-xs font-medium">
-                    {lang === 'ar' ? 'مجاني للمعلمين' : 'Free for educators'}
-                  </span>
+                <div className="w-px h-3 bg-white/15" />
+                <div className="flex items-center gap-1.5">
+                  <div className="w-1.5 h-1.5 rounded-full bg-sky shadow-[0_0_6px_rgba(91,196,255,0.5)]" />
+                  <span className="text-[11px] text-white/60">{lang === 'ar' ? 'مجاني للمعلمين' : 'Free for educators'}</span>
                 </div>
               </div>
+
             </div>
           </div>
 
-          {/* Bottom copyright */}
-          <div className={`flex items-center justify-between transition-all duration-700 delay-800 ${mounted ? 'opacity-100' : 'opacity-0'}`}>
-            <p className="text-white/20 text-xs">
-              © 2026 NourStep — خطوة للنور
-            </p>
-            <div className="flex items-center gap-1">
-              <div className="w-1.5 h-1.5 rounded-full bg-success/60" />
-              <span className="text-white/20 text-[10px]">
-                {lang === 'ar' ? 'جميع الحقوق محفوظة' : 'All rights reserved'}
-              </span>
-            </div>
+          {/* Footer */}
+          <div className="flex items-center justify-between">
+            <p className="text-[11px] text-white/30">© 2026 NourStep — خطوة للنور</p>
+            <span className="text-[10px] text-white/30">{lang === 'ar' ? 'جميع الحقوق محفوظة' : 'All rights reserved'}</span>
           </div>
+
         </div>
       </div>
 
       {/* ── Right Panel: Auth Form ── */}
-      <div className={`flex-1 flex flex-col min-h-screen relative ${isDark ? 'bg-[#050D24]' : 'bg-[#F8FAFF]'}`}>
-        {/* Unified subtle background — consistent across all pages */}
+      <div className={`flex-1 flex flex-col min-h-screen relative ${isDark ? 'bg-[#050D24]' : 'bg-[#F5F7FF]'}`}>
+        {/* Unified subtle background — matches Hero section patterns */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          {/* Top-left soft glow */}
-          <div className={`absolute -top-32 ${isRTL ? '-right-32' : '-left-32'} w-[400px] h-[400px] rounded-full blur-[120px] ${isDark ? 'bg-royal/[0.06]' : 'bg-royal/[0.04]'}`} />
-          {/* Bottom-right soft glow */}
-          <div className={`absolute -bottom-24 ${isRTL ? '-left-24' : '-right-24'} w-[350px] h-[350px] rounded-full blur-[100px] ${isDark ? 'bg-bright/[0.04]' : 'bg-bright/[0.03]'}`} />
+          {/* Dark mode: subtle gradient matching Hero dark bg */}
+          {isDark && (
+            <div className="absolute inset-0 bg-gradient-to-b from-[#050D24] via-[#081840] to-[#050D24] opacity-30" />
+          )}
+          {/* Light mode: soft radials matching Hero light bg */}
+          {!isDark && (
+            <>
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-5%,rgba(27,79,216,0.08),transparent)]" />
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_80%_80%,rgba(91,196,255,0.04),transparent)]" />
+            </>
+          )}
+          {/* Top soft glow */}
+          <div className={`absolute -top-32 ${isRTL ? '-right-32' : '-left-32'} w-[400px] h-[400px] rounded-full blur-[120px] ${isDark ? 'bg-[#1B4FD8]/[0.06]' : 'bg-[#1B4FD8]/[0.04]'}`} />
+          {/* Bottom soft glow */}
+          <div className={`absolute -bottom-24 ${isRTL ? '-left-24' : '-right-24'} w-[350px] h-[350px] rounded-full blur-[100px] ${isDark ? 'bg-[#3D8BFF]/[0.04]' : 'bg-[#3D8BFF]/[0.03]'}`} />
           {/* Very subtle dot grid for texture */}
           <div className={`absolute inset-0 ${isDark ? 'opacity-[0.015]' : 'opacity-[0.025]'}`} style={{
             backgroundImage: 'radial-gradient(circle at 1px 1px, currentColor 0.5px, transparent 0)',

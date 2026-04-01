@@ -109,7 +109,7 @@ export default function RegisterPage({ lang, theme, setLang, setTheme }: Props) 
         {/* Header with role badge */}
         <div className="text-center mb-6">
           <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-xl bg-gradient-to-r from-royal/6 to-bright/6 dark:from-bright/6 dark:to-sky/6 border border-royal/10 dark:border-bright/10 mb-4 backdrop-blur-sm">
-            <span className="text-lg">{roleInfo.icon}</span>
+            <roleInfo.icon size={16} className="text-royal dark:text-sky shrink-0" />
             <span className="text-[13px] font-bold text-royal dark:text-sky tracking-wide">
               {t.continueAs} {roleInfo.label[lang]}
             </span>

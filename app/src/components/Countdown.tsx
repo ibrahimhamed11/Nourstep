@@ -72,7 +72,7 @@ const txt: I18n<Txt> = {
     whatsappSame: 'WhatsApp is same as phone',
     whatsappLabel: 'WhatsApp Number', whatsappPH: 'Enter your WhatsApp number',
     locationLabel: 'Location', locationPH: 'Enter your city / area',
-    successMsg: 'You\'re on the list! We\'ll notify you at launch 🚀',
+    successMsg: 'You\'re on the list! We\'ll notify you at launch',
     dupPhone: 'This phone number is already registered',
     netErr: 'Connection error. Please try again.',
     rateErr: 'Too many attempts. Please try again later.',
@@ -110,7 +110,7 @@ const txt: I18n<Txt> = {
     whatsappSame: 'واتساب نفس رقم الهاتف',
     whatsappLabel: 'رقم الواتساب', whatsappPH: 'أدخل رقم الواتساب',
     locationLabel: 'الموقع', locationPH: 'أدخل مدينتك / منطقتك',
-    successMsg: 'تم التسجيل بنجاح! سنُبلغك فور الإطلاق 🚀',
+    successMsg: 'تم التسجيل بنجاح! سنُبلغك فور الإطلاق',
     dupPhone: 'رقم الهاتف مسجّل بالفعل',
     netErr: 'خطأ في الاتصال. حاول مرة أخرى.',
     rateErr: 'محاولات كثيرة. حاول مرة أخرى لاحقًا.',
@@ -439,7 +439,7 @@ export default function Countdown({ lang }: { lang: Lang }) {
                 {/* API Error */}
                 {apiError && (
                   <div className="flex items-center gap-2 p-2.5 rounded-lg bg-error/5 border border-error/10 text-error text-[13px]">
-                    <span className="shrink-0">⚠️</span>
+                    <AlertTriangle size={14} className="shrink-0" />
                     {apiError}
                   </div>
                 )}

@@ -4,9 +4,8 @@
  */
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { GraduationCap, BookOpen, Users, ChevronRight, ChevronLeft, UserPlus } from 'lucide-react';
+import { ChevronRight, ChevronLeft, UserPlus } from 'lucide-react';
 import type { Lang, Theme } from '../../types';
-import type { LucideIcon } from 'lucide-react';
 import { authI18n } from '../../auth.i18n';
 import { ROLE_OPTIONS } from '../../auth.types';
 import AuthLayout from './AuthLayout';
@@ -17,12 +16,6 @@ interface Props {
   setLang?: (l: Lang) => void;
   setTheme?: (t: Theme) => void;
 }
-
-const roleIcons: Record<string, LucideIcon> = {
-  teacher: GraduationCap,
-  student: BookOpen,
-  parent: Users,
-};
 
 export default function RegisterTypePage({ lang, theme, setLang, setTheme }: Props) {
   const t = authI18n[lang];
@@ -52,7 +45,7 @@ export default function RegisterTypePage({ lang, theme, setLang, setTheme }: Pro
         {/* Role Cards */}
         <div className="space-y-3">
           {ROLE_OPTIONS.map((option, i) => {
-            const Icon = roleIcons[option.role] || GraduationCap;
+            const Icon = option.icon;
 
             const colorConfig: Record<string, {
               border: string;
