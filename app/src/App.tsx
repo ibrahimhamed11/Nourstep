@@ -27,6 +27,7 @@ const ResetPasswordPage = lazy(() => import('./components/auth/ResetPasswordPage
 const BusinessPage = lazy(() => import('./components/BusinessPage'));
 const ModuleDetailPage = lazy(() => import('./components/ModuleDetailPage'));
 const RoadmapPage = lazy(() => import('./components/RoadmapPage'));
+const TasksPage = lazy(() => import('./modules/tasks/TasksPage'));
 
 /** Minimal placeholder for lazy sections */
 const SectionFallback = () => <div className="min-h-[30vh]" />;
@@ -132,6 +133,16 @@ function App() {
           element={
             <Suspense fallback={<SectionFallback />}>
               <RoadmapPage />
+            </Suspense>
+          }
+        />
+
+        {/* ── Tasks Module Route ── */}
+        <Route
+          path="/tasks"
+          element={
+            <Suspense fallback={<SectionFallback />}>
+              <TasksPage />
             </Suspense>
           }
         />
