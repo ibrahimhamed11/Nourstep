@@ -1,28 +1,33 @@
 /**
- * RoadmapPage — 2-Month Sprint Roadmap to Launch + Full CRUD Task Manager
+ * RoadmapPage — 2-Month Sprint Roadmap
  * Route: /roadmap
  *
- * Features:
- *  - Add / Edit / Delete tasks
- *  - Click status to mark done / in-progress / todo / blocked
- *  - AssignedTo (default "Dev Ibrahim Hamed")
- *  - Search by name, number, TASK-3, tag
- *  - Filter by status (done, todo, in-progress, blocked)
- *  - Filter by tag (frontend, backend, mobile, firebase, aws, etc.)
- *  - Filter by track
- *  - Auto-generated IDs (TASK-1, BUG-5, FEAT-12, IMP-3)
- *  - Tags on tasks: Frontend, Backend, Mobile, Firebase, AWS, etc (no emoji)
- *  - Board / Table / Parallel views
+ * Data is fetched from: GET /api/v1/roadmap/tasks
+ * All CRUD ops hit the real backend (no static data).
  *
- * Backend = NOT started | Mobile = NOT started (React Native CLI)
- * Website = only frontend done (landing + auth UI)
+ * Features:
+ *  - Loads tasks from backend on mount
+ *  - Add / Edit / Delete tasks via API
+ *  - Click status to cycle through: todo → in-progress → done → blocked
+ *  - Search by name, number, TASK-3, tag
+ *  - Filter by status / tag / track
+ *  - Board / Table / Parallel views
  */
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import type { RoadmapTask, Track, ViewMode, Week, Status, Tag } from './roadmap/roadmap.types';
 import {
   WEEKS, STATUS_CYCLE, getStats, taskDisplayId, TAG_CONFIG,
 } from './roadmap/roadmap.types';
-import { INITIAL_TASKS, getNextRoadmapTaskNumber } from './roadmap/roadmap.data';
+import {
+  fetchRoadmapTasks,
+  createRoadmapTask,
+  updateRoadmapTask,
+  toggleRoadmapTaskStatus,
+  deleteRoadmapTask,
+  mapBackendTask,
+  generateTaskId,
+  type RoadmapFilters,
+} from './roadmap/roadmap.api';
 
 import RoadmapHeader from './roadmap/RoadmapHeader';
 import RoadmapStats from './roadmap/RoadmapStats';
@@ -32,9 +37,46 @@ import RoadmapParallelView from './roadmap/RoadmapParallelView';
 import RoadmapBottomSummary from './roadmap/RoadmapBottomSummary';
 import RoadmapTaskFormModal from './roadmap/RoadmapTaskFormModal';
 
+// ─── Loading / Error skeletons ─────────────────────────────────────────────────
+
+function LoadingState() {
+  return (
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="text-center space-y-4">
+        <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto" />
+        <p className="text-gray-500 text-sm">Loading roadmap…</p>
+      </div>
+    </div>
+  );
+}
+
+function ErrorState({ message, onRetry }: { message: string; onRetry: () => void }) {
+  return (
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="text-center space-y-4 max-w-sm mx-4">
+        <div className="text-red-500 text-5xl">⚠</div>
+        <p className="text-gray-700 font-semibold">Failed to load roadmap</p>
+        <p className="text-gray-400 text-sm">{message}</p>
+        <button
+          onClick={onRetry}
+          className="px-4 py-2 bg-blue-600 text-white rounded-xl text-sm font-medium hover:bg-blue-700 transition-colors"
+        >
+          Retry
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ─── Component ────────────────────────────────────────────────────────────────
+
 export default function RoadmapPage() {
   /* ── State ── */
-  const [tasks, setTasks] = useState<RoadmapTask[]>(() => [...INITIAL_TASKS]);
+  const [tasks, setTasks] = useState<RoadmapTask[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
+
   const [activeTrack, setActiveTrack] = useState<Track | 'all'>('all');
   const [view, setView] = useState<ViewMode>('board');
   const [searchQuery, setSearchQuery] = useState('');
@@ -44,30 +86,45 @@ export default function RoadmapPage() {
   // Modal: null = closed, {} = add new, { ...task } = edit existing
   const [modalTask, setModalTask] = useState<Partial<RoadmapTask> | null>(null);
 
+  /* ── Fetch all tasks from backend ── */
+  const loadTasks = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const filters: RoadmapFilters = { limit: 200, sortBy: 'week', order: 'asc' };
+      const res = await fetchRoadmapTasks(filters);
+      setTasks(res.data.map(mapBackendTask));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadTasks();
+  }, [loadTasks]);
+
   /* ── Unique tags present in current tasks ── */
   const activeTags = useMemo(() => {
     const tagSet = new Set<Tag>();
     tasks.forEach(t => (t.tags ?? []).forEach(tag => tagSet.add(tag)));
-    // Sort by TAG_CONFIG key order
     const allKeys = Object.keys(TAG_CONFIG) as Tag[];
     return allKeys.filter(k => tagSet.has(k));
   }, [tasks]);
 
-  /* ── Search + Status + Tag + Track Filter ── */
+  /* ── Search + Status + Tag filter (client-side on top of fetched data) ── */
   const filteredTasks = useMemo(() => {
     let result = tasks;
 
-    // Status filter
     if (statusFilter !== 'all') {
       result = result.filter(t => t.status === statusFilter);
     }
 
-    // Tag filter
     if (tagFilter !== 'all') {
       result = result.filter(t => (t.tags ?? []).includes(tagFilter));
     }
 
-    // Search
     if (searchQuery.trim()) {
       const q = searchQuery.trim().toLowerCase();
       result = result.filter(task => {
@@ -77,7 +134,6 @@ export default function RoadmapPage() {
         if (q.startsWith('#') && String(task.taskNumber) === q.slice(1)) return true;
         if (/^\d+$/.test(q) && String(task.taskNumber) === q) return true;
         if (task.assignee.toLowerCase().includes(q)) return true;
-        // Search by tag name
         if ((task.tags ?? []).some(tag => TAG_CONFIG[tag]?.label.toLowerCase().includes(q))) return true;
         return false;
       });
@@ -89,18 +145,44 @@ export default function RoadmapPage() {
   const stats = useMemo(() => getStats(filteredTasks), [filteredTasks]);
 
   /* ── Handlers ── */
-  const handleToggleStatus = useCallback((id: string) => {
-    setTasks(prev => prev.map(t => {
-      if (t.id !== id) return t;
-      const idx = STATUS_CYCLE.indexOf(t.status);
-      const next = STATUS_CYCLE[(idx + 1) % STATUS_CYCLE.length];
-      return { ...t, status: next };
-    }));
-  }, []);
 
-  const handleDelete = useCallback((id: string) => {
+  /** Cycle status: todo → in-progress → done → blocked → todo */
+  const handleToggleStatus = useCallback(async (id: string) => {
+    const task = tasks.find(t => t.id === id);
+    if (!task) return;
+    const idx = STATUS_CYCLE.indexOf(task.status);
+    const nextStatus = STATUS_CYCLE[(idx + 1) % STATUS_CYCLE.length];
+
+    // Optimistic update
+    setTasks(prev => prev.map(t => t.id === id ? { ...t, status: nextStatus } : t));
+
+    try {
+      const apiId = task._id || task.id;
+      await toggleRoadmapTaskStatus(apiId, nextStatus);
+    } catch (err) {
+      // Revert on failure
+      setTasks(prev => prev.map(t => t.id === id ? { ...t, status: task.status } : t));
+      console.error('Failed to toggle status:', err);
+    }
+  }, [tasks]);
+
+  const handleDelete = useCallback(async (id: string) => {
+    const task = tasks.find(t => t.id === id);
+    if (!task) return;
+
+    // Optimistic remove
     setTasks(prev => prev.filter(t => t.id !== id));
-  }, []);
+
+    try {
+      const apiId = task._id || task.id;
+      const ok = await deleteRoadmapTask(apiId);
+      if (!ok) throw new Error('Delete failed');
+    } catch (err) {
+      // Revert
+      setTasks(prev => [...prev, task]);
+      console.error('Failed to delete task:', err);
+    }
+  }, [tasks]);
 
   const handleEdit = useCallback((task: RoadmapTask) => {
     setModalTask(task);
@@ -114,39 +196,66 @@ export default function RoadmapPage() {
     setModalTask({ week });
   }, []);
 
-  const handleSave = useCallback((data: Partial<RoadmapTask>) => {
-    setTasks(prev => {
-      // EDIT — data has id
-      if (data.id) {
-        return prev.map(t => t.id === data.id ? { ...t, ...data } as RoadmapTask : t);
+  const handleSave = useCallback(async (data: Partial<RoadmapTask>) => {
+    setSaving(true);
+    try {
+      if (data.id && data._id) {
+        // ── EDIT ──
+        const res = await updateRoadmapTask(data._id, {
+          title: data.title,
+          desc: data.desc,
+          taskType: data.taskType,
+          status: data.status,
+          track: data.track,
+          week: data.week,
+          estimate: data.estimate,
+          assignee: data.assignee,
+          tags: data.tags,
+          parallel: data.parallel,
+          blockedBy: data.blockedBy,
+        });
+        const updated = mapBackendTask(res.data);
+        setTasks(prev => prev.map(t => t.id === data.id ? updated : t));
+      } else {
+        // ── ADD ──
+        const maxNum = tasks.reduce((m, t) => Math.max(m, t.taskNumber), 0);
+        const tentativeNumber = maxNum + 1;
+        const taskId = generateTaskId(data.taskType ?? 'task', tentativeNumber);
+
+        const res = await createRoadmapTask({
+          taskId,
+          taskType: data.taskType ?? 'task',
+          title: data.title ?? 'Untitled',
+          desc: data.desc ?? '',
+          status: data.status ?? 'todo',
+          track: data.track ?? 'backend',
+          week: data.week ?? 1,
+          estimate: data.estimate ?? '—',
+          assignee: data.assignee ?? 'Dev Ibrahim Hamed',
+          tags: data.tags ?? [],
+          parallel: data.parallel ?? [],
+          blockedBy: data.blockedBy ?? [],
+        });
+        const created = mapBackendTask(res.data);
+        setTasks(prev => [...prev, created]);
       }
-      // ADD — generate new task
-      const nextNumber = getNextRoadmapTaskNumber(prev);
-      const newTask: RoadmapTask = {
-        id: `custom-${Date.now()}`,
-        taskNumber: nextNumber,
-        taskType: data.taskType ?? 'task',
-        title: data.title ?? 'Untitled',
-        desc: data.desc ?? '',
-        status: data.status ?? 'todo',
-        track: data.track ?? 'backend',
-        week: data.week ?? 1,
-        estimate: data.estimate ?? '',
-        assignee: data.assignee ?? 'Dev Ibrahim Hamed',
-        parallel: data.parallel,
-        blockedBy: data.blockedBy,
-        tags: data.tags,
-      };
-      return [...prev, newTask];
-    });
-    setModalTask(null);
-  }, []);
+      setModalTask(null);
+    } catch (err) {
+      console.error('Save failed:', err);
+      alert(err instanceof Error ? err.message : 'Save failed. Please try again.');
+    } finally {
+      setSaving(false);
+    }
+  }, [tasks]);
 
   const handleCloseModal = useCallback(() => {
-    setModalTask(null);
-  }, []);
+    if (!saving) setModalTask(null);
+  }, [saving]);
 
   /* ── Render ── */
+  if (loading) return <LoadingState />;
+  if (error) return <ErrorState message={error} onRetry={loadTasks} />;
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header with search, status filter, tag filter, view toggle */}
@@ -212,6 +321,16 @@ export default function RoadmapPage() {
           onSave={handleSave}
           onClose={handleCloseModal}
         />
+      )}
+
+      {/* ── Saving overlay ── */}
+      {saving && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/20 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl shadow-xl px-8 py-5 flex items-center gap-3">
+            <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+            <span className="text-gray-700 text-sm font-medium">Saving…</span>
+          </div>
+        </div>
       )}
     </div>
   );

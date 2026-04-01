@@ -11,4 +11,4 @@ export { default as RoadmapBottomSummary } from './RoadmapBottomSummary';
 export { default as RoadmapTaskCard } from './RoadmapTaskCard';
 export { default as RoadmapTaskFormModal } from './RoadmapTaskFormModal';
 export * from './roadmap.types';
-export * from './roadmap.data';
+export * from './roadmap.api';

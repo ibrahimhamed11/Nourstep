@@ -20,7 +20,10 @@ export type Tag = 'frontend' | 'backend' | 'mobile' | 'devops' | 'firebase' | 'a
 export const DEFAULT_ASSIGNEE = 'Dev Ibrahim Hamed';
 
 export interface RoadmapTask {
+  /** Frontend display id e.g. "b1-1" or "TASK-42" */
   id: string;
+  /** MongoDB _id from backend (set when loaded from API) */
+  _id?: string;
   taskNumber: number;
   taskType: TaskType;
   title: string;
