@@ -2,6 +2,7 @@ import { m } from 'framer-motion';
 import { Brain, BadgeCheck, BarChart3, BookOpenCheck, Gamepad2, MessageCircle } from 'lucide-react';
 import type { Lang, I18n } from '../types';
 import type { LucideIcon } from 'lucide-react';
+import { fontSize, textColor, spacing, eyebrowStyle, sectionHeadingStyle, cardTitleStyle, cardDescStyle } from '../design-tokens';
 
 interface FeatureItem {
   icon: LucideIcon;
@@ -97,27 +98,27 @@ export default function Features({ lang }: { lang: Lang }) {
   const t = content[lang];
 
   return (
-    <section id="features" className="relative py-20 md:py-28 px-6 bg-navy">
-      <div className="max-w-5xl mx-auto">
+    <section id="features" className={`relative ${spacing.sectionY} ${spacing.sectionX} bg-navy`}>
+      <div className={spacing.maxWidth}>
         {/* Header */}
         <m.div
           initial={{ opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-60px' }}
           transition={{ duration: 0.4 }}
-          className="mb-14"
+          className={spacing.sectionGap}
         >
-          <p className="text-xs font-semibold uppercase tracking-widest text-royal dark:text-bright/60 mb-3">
+          <p className={`${eyebrowStyle} ${textColor.eyebrowSoft}`}>
             {t.eyebrow}
           </p>
-          <h2 className="text-2xl md:text-3xl lg:text-4xl font-heading font-bold text-heading">
+          <h2 className={sectionHeadingStyle}>
             {t.title}
           </h2>
-          <p className="text-muted text-[15px] mt-3 max-w-md">{t.subtitle}</p>
+          <p className={`${fontSize.body} ${textColor.muted} mt-3 max-w-md`}>{t.subtitle}</p>
         </m.div>
 
         {/* 3-column grid — clean cards, no gradient accent lines */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
+        <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 ${spacing.gridGap}`}>
           {t.features.map((feature, i) => {
             const Icon = feature.icon;
             return (
@@ -127,13 +128,13 @@ export default function Features({ lang }: { lang: Lang }) {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.05, duration: 0.35 }}
-                className="group p-6 rounded-xl bg-surface/50 dark:bg-card-dark/60 border border-border/40 hover:border-border/70 transition-colors duration-200"
+                className="group p-5 rounded-xl bg-surface/50 dark:bg-card-dark/60 border border-border/40 hover:border-royal/20 dark:hover:border-bright/20 hover:shadow-lg hover:shadow-royal/5 dark:hover:shadow-black/10 hover:-translate-y-1 transition-all duration-300"
               >
-                <div className="w-9 h-9 rounded-lg bg-royal/6 dark:bg-bright/6 flex items-center justify-center mb-4">
+                <div className="w-9 h-9 rounded-lg bg-royal/8 dark:bg-bright/8 flex items-center justify-center mb-3.5 group-hover:scale-110 transition-transform duration-300">
                   <Icon size={18} className="text-royal dark:text-bright/80" />
                 </div>
-                <h3 className="text-[15px] font-semibold text-heading mb-2">{feature.title}</h3>
-                <p className="text-[13px] text-muted leading-[1.65]">{feature.description}</p>
+                <h3 className={`${cardTitleStyle} mb-2`}>{feature.title}</h3>
+                <p className={cardDescStyle}>{feature.description}</p>
               </m.div>
             );
           })}

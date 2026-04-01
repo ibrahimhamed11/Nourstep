@@ -1,6 +1,7 @@
 import { m } from 'framer-motion';
 import { Smartphone, Bell, Zap, Shield, Globe, Fingerprint, CalendarClock } from 'lucide-react';
 import type { Lang, I18n } from '../types';
+import { fontSize, textColor, spacing, eyebrowStyle, sectionHeadingStyle } from '../design-tokens';
 
 interface AppFeature {
   icon: typeof Smartphone;
@@ -123,9 +124,9 @@ export default function MobileApp({ lang }: { lang: Lang }) {
   const t = content[lang];
 
   return (
-    <section id="mobile-app" className="relative py-20 md:py-28 px-6 bg-surface dark:bg-navy overflow-hidden">
-      <div className="max-w-5xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 lg:gap-16 items-center">
+    <section id="mobile-app" className={`relative ${spacing.sectionY} ${spacing.sectionX} bg-surface dark:bg-navy overflow-hidden`}>
+      <div className={spacing.maxWidth}>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center">
           {/* Text */}
           <m.div
             initial={{ opacity: 0, y: 16 }}
@@ -134,17 +135,17 @@ export default function MobileApp({ lang }: { lang: Lang }) {
             transition={{ duration: 0.45 }}
             className="order-2 lg:order-1"
           >
-            <p className="text-xs font-semibold uppercase tracking-widest text-royal dark:text-bright/60 mb-3">
+            <p className={`${eyebrowStyle} ${textColor.eyebrowSoft}`}>
               {t.eyebrow}
             </p>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-heading font-bold text-heading mb-3">
+            <h2 className={`${sectionHeadingStyle} mb-3`}>
               {t.title}{' '}
               <span className="text-gradient">{t.titleHighlight}</span>
             </h2>
-            <p className="text-[15px] text-muted leading-[1.7] mb-8 max-w-md">{t.subtitle}</p>
+            <p className={`${fontSize.body} ${textColor.muted} leading-[1.7] mb-6 max-w-md`}>{t.subtitle}</p>
 
             {/* Feature checklist */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 mb-6">
               {t.features.map((feat, i) => {
                 const Icon = feat.icon;
                 return (
@@ -156,8 +157,8 @@ export default function MobileApp({ lang }: { lang: Lang }) {
                     transition={{ delay: 0.08 + i * 0.04, duration: 0.3 }}
                     className="flex items-center gap-2.5 py-2 px-3 rounded-lg hover:bg-royal/[0.03] dark:hover:bg-bright/[0.03] transition-colors"
                   >
-                    <Icon size={14} className="text-royal/50 dark:text-bright/40 shrink-0" />
-                    <span className="text-[13px] text-muted">{feat.text}</span>
+                    <Icon size={14} className="text-royal/60 dark:text-bright/50 shrink-0" />
+                    <span className={`${fontSize.small} ${textColor.muted}`}>{feat.text}</span>
                   </m.div>
                 );
               })}

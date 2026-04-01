@@ -4,6 +4,7 @@ import { Rocket, Calendar, User, Phone, MapPin, CheckCircle, Crown, Zap, Star, C
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import type { Lang, I18n } from '../types';
+import { fontSize, textColor, spacing, sectionHeadingStyle } from '../design-tokens';
 
 const LAUNCH_DATE = new Date('2026-06-12T00:00:00');
 
@@ -199,29 +200,29 @@ export default function Countdown({ lang }: { lang: Lang }) {
   ];
   const fmt = (v: number) => lang === 'ar' ? toAr(v) : String(v).padStart(2, '0');
 
-  const inputCls = 'w-full px-3.5 py-3 rounded-lg bg-navy/80 dark:bg-navy border border-border/50 text-heading placeholder:text-muted/30 focus:outline-none focus:border-royal dark:focus:border-bright/50 focus:ring-1 focus:ring-royal/15 dark:focus:ring-bright/15 transition-colors text-sm';
-  const inputErr = 'w-full px-3.5 py-3 rounded-lg bg-navy/80 dark:bg-navy border border-error/40 text-heading placeholder:text-muted/30 focus:outline-none focus:border-error focus:ring-1 focus:ring-error/15 transition-colors text-sm';
+  const inputCls = 'w-full px-3.5 py-2.5 rounded-lg bg-navy/80 dark:bg-navy border border-border/50 text-heading placeholder:text-muted/30 focus:outline-none focus:border-royal dark:focus:border-bright/50 focus:ring-2 focus:ring-royal/15 dark:focus:ring-bright/15 transition-all text-sm';
+  const inputErr = 'w-full px-3.5 py-2.5 rounded-lg bg-navy/80 dark:bg-navy border border-error/40 text-heading placeholder:text-muted/30 focus:outline-none focus:border-error focus:ring-2 focus:ring-error/15 transition-all text-sm';
 
   return (
-    <section id="countdown" className="relative py-20 md:py-28 px-6 bg-surface dark:bg-darkblue">
-      <div className="max-w-5xl mx-auto">
+    <section id="countdown" className={`relative ${spacing.sectionY} ${spacing.sectionX} bg-surface dark:bg-darkblue`}>
+      <div className={spacing.maxWidth}>
         {/* Header + countdown timer */}
         <m.div
           initial={{ opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-60px' }}
           transition={{ duration: 0.4 }}
-          className="text-center mb-10"
+          className="text-center mb-8"
         >
-          <p className="text-xs font-semibold uppercase tracking-widest text-warning/70 mb-3 flex items-center gap-1.5 justify-center">
+          <p className={`${fontSize.eyebrow} text-warning/80 mb-3 flex items-center gap-1.5 justify-center`}>
             <Rocket size={12} />
             {t.eyebrow}
           </p>
-          <h2 className="text-2xl md:text-3xl lg:text-4xl font-heading font-bold text-heading">
+          <h2 className={sectionHeadingStyle}>
             {t.title}{' '}
             <span className="text-gradient">{t.titleHL}</span>
           </h2>
-          <p className="text-muted text-[15px] mt-3 max-w-md mx-auto">{t.subtitle}</p>
+          <p className={`${fontSize.body} ${textColor.muted} mt-3 max-w-md mx-auto`}>{t.subtitle}</p>
         </m.div>
 
         {/* Timer */}
@@ -230,21 +231,21 @@ export default function Countdown({ lang }: { lang: Lang }) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.35, delay: 0.1 }}
-          className="flex justify-center gap-3 md:gap-4 mb-3"
+          className="flex justify-center gap-3 md:gap-4 mb-2"
         >
           {units.map((u, i) => (
-            <div key={i} className="text-center min-w-[64px] md:min-w-[80px]">
-              <div className="text-3xl md:text-4xl lg:text-5xl font-bold text-heading tabular-nums font-heading leading-none">
+            <div key={i} className="text-center min-w-[60px] md:min-w-[76px]">
+              <div className={`${fontSize.timer} ${textColor.heading} tabular-nums font-heading leading-none bg-navy/30 dark:bg-navy/50 rounded-xl py-2.5 px-1 border border-border/30`}>
                 {fmt(u.val)}
               </div>
-              <div className="text-[10px] md:text-xs text-muted/50 mt-1.5 uppercase tracking-wider font-medium">
+              <div className={`${fontSize.timerLabel} ${textColor.subtle} mt-1.5 uppercase tracking-wider font-medium`}>
                 {u.lbl}
               </div>
             </div>
           ))}
         </m.div>
 
-        <div className="text-center mb-12">
+        <div className="text-center mb-8">
           <span className="inline-flex items-center gap-1.5 text-xs text-muted/40">
             <Calendar size={11} />
             {t.date}
@@ -257,7 +258,7 @@ export default function Countdown({ lang }: { lang: Lang }) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.15, duration: 0.35 }}
-          className="max-w-2xl mx-auto mb-10"
+          className="max-w-2xl mx-auto mb-8"
         >
           <div className="flex items-start gap-4 p-5 rounded-xl bg-warning/[0.04] dark:bg-warning/[0.06] border border-warning/10">
             <AlertTriangle size={18} className="text-warning/60 shrink-0 mt-0.5" />
@@ -268,14 +269,14 @@ export default function Countdown({ lang }: { lang: Lang }) {
                   {t.urgencyBadge}
                 </span>
               </div>
-              <p className="text-sm font-medium text-heading mb-0.5">{t.urgencyTitle}</p>
-              <p className="text-[13px] text-muted leading-relaxed">{t.urgencySub}</p>
+              <p className={`${fontSize.small} font-medium ${textColor.heading} mb-0.5`}>{t.urgencyTitle}</p>
+              <p className={`${fontSize.small} ${textColor.muted} leading-relaxed`}>{t.urgencySub}</p>
             </div>
           </div>
         </m.div>
 
         {/* Two-column: VIP benefits + Form */}
-        <div className="grid md:grid-cols-2 gap-5 md:gap-6 max-w-4xl mx-auto">
+        <div className="grid md:grid-cols-2 gap-4 md:gap-5 max-w-4xl mx-auto">
 
           {/* VIP Benefits */}
           <m.div
@@ -283,9 +284,9 @@ export default function Countdown({ lang }: { lang: Lang }) {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2, duration: 0.4 }}
-            className="p-6 rounded-xl bg-navy/40 dark:bg-navy/50 border border-border/40 h-fit"
+            className="p-5 rounded-xl bg-navy/40 dark:bg-navy/50 border border-border/40 h-fit"
           >
-            <div className="flex items-center gap-2.5 mb-5">
+            <div className="flex items-center gap-2.5 mb-4">
               <div className="w-8 h-8 rounded-lg bg-warning/10 flex items-center justify-center">
                 <Crown size={16} className="text-warning/70" />
               </div>
@@ -293,13 +294,13 @@ export default function Countdown({ lang }: { lang: Lang }) {
                 <span className="text-[10px] font-bold uppercase tracking-wider text-warning/60 flex items-center gap-1">
                   <Star size={8} /> {t.vipBadge}
                 </span>
-                <h3 className="text-[15px] font-bold text-heading leading-tight">{t.vipTitle}</h3>
+                <h3 className={`${fontSize.cardTitle} ${textColor.heading} leading-tight`}>{t.vipTitle}</h3>
               </div>
             </div>
 
-            <p className="text-[13px] text-muted mb-5">{t.vipSub}</p>
+            <p className={`${fontSize.small} ${textColor.muted} mb-4`}>{t.vipSub}</p>
 
-            <ul className="space-y-3">
+            <ul className="space-y-2.5">
               {t.vipBenefits.map((b, i) => (
                 <m.li
                   key={i}
@@ -310,12 +311,12 @@ export default function Countdown({ lang }: { lang: Lang }) {
                   className="flex items-start gap-2.5"
                 >
                   <CheckCircle size={14} className="text-success/60 shrink-0 mt-0.5" />
-                  <span className="text-[13px] text-heading/80 leading-relaxed">{b}</span>
+                  <span className={`${fontSize.small} text-heading/90 leading-relaxed`}>{b}</span>
                 </m.li>
               ))}
             </ul>
 
-            <div className="mt-6 pt-4 border-t border-border/20 text-center">
+            <div className="mt-5 pt-3 border-t border-border/20 text-center">
               <span className="text-[12px] font-medium text-warning/50 flex items-center gap-1.5 justify-center">
                 <Zap size={11} />
                 {t.hurryNote}
@@ -329,9 +330,9 @@ export default function Countdown({ lang }: { lang: Lang }) {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.25, duration: 0.4 }}
-            className="p-6 rounded-xl bg-navy/40 dark:bg-navy/50 border border-border/40"
+            className="p-5 rounded-xl bg-navy/40 dark:bg-navy/50 border border-border/40"
           >
-            <h3 className="text-[15px] font-bold text-heading text-center mb-6">{t.formTitle}</h3>
+            <h3 className={`${fontSize.cardTitle} ${textColor.heading} text-center mb-5`}>{t.formTitle}</h3>
 
             {submitted ? (
               <m.div
@@ -342,14 +343,14 @@ export default function Countdown({ lang }: { lang: Lang }) {
                 <div className="w-12 h-12 rounded-full bg-success/10 flex items-center justify-center mx-auto mb-3">
                   <CheckCircle size={24} className="text-success/70" />
                 </div>
-                <p className="text-sm font-medium text-heading">{t.successMsg}</p>
+                <p className={`${fontSize.small} font-medium ${textColor.heading}`}>{t.successMsg}</p>
               </m.div>
             ) : (
-              <form className="space-y-4" onSubmit={formik.handleSubmit} noValidate>
+              <form className="space-y-3.5" onSubmit={formik.handleSubmit} noValidate>
                 {/* Name */}
                 <div>
-                  <label className="flex items-center gap-1.5 text-[13px] font-medium text-heading/70 mb-1.5">
-                    <User size={12} className="text-muted/40" />
+                  <label className={`flex items-center gap-1.5 ${fontSize.label} text-heading/80 mb-1.5`}>
+                    <User size={12} className="text-muted/50" />
                     {t.nameLabel}
                   </label>
                   <input
@@ -365,8 +366,8 @@ export default function Countdown({ lang }: { lang: Lang }) {
 
                 {/* Phone */}
                 <div>
-                  <label className="flex items-center gap-1.5 text-[13px] font-medium text-heading/70 mb-1.5">
-                    <Phone size={12} className="text-muted/40" />
+                  <label className={`flex items-center gap-1.5 ${fontSize.label} text-heading/80 mb-1.5`}>
+                    <Phone size={12} className="text-muted/50" />
                     {t.phoneLabel}
                   </label>
                   <input
@@ -396,14 +397,14 @@ export default function Countdown({ lang }: { lang: Lang }) {
                       )}
                     </div>
                   </div>
-                  <span className="text-[13px] text-muted">{t.whatsappSame}</span>
+                  <span className={`${fontSize.small} ${textColor.muted}`}>{t.whatsappSame}</span>
                 </label>
 
                 {/* WhatsApp field */}
                 {!formik.values.whatsappSame && (
                   <m.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} transition={{ duration: 0.2 }}>
-                    <label className="flex items-center gap-1.5 text-[13px] font-medium text-heading/70 mb-1.5">
-                      <Phone size={12} className="text-muted/40" />
+                    <label className={`flex items-center gap-1.5 ${fontSize.label} text-heading/80 mb-1.5`}>
+                      <Phone size={12} className="text-muted/50" />
                       {t.whatsappLabel}
                     </label>
                     <input
@@ -420,8 +421,8 @@ export default function Countdown({ lang }: { lang: Lang }) {
 
                 {/* Location */}
                 <div>
-                  <label className="flex items-center gap-1.5 text-[13px] font-medium text-heading/70 mb-1.5">
-                    <MapPin size={12} className="text-muted/40" />
+                  <label className={`flex items-center gap-1.5 ${fontSize.label} text-heading/80 mb-1.5`}>
+                    <MapPin size={12} className="text-muted/50" />
                     {t.locationLabel}
                   </label>
                   <input
@@ -447,7 +448,7 @@ export default function Countdown({ lang }: { lang: Lang }) {
                 <button
                   type="submit"
                   disabled={formik.isSubmitting}
-                  className="w-full py-3 rounded-xl text-sm font-semibold text-white bg-royal hover:bg-bright transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed mt-1 flex items-center justify-center gap-2"
+                  className="w-full py-2.5 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-royal to-bright hover:from-bright hover:to-royal transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed mt-1 flex items-center justify-center gap-2 shadow-md shadow-royal/20 hover:shadow-lg hover:shadow-royal/30"
                 >
                   {formik.isSubmitting ? (
                     <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />

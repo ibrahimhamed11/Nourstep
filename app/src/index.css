@@ -46,11 +46,11 @@
   --theme-navy: #050D24;
   --theme-darkblue: #0A1845;
   --theme-card: #0D1D4E;
-  --theme-lightblue: #C8D8F5;
-  --theme-muted: #7E99C4;
+  --theme-lightblue: #D6E3FA;
+  --theme-muted: #9DB5DC;
   --theme-surface: #0A1845;
-  --theme-heading: #F2F6FF;
-  --theme-border: rgba(61, 139, 255, 0.12);
+  --theme-heading: #F5F8FF;
+  --theme-border: rgba(61, 139, 255, 0.15);
 }
 
 html {
@@ -148,12 +148,12 @@ body {
   background: var(--theme-card);
   border: 1px solid var(--theme-border);
   border-radius: 1rem;
-  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
 }
 .card-dark:hover {
-  border-color: rgba(59, 139, 255, 0.18);
-  box-shadow: 0 4px 24px rgba(27, 79, 216, 0.08);
-  transform: translateY(-2px);
+  border-color: rgba(59, 139, 255, 0.22);
+  box-shadow: 0 8px 32px rgba(27, 79, 216, 0.12);
+  transform: translateY(-3px);
 }
 
 /* Light mode card shadow */
@@ -162,8 +162,8 @@ body {
   border-color: rgba(27, 79, 216, 0.10);
 }
 :root:not(.dark) .card-dark:hover {
-  box-shadow: 0 8px 32px rgba(27, 79, 216, 0.12);
-  border-color: rgba(27, 79, 216, 0.18);
+  box-shadow: 0 12px 40px rgba(27, 79, 216, 0.14);
+  border-color: rgba(27, 79, 216, 0.22);
 }
 
 /* Gradient text utility */
@@ -174,7 +174,7 @@ body {
   background-clip: text;
 }
 .dark .text-gradient {
-  background: linear-gradient(140deg, #5BA8FF 10%, #8ED0FF 90%);
+  background: linear-gradient(140deg, #6DB8FF 10%, #A2DCFF 90%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -236,6 +236,10 @@ body {
 .btn-glow {
   position: relative;
   overflow: hidden;
+  transition: transform 0.2s ease;
+}
+.btn-glow:hover {
+  transform: translateY(-1px);
 }
 .btn-glow::before {
   content: '';
@@ -293,6 +297,15 @@ button:focus-visible {
 /* Smooth theme transition for key elements */
 body, .card-dark, nav, section, footer {
   transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Selection styling */
+::selection {
+  background: rgba(27, 79, 216, 0.2);
+  color: inherit;
+}
+.dark ::selection {
+  background: rgba(91, 196, 255, 0.2);
 }
 
 /* ─── Navbar Logo Entrance Animations ─── */
@@ -441,8 +454,16 @@ body, .card-dark, nav, section, footer {
 /* ─── Light Mode Enhancements ─── */
 
 /* Better section alternation in light mode */
-:root:not(.dark) section {
-  border-bottom: 1px solid rgba(27, 79, 216, 0.04);
+:root:not(.dark) section:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  max-width: 600px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(27, 79, 216, 0.08), transparent);
 }
 
 /* Stronger focus ring in light mode */

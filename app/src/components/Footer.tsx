@@ -1,6 +1,7 @@
 import { ArrowUp, Mail, MapPin } from 'lucide-react';
 import type { Lang, Theme, I18n } from '../types';
 import NavbarLogo from './NavbarLogo';
+import { fontSize } from '../design-tokens';
 
 interface FooterLink { label: string; href: string }
 
@@ -52,30 +53,31 @@ export default function Footer({ lang, theme }: { lang: Lang; theme: Theme }) {
   const t = content[lang];
 
   return (
-    <footer className="relative bg-navy py-12 px-6">
-      <div className="h-px bg-gradient-to-r from-transparent via-border/40 to-transparent mb-12" />
+    <footer className="relative bg-navy pt-0 pb-8 px-6">
+      {/* Top divider — gradient line */}
+      <div className="h-px bg-gradient-to-r from-transparent via-royal/20 dark:via-bright/20 to-transparent mb-10" />
 
       <div className="max-w-5xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-10">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           {/* Brand */}
           <div className="md:col-span-2">
-            <div className="mb-3">
+            <div className="mb-4">
               <NavbarLogo theme={theme} />
             </div>
-            <p className="text-[13px] text-muted/60 leading-relaxed max-w-xs">
+            <p className={`${fontSize.small} text-muted dark:text-lightblue/70 leading-relaxed max-w-xs`}>
               {t.description}
             </p>
           </div>
 
           {/* Links */}
           <div>
-            <h4 className="text-[11px] font-semibold text-muted/40 uppercase tracking-wider mb-3">{t.linksTitle}</h4>
-            <div className="space-y-2">
+            <h4 className={`${fontSize.xs} font-bold text-heading/50 dark:text-lightblue/50 uppercase tracking-wider mb-4`}>{t.linksTitle}</h4>
+            <div className="space-y-2.5">
               {t.links.map((link) => (
                 <a
                   key={link.href}
                   href={link.href}
-                  className="block text-[13px] text-muted/60 hover:text-heading transition-colors"
+                  className={`block ${fontSize.small} text-muted dark:text-lightblue/70 hover:text-royal dark:hover:text-white transition-colors duration-200`}
                 >
                   {link.label}
                 </a>
@@ -85,23 +87,23 @@ export default function Footer({ lang, theme }: { lang: Lang; theme: Theme }) {
 
           {/* Contact */}
           <div>
-            <h4 className="text-[11px] font-semibold text-muted/40 uppercase tracking-wider mb-3">{t.contactTitle}</h4>
-            <div className="space-y-2">
-              <a href={`mailto:${t.email}`} className="flex items-center gap-1.5 text-[13px] text-muted/60 hover:text-heading transition-colors">
-                <Mail size={12} className="shrink-0 opacity-50" />
+            <h4 className={`${fontSize.xs} font-bold text-heading/50 dark:text-lightblue/50 uppercase tracking-wider mb-4`}>{t.contactTitle}</h4>
+            <div className="space-y-2.5">
+              <a href={`mailto:${t.email}`} className={`flex items-center gap-2 ${fontSize.small} text-muted dark:text-lightblue/70 hover:text-royal dark:hover:text-white transition-colors duration-200`}>
+                <Mail size={13} className="shrink-0 text-royal/40 dark:text-bright/40" />
                 {t.email}
               </a>
-              <div className="flex items-center gap-1.5 text-[13px] text-muted/60">
-                <MapPin size={12} className="shrink-0 opacity-50" />
+              <div className={`flex items-center gap-2 ${fontSize.small} text-muted dark:text-lightblue/70`}>
+                <MapPin size={13} className="shrink-0 text-royal/40 dark:text-bright/40" />
                 {t.location}
               </div>
               <a
                 href="https://www.facebook.com/NourStepApp"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1.5 text-[13px] text-muted/60 hover:text-heading transition-colors"
+                className={`flex items-center gap-2 ${fontSize.small} text-muted dark:text-lightblue/70 hover:text-royal dark:hover:text-white transition-colors duration-200`}
               >
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" className="shrink-0 opacity-50">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" className="shrink-0 text-royal/40 dark:text-bright/40">
                   <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
                 </svg>
                 Facebook
@@ -110,14 +112,14 @@ export default function Footer({ lang, theme }: { lang: Lang; theme: Theme }) {
           </div>
         </div>
 
-        {/* Bottom */}
-        <div className="flex items-center justify-between pt-6 border-t border-border/20">
-          <p className="text-[12px] text-muted/30">{t.copyright}</p>
+        {/* Bottom bar */}
+        <div className="flex items-center justify-between pt-6 border-t border-royal/8 dark:border-bright/10">
+          <p className={`${fontSize.xs} text-muted/60 dark:text-lightblue/40`}>{t.copyright}</p>
           <a
             href="#hero"
-            className="inline-flex items-center gap-1 text-[12px] text-muted/30 hover:text-muted/60 transition-colors"
+            className={`inline-flex items-center gap-1.5 ${fontSize.xs} font-medium text-muted/60 dark:text-lightblue/40 hover:text-royal dark:hover:text-white transition-colors duration-200`}
           >
-            <ArrowUp size={10} />
+            <ArrowUp size={12} />
             {t.backToTop}
           </a>
         </div>

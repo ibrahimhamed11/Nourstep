@@ -65,7 +65,7 @@ export default function NavbarLogo({ theme }: NavbarLogoProps) {
         {/* Main brand name — per-word staggered animation */}
         <span
           style={{ fontFamily: "'Noto Kufi Arabic', sans-serif" }}
-          className={`text-[20px] font-extrabold leading-tight tracking-[-0.01em] transition-all duration-500 ease-out group-hover:tracking-[0.005em] ${mounted ? '' : 'opacity-0'}`}
+          className={`text-[22px] font-extrabold leading-tight tracking-[-0.01em] transition-all duration-500 ease-out group-hover:tracking-[0.005em] ${mounted ? '' : 'opacity-0'}`}
         >
           {mounted && (
             <>
@@ -90,7 +90,7 @@ export default function NavbarLogo({ theme }: NavbarLogoProps) {
                   duration: 0.5,
                   ease: [0.22, 1, 0.36, 1],
                 }}
-                className={`inline-block navbar-title-char ${theme === 'dark' ? 'text-bright' : 'text-sky'}`}
+                className={`inline-block navbar-title-char ${theme === 'dark' ? 'text-sky' : 'text-bright'}`}
               >
                 للنور
               </m.span>
@@ -101,10 +101,10 @@ export default function NavbarLogo({ theme }: NavbarLogoProps) {
         {/* Subtitle tagline — per-word wave entrance */}
         <span
           style={{ fontFamily: "'Noto Kufi Arabic', sans-serif" }}
-          className={`mt-1 text-[10px] font-extrabold uppercase tracking-[0.16em] transition-all duration-500 ease-out
-            text-heading dark:text-white
-            group-hover:text-bright dark:group-hover:text-sky
-            group-hover:tracking-[0.2em]
+          className={`mt-1 text-[11px] font-bold uppercase tracking-[0.14em] transition-all duration-500 ease-out
+            text-muted dark:text-lightblue/60
+            group-hover:text-royal dark:group-hover:text-sky
+            group-hover:tracking-[0.18em]
             ${mounted ? '' : 'opacity-0'}`}
         >
           {mounted && (

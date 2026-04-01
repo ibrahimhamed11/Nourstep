@@ -2,6 +2,7 @@ import { m } from 'framer-motion';
 import { Lightbulb, TrendingUp, Users } from 'lucide-react';
 import type { Lang, I18n } from '../types';
 import type { LucideIcon } from 'lucide-react';
+import { fontSize, textColor, spacing, eyebrowStyle, sectionHeadingStyle } from '../design-tokens';
 
 interface StatItem { icon: LucideIcon; value: string; label: string }
 
@@ -38,10 +39,10 @@ export default function About({ lang }: { lang: Lang }) {
   const t = content[lang];
 
   return (
-    <section id="about" className="relative py-20 md:py-28 px-6 bg-surface dark:bg-darkblue">
-      <div className="max-w-5xl mx-auto">
+    <section id="about" className={`relative ${spacing.sectionY} ${spacing.sectionX} bg-surface dark:bg-darkblue`}>
+      <div className={spacing.maxWidth}>
         {/* Two-column: text left, stats right — not centered everything */}
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-12 items-start">
 
           {/* Text — takes more space */}
           <m.div
@@ -51,13 +52,13 @@ export default function About({ lang }: { lang: Lang }) {
             transition={{ duration: 0.45 }}
             className="lg:col-span-3"
           >
-            <p className="text-xs font-semibold uppercase tracking-widest text-royal dark:text-sky/70 mb-3">
+            <p className={`${eyebrowStyle} ${textColor.eyebrow}`}>
               {lang === 'ar' ? 'عن خطوة للنور' : 'About NourStep'}
             </p>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-heading font-bold text-heading leading-snug">
+            <h2 className={`${sectionHeadingStyle} leading-snug`}>
               {t.title}
             </h2>
-            <p className="mt-5 text-[15px] text-muted leading-[1.75] max-w-xl">
+            <p className={`mt-4 ${fontSize.body} ${textColor.muted} leading-[1.75] max-w-xl`}>
               {t.description}
             </p>
           </m.div>
@@ -73,14 +74,14 @@ export default function About({ lang }: { lang: Lang }) {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.1 + i * 0.1, duration: 0.35 }}
-                  className="flex items-center gap-4 p-4 rounded-xl bg-navy/50 dark:bg-navy/40 border border-border/50"
+                  className="flex items-center gap-4 p-4 rounded-xl bg-navy/50 dark:bg-navy/40 border border-border/50 hover:border-royal/20 dark:hover:border-bright/20 hover:bg-navy/70 dark:hover:bg-navy/60 transition-all duration-300 hover:shadow-md hover:shadow-royal/5"
                 >
                   <div className="w-10 h-10 rounded-lg bg-royal/8 dark:bg-bright/8 flex items-center justify-center shrink-0">
                     <Icon size={18} className="text-royal dark:text-bright" />
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-heading leading-tight">{stat.value}</p>
-                    <p className="text-xs text-muted mt-0.5">{stat.label}</p>
+                    <p className={`${fontSize.statValue} ${textColor.heading} leading-tight`}>{stat.value}</p>
+                    <p className={`${fontSize.statLabel} ${textColor.muted} mt-0.5`}>{stat.label}</p>
                   </div>
                 </m.div>
               );

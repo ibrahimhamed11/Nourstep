@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { m } from 'framer-motion';
 import { ArrowDown, CheckCircle } from 'lucide-react';
 import type { Lang, I18n } from '../types';
+import { fontSize, textColor, ctaPrimaryStyle, ctaSecondaryStyle } from '../design-tokens';
 
 /* ── Typewriter ── */
 function useTypeOnce(text: string, speed = 50, startDelay = 600) {
@@ -68,7 +69,7 @@ export default function Hero({ lang }: { lang: Lang }) {
   return (
     <section
       id="hero"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-navy"
+      className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-navy"
     >
       {/* BG — one subtle radial, no multiple orbs */}
       <div className="absolute inset-0 dark:block hidden bg-gradient-to-b from-navy via-[#081840] to-navy" />
@@ -76,7 +77,7 @@ export default function Hero({ lang }: { lang: Lang }) {
       <div className="absolute inset-0 dark:hidden bg-[radial-gradient(ellipse_60%_40%_at_80%_80%,rgba(91,196,255,0.04),transparent)]" />
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] hidden dark:block bg-royal/6 rounded-full blur-[100px]" />
 
-      <div className="relative z-10 max-w-3xl mx-auto px-6 sm:px-8 w-full pt-28 pb-20 md:pt-40 md:pb-28">
+      <div className="relative z-10 max-w-3xl mx-auto px-6 sm:px-8 w-full pt-24 pb-14 md:pt-32 md:pb-20">
         <div className="flex flex-col items-center text-center">
 
           {/* Badge */}
@@ -84,10 +85,10 @@ export default function Hero({ lang }: { lang: Lang }) {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45, delay: 0.15 }}
-            className="mb-7"
+            className="mb-5"
           >
-            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-royal/6 dark:bg-bright/6 border border-royal/10 dark:border-bright/10 text-xs font-medium text-royal dark:text-sky/80 tracking-wide">
-              <span className="w-1.5 h-1.5 rounded-full bg-royal dark:bg-sky/80" />
+            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-royal/8 dark:bg-bright/8 border border-royal/15 dark:border-bright/15 text-xs font-semibold text-royal dark:text-sky tracking-wide shadow-sm shadow-royal/5 dark:shadow-bright/5">
+              <span className="w-1.5 h-1.5 rounded-full bg-royal dark:bg-sky" />
               {t.badge}
             </span>
           </m.div>
@@ -97,10 +98,10 @@ export default function Hero({ lang }: { lang: Lang }) {
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
-            className={`font-heading font-extrabold tracking-tight text-heading leading-[1.08] ${
+            className={`font-heading font-extrabold tracking-tight ${textColor.heading} leading-[1.08] ${
               lang === 'ar'
-                ? 'text-[2.25rem] md:text-5xl lg:text-[3.25rem]'
-                : 'text-[2.5rem] sm:text-5xl md:text-[3.5rem] lg:text-[4rem]'
+                ? fontSize.heroTitle.ar
+                : fontSize.heroTitle.en
             }`}
           >
             <span className="block">{t.titleStatic}</span>
@@ -117,7 +118,7 @@ export default function Hero({ lang }: { lang: Lang }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.45, delay: 0.5 }}
-            className="mt-5 md:mt-7 text-[15px] md:text-base text-muted leading-[1.7] max-w-lg"
+            className={`mt-4 md:mt-5 ${fontSize.bodyLg} ${textColor.muted} leading-[1.7] max-w-lg`}
           >
             {t.subtitle}
           </m.p>
@@ -127,18 +128,18 @@ export default function Hero({ lang }: { lang: Lang }) {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.65 }}
-            className="mt-9 flex flex-col sm:flex-row gap-3 justify-center w-full sm:w-auto"
+            className="mt-7 flex flex-col sm:flex-row gap-3 justify-center w-full sm:w-auto"
           >
             <a
               href="#countdown"
-              className="group inline-flex items-center justify-center gap-2 px-7 py-3 rounded-xl text-[15px] font-semibold text-white bg-royal hover:bg-bright transition-colors duration-200 shadow-md shadow-royal/20 dark:shadow-royal/10"
+              className={ctaPrimaryStyle}
             >
               {t.cta1}
               <span className="text-white/60 group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 transition-transform duration-150">→</span>
             </a>
             <a
               href="#about"
-              className="inline-flex items-center justify-center px-7 py-3 rounded-xl text-[15px] font-semibold text-heading border border-border hover:border-royal/25 dark:hover:border-bright/15 hover:bg-royal/4 dark:hover:bg-bright/4 transition-all duration-200"
+              className={ctaSecondaryStyle}
             >
               {t.cta2}
             </a>
@@ -149,7 +150,7 @@ export default function Hero({ lang }: { lang: Lang }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.4, delay: 0.85 }}
-            className="mt-11 flex items-center gap-4 text-[13px] text-muted/60"
+            className={`mt-8 flex items-center gap-4 ${fontSize.small} ${textColor.subtle}`}
           >
             <span className="flex items-center gap-1.5">
               <CheckCircle size={12} className="text-success/60" />

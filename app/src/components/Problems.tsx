@@ -2,6 +2,7 @@ import { m } from 'framer-motion';
 import { UserX, EyeOff, Layers, ClipboardList } from 'lucide-react';
 import type { Lang, I18n } from '../types';
 import type { LucideIcon } from 'lucide-react';
+import { fontSize, textColor, spacing, sectionHeadingStyle, cardTitleStyle, cardDescStyle } from '../design-tokens';
 
 interface ProblemItem {
   icon: LucideIcon;
@@ -104,27 +105,27 @@ export default function Problems({ lang }: { lang: Lang }) {
   const t = content[lang];
 
   return (
-    <section id="problems" className="relative py-16 md:py-20 px-6 bg-navy">
-      <div className="max-w-5xl mx-auto">
+    <section id="problems" className={`relative ${spacing.sectionY} ${spacing.sectionX} bg-navy`}>
+      <div className={spacing.maxWidth}>
         {/* Header — centered for impact */}
         <m.div
           initial={{ opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-60px' }}
           transition={{ duration: 0.4 }}
-          className="text-center mb-10"
+          className="text-center mb-8"
         >
-          <p className="inline-block text-[11px] font-semibold uppercase tracking-widest text-error/80 mb-3 px-3 py-1 rounded-full bg-error/10 border border-error/20">
+          <p className="inline-block text-xs font-semibold uppercase tracking-widest text-error/80 mb-3 px-3 py-1 rounded-full bg-error/10 border border-error/20">
             {t.eyebrow}
           </p>
-          <h2 className="text-2xl md:text-3xl lg:text-4xl font-heading font-bold text-heading mt-2">
+          <h2 className={`${sectionHeadingStyle} mt-2`}>
             {t.title}
           </h2>
-          <p className="text-muted text-[15px] mt-2 max-w-lg mx-auto">{t.subtitle}</p>
+          <p className={`${fontSize.body} ${textColor.muted} mt-2 max-w-lg mx-auto`}>{t.subtitle}</p>
         </m.div>
 
         {/* 2×2 Card Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+        <div className={`grid grid-cols-1 sm:grid-cols-2 ${spacing.gridGap}`}>
           {t.problems.map((problem, i) => {
             const Icon = problem.icon;
             return (
@@ -134,7 +135,7 @@ export default function Problems({ lang }: { lang: Lang }) {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.08, duration: 0.35 }}
-                className={`group relative rounded-2xl border ${problem.accentBorder} bg-card-dark/60 backdrop-blur-sm p-5 transition-all duration-300 hover:bg-card-dark/90 hover:shadow-lg hover:shadow-black/5`}
+                className={`group relative rounded-2xl border ${problem.accentBorder} bg-card-dark/60 backdrop-blur-sm p-5 transition-all duration-300 hover:bg-card-dark/90 hover:shadow-lg hover:shadow-black/5 hover:-translate-y-1`}
               >
                 {/* Number watermark */}
                 <span className="absolute top-3 end-4 text-[40px] font-heading font-black text-muted/[0.06] leading-none select-none pointer-events-none">
@@ -147,10 +148,10 @@ export default function Problems({ lang }: { lang: Lang }) {
                 </div>
 
                 {/* Text */}
-                <h3 className="text-[15px] font-semibold text-heading mb-1.5 group-hover:text-royal dark:group-hover:text-sky transition-colors duration-200">
+                <h3 className={`${cardTitleStyle} mb-1.5 group-hover:text-royal dark:group-hover:text-sky transition-colors duration-200`}>
                   {problem.title}
                 </h3>
-                <p className="text-[13px] text-muted leading-relaxed">
+                <p className={cardDescStyle}>
                   {problem.description}
                 </p>
               </m.div>

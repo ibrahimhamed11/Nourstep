@@ -17,7 +17,7 @@ const Countdown = lazy(() => import('./components/Countdown'));
 const Footer = lazy(() => import('./components/Footer'));
 
 /** Minimal placeholder for lazy sections */
-const SectionFallback = () => <div className="min-h-[40vh]" />;
+const SectionFallback = () => <div className="min-h-[30vh]" />;
 
 export type { Lang, Theme };
 

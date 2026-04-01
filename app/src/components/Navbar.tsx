@@ -3,6 +3,7 @@ import { Menu, X, Globe, Sun, Moon, Sparkles } from 'lucide-react';
 import { m, AnimatePresence } from 'framer-motion';
 import type { Lang, Theme, I18n } from '../types';
 import NavbarLogo from './NavbarLogo';
+import { fontSize } from '../design-tokens';
 
 interface NavItem { label: string; href: string }
 
@@ -105,11 +106,11 @@ export default function Navbar({ lang, setLang, theme, setTheme }: Props) {
                   <a
                     key={item.href}
                     href={item.href}
-                    className={`relative px-3.5 py-1.5 rounded-xl text-[13px] font-semibold transition-all duration-300 ${
+                    className={`relative px-3.5 py-1.5 rounded-xl ${fontSize.nav} transition-all duration-300 ${
                       isActive
                         ? 'text-white'
                         : isDark
-                          ? 'text-muted hover:text-white/90'
+                          ? 'text-lightblue/80 hover:text-white'
                           : 'text-muted hover:text-heading'
                     }`}
                   >
@@ -133,9 +134,9 @@ export default function Navbar({ lang, setLang, theme, setTheme }: Props) {
             {/* Language toggle */}
             <button
               onClick={() => setLang(lang === 'en' ? 'ar' : 'en')}
-              className={`group/btn relative flex items-center gap-1.5 px-3 py-2 rounded-xl text-[13px] font-semibold transition-all duration-300 cursor-pointer ${
+              className={`group/btn relative flex items-center gap-1.5 px-3 py-2 rounded-xl ${fontSize.nav} transition-all duration-300 cursor-pointer ${
                 isDark
-                  ? 'text-muted hover:text-white'
+                  ? 'text-lightblue/80 hover:text-white'
                   : 'text-muted hover:text-royal'
               }`}
             >
@@ -151,7 +152,7 @@ export default function Navbar({ lang, setLang, theme, setTheme }: Props) {
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
               className={`group/btn relative flex items-center justify-center w-9 h-9 rounded-xl transition-all duration-300 cursor-pointer ${
                 isDark
-                  ? 'text-muted hover:text-white'
+                  ? 'text-lightblue/80 hover:text-white'
                   : 'text-muted hover:text-royal'
               }`}
               title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
@@ -176,7 +177,7 @@ export default function Navbar({ lang, setLang, theme, setTheme }: Props) {
             {/* CTA Button */}
             <a
               href="#countdown"
-              className={`group/cta relative ms-1 px-5 py-2 rounded-xl text-[13px] font-bold text-white overflow-hidden transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] ${
+              className={`group/cta relative ms-1 px-5 py-2.5 rounded-xl ${fontSize.nav} font-bold text-white overflow-hidden transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] ${
                 isDark
                   ? 'hover:shadow-lg hover:shadow-bright/20'
                   : 'hover:shadow-lg hover:shadow-royal/25'
@@ -198,7 +199,7 @@ export default function Navbar({ lang, setLang, theme, setTheme }: Props) {
               onClick={() => setLang(lang === 'en' ? 'ar' : 'en')}
               className={`p-2 rounded-xl transition-all duration-300 cursor-pointer ${
                 isDark
-                  ? 'text-muted hover:text-white hover:bg-bright/10'
+                  ? 'text-lightblue/80 hover:text-white hover:bg-bright/10'
                   : 'text-muted hover:text-royal hover:bg-royal/8'
               }`}
             >
@@ -209,7 +210,7 @@ export default function Navbar({ lang, setLang, theme, setTheme }: Props) {
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
               className={`p-2 rounded-xl transition-all duration-300 cursor-pointer ${
                 isDark
-                  ? 'text-muted hover:text-white hover:bg-bright/10'
+                  ? 'text-lightblue/80 hover:text-white hover:bg-bright/10'
                   : 'text-muted hover:text-royal hover:bg-royal/8'
               }`}
             >
@@ -267,11 +268,11 @@ export default function Navbar({ lang, setLang, theme, setTheme }: Props) {
                       initial={{ opacity: 0, x: lang === 'ar' ? 20 : -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: i * 0.05, duration: 0.25 }}
-                      className={`block px-4 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                      className={`block px-4 py-3 rounded-xl text-[15px] font-semibold transition-all duration-300 ${
                         isActive
                           ? 'text-white bg-gradient-to-r from-royal to-bright shadow-sm shadow-royal/20'
                           : isDark
-                            ? 'text-muted hover:text-white hover:bg-card-dark/70'
+                            ? 'text-lightblue/80 hover:text-white hover:bg-card-dark/70'
                             : 'text-muted hover:text-royal hover:bg-royal/6'
                       }`}
                     >
