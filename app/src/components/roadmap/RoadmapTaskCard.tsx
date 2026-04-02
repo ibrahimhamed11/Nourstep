@@ -139,12 +139,8 @@ export default function RoadmapTaskCard({ task, allTasks, onToggleStatus, onEdit
               {task.tags!.map(tag => (
                 <span
                   key={tag}
-                  className="text-[8px] font-medium px-1.5 py-0.5 rounded-sm"
-                  style={{
-                    background: '#f8fafc',
-                    color: '#475569',
-                    border: '1px solid #e2e8f0',
-                  }}
+                  className="text-[8px] font-medium px-1.5 py-0.5 rounded-sm border border-border/40 text-muted"
+                  style={{ background: 'var(--theme-surface)' }}
                 >
                   {TAG_CONFIG[tag]?.label ?? tag}
                 </span>
@@ -160,27 +156,21 @@ export default function RoadmapTaskCard({ task, allTasks, onToggleStatus, onEdit
         >
           <button
             onClick={() => onEdit(task)}
-            className="w-6 h-6 flex items-center justify-center rounded transition-all cursor-pointer"
-            style={{ color: '#64748b' }}
-            onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#0078d4'; (e.currentTarget as HTMLButtonElement).style.background = '#eff6ff'; }}
-            onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#64748b'; (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}
+            className="w-6 h-6 flex items-center justify-center rounded transition-all cursor-pointer text-muted hover:text-[#0078d4] hover:bg-[rgba(0,120,212,0.1)]"
             title="Edit"
           >
             <Edit2 size={11} />
           </button>
           <button
             onClick={() => onDelete(task.id)}
-            className="w-6 h-6 flex items-center justify-center rounded transition-all cursor-pointer"
-            style={{ color: '#64748b' }}
-            onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#dc2626'; (e.currentTarget as HTMLButtonElement).style.background = '#fef2f2'; }}
-            onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#64748b'; (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}
+            className="w-6 h-6 flex items-center justify-center rounded transition-all cursor-pointer text-muted hover:text-[#dc2626] hover:bg-[rgba(220,38,38,0.08)]"
             title="Delete"
           >
             <Trash2 size={11} />
           </button>
         </div>
 
-        <span className="flex-shrink-0 mt-1" style={{ color: '#cbd5e1' }}>
+        <span className="flex-shrink-0 mt-1 text-muted/40">
           {expanded ? <ChevronUp size={11} /> : <ChevronDown size={11} />}
         </span>
       </div>
@@ -188,23 +178,20 @@ export default function RoadmapTaskCard({ task, allTasks, onToggleStatus, onEdit
       {/* Expanded detail panel */}
       {expanded && (
         <div
-          className="border-t px-3 py-3 space-y-3"
-          style={{
-            background: '#fafbfe',
-            borderColor: 'var(--theme-border)',
-          }}
+          className="border-t border-border/40 px-3 py-3 space-y-3"
+          style={{ background: 'var(--theme-surface)' }}
           onClick={e => e.stopPropagation()}
         >
           {task.desc && (
-            <p className="text-[11px] leading-relaxed" style={{ color: '#475569' }}>
+            <p className="text-[11px] leading-relaxed text-muted">
               {task.desc}
             </p>
           )}
 
-          <div className="flex flex-wrap gap-4 text-[10px]" style={{ color: '#64748b' }}>
+          <div className="flex flex-wrap gap-4 text-[10px] text-muted">
             {task.assignee && (
               <span className="flex items-center gap-1.5">
-                <span className="w-4 h-4 rounded-full flex items-center justify-center" style={{ background: '#eff6ff' }}>
+                <span className="w-4 h-4 rounded-full flex items-center justify-center" style={{ background: 'rgba(0,120,212,0.1)' }}>
                   <User size={9} style={{ color: '#0078d4' }} />
                 </span>
                 {task.assignee}
@@ -251,22 +238,22 @@ export default function RoadmapTaskCard({ task, allTasks, onToggleStatus, onEdit
             </div>
           )}
 
-          <div className="flex gap-2 pt-2 border-t" style={{ borderColor: '#e2e8f0' }}>
+          <div className="flex gap-2 pt-2 border-t border-border/40">
             <button
               onClick={() => onEdit(task)}
               className="flex items-center gap-1.5 text-[10px] font-semibold px-3 py-1 rounded cursor-pointer transition-colors"
-              style={{ background: '#eff6ff', color: '#0078d4', border: '1px solid #93c5fd' }}
-              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = '#dbeafe'; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = '#eff6ff'; }}
+              style={{ background: 'rgba(0,120,212,0.1)', color: '#0078d4', border: '1px solid rgba(0,120,212,0.25)' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(0,120,212,0.18)'; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(0,120,212,0.1)'; }}
             >
               <Edit2 size={10} /> Edit
             </button>
             <button
               onClick={() => onDelete(task.id)}
               className="flex items-center gap-1.5 text-[10px] font-semibold px-3 py-1 rounded cursor-pointer transition-colors"
-              style={{ background: '#fef2f2', color: '#dc2626', border: '1px solid #fca5a5' }}
-              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = '#fee2e2'; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = '#fef2f2'; }}
+              style={{ background: 'rgba(220,38,38,0.08)', color: '#dc2626', border: '1px solid rgba(220,38,38,0.2)' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(220,38,38,0.15)'; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(220,38,38,0.08)'; }}
             >
               <Trash2 size={10} /> Delete
             </button>

@@ -34,10 +34,11 @@ export default function RoadmapWeekColumn({
 
   return (
     <div
-      className="flex flex-col rounded-lg overflow-hidden transition-all duration-150"
+      className={`flex flex-col rounded-lg overflow-hidden transition-all duration-150 ${
+        isCurrent ? 'border-[1.5px] border-[#0078d4]' : 'border border-border/50'
+      }`}
       style={{
-        background: '#fff',
-        border: isCurrent ? '1.5px solid #0078d4' : '1px solid #e2e8f0',
+        background: 'var(--theme-card)',
         boxShadow: isCurrent
           ? '0 0 0 3px rgba(0,120,212,0.10), 0 2px 8px rgba(0,120,212,0.10)'
           : '0 1px 4px rgba(0,0,0,0.06)',
@@ -45,17 +46,16 @@ export default function RoadmapWeekColumn({
     >
       {/* ── Column header ── */}
       <div
-        className="px-3 py-2.5 flex items-center justify-between border-b"
+        className="px-3 py-2.5 flex items-center justify-between border-b border-border/40"
         style={{
-          background: isCurrent ? '#eff6ff' : '#f8fafc',
-          borderColor: isCurrent ? '#93c5fd' : '#e2e8f0',
+          background: isCurrent ? 'rgba(0,120,212,0.08)' : 'var(--theme-surface)',
         }}
       >
         <div>
           <div className="flex items-center gap-1.5">
             <span
               className="text-xs font-bold"
-              style={{ color: isCurrent ? '#0078d4' : '#1e293b' }}
+              style={{ color: isCurrent ? '#0078d4' : 'var(--theme-heading)' }}
             >
               {week.label}
             </span>
@@ -68,7 +68,7 @@ export default function RoadmapWeekColumn({
               </span>
             )}
           </div>
-          <p className="text-[10px] mt-0.5" style={{ color: '#94a3b8' }}>{week.dates}</p>
+          <p className="text-[10px] mt-0.5 text-muted">{week.dates}</p>
         </div>
 
         <div className="flex items-center gap-1.5">
@@ -92,8 +92,8 @@ export default function RoadmapWeekColumn({
             className="text-[10px] font-bold px-1.5 py-0.5 rounded-sm"
             style={
               isCurrent
-                ? { background: '#dbeafe', color: '#0078d4' }
-                : { background: '#f1f5f9', color: '#64748b' }
+                ? { background: 'rgba(0,120,212,0.12)', color: '#0078d4' }
+                : { background: 'var(--theme-surface)', color: 'var(--theme-muted)' }
             }
           >
             {stats.done}/{stats.total}
@@ -120,7 +120,7 @@ export default function RoadmapWeekColumn({
       </div>
 
       {/* ── Progress bar ── */}
-      <div className="h-[3px]" style={{ background: '#e2e8f0' }}>
+      <div className="h-[3px]" style={{ background: 'var(--theme-border)' }}>
         <div
           className="h-[3px] transition-all duration-700"
           style={{
@@ -139,26 +139,14 @@ export default function RoadmapWeekColumn({
         {filtered.length === 0 ? (
           <button
             onClick={() => onAddTask(week.week)}
-            className="w-full flex flex-col items-center justify-center py-8 gap-2 rounded cursor-pointer transition-all"
-            style={{
-              border: '1.5px dashed #e2e8f0',
-            }}
-            onMouseEnter={e => {
-              (e.currentTarget as HTMLButtonElement).style.borderColor = '#93c5fd';
-              (e.currentTarget as HTMLButtonElement).style.background = '#f0f7ff';
-            }}
-            onMouseLeave={e => {
-              (e.currentTarget as HTMLButtonElement).style.borderColor = '#e2e8f0';
-              (e.currentTarget as HTMLButtonElement).style.background = 'transparent';
-            }}
+            className="w-full flex flex-col items-center justify-center py-8 gap-2 rounded cursor-pointer transition-all border-[1.5px] border-dashed border-border/40 hover:border-[#93c5fd] hover:bg-[rgba(0,120,212,0.04)]"
           >
             <span
-              className="w-7 h-7 rounded-full flex items-center justify-center"
-              style={{ border: '1.5px dashed #cbd5e1' }}
+              className="w-7 h-7 rounded-full flex items-center justify-center border-[1.5px] border-dashed border-border/40"
             >
-              <Plus size={12} style={{ color: '#cbd5e1' }} />
+              <Plus size={12} className="text-muted/40" />
             </span>
-            <p className="text-[10px]" style={{ color: '#cbd5e1' }}>Add work item</p>
+            <p className="text-[10px] text-muted/40">Add work item</p>
           </button>
         ) : (
           filtered.map(t => (

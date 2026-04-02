@@ -49,12 +49,12 @@ export default function RoadmapTableView({ tasks, activeTrack, onToggleStatus, o
 
   if (filtered.length === 0) {
     return (
-      <div className="rounded-lg flex items-center justify-center py-20 text-center"
-        style={{ background: '#fff', border: '1px solid #e2e8f0', boxShadow: '0 1px 4px rgba(0,0,0,0.06)' }}>
+      <div className="rounded-lg flex items-center justify-center py-20 text-center border border-border/40 bg-[var(--theme-card)]"
+        style={{ boxShadow: '0 1px 4px rgba(0,0,0,0.06)' }}>
         <div className="space-y-2">
-          <Plus size={24} className="mx-auto" style={{ color: '#cbd5e1' }} />
-          <p className="text-sm" style={{ color: '#94a3b8' }}>No work items found</p>
-          <p className="text-xs" style={{ color: '#cbd5e1' }}>Try adjusting your filters</p>
+          <Plus size={24} className="mx-auto text-muted/30" />
+          <p className="text-sm text-muted">No work items found</p>
+          <p className="text-xs text-muted/50">Try adjusting your filters</p>
         </div>
       </div>
     );
@@ -64,8 +64,8 @@ export default function RoadmapTableView({ tasks, activeTrack, onToggleStatus, o
   const MIN_W = 960;
 
   return (
-    <div className="rounded-lg"
-      style={{ border: '1px solid #e2e8f0', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', background: '#fff', overflow: 'hidden' }}>
+    <div className="rounded-lg border border-border/40 overflow-hidden"
+      style={{ boxShadow: '0 1px 6px rgba(0,0,0,0.06)', background: 'var(--theme-card)' }}>
 
       {/* ── Horizontal scroll wrapper ── */}
       <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
@@ -73,12 +73,10 @@ export default function RoadmapTableView({ tasks, activeTrack, onToggleStatus, o
 
       {/* ── Table header ── */}
       <div
-        className="grid text-[10px] font-bold uppercase tracking-widest border-b"
+        className="grid text-[10px] font-bold uppercase tracking-widest border-b border-border/40 text-muted"
         style={{
           gridTemplateColumns: COLS,
-          background: '#f8fafc',
-          borderColor: '#e2e8f0',
-          color: '#64748b',
+          background: 'var(--theme-surface)',
         }}
       >
         <div className="px-1 py-2.5" />
@@ -103,21 +101,19 @@ export default function RoadmapTableView({ tasks, activeTrack, onToggleStatus, o
           <div key={group.week}>
             {/* ── Sprint group header ── */}
             <div
-              className="flex items-center gap-3 px-3 py-2 cursor-pointer select-none transition-colors border-b"
-              style={{ background: '#f1f5f9', borderColor: '#e2e8f0', minWidth: MIN_W }}
+              className="flex items-center gap-3 px-3 py-2 cursor-pointer select-none transition-colors border-b border-border/30 hover:brightness-95"
+              style={{ background: 'var(--theme-surface)', minWidth: MIN_W }}
               onClick={() => toggleCollapse(group.week)}
-              onMouseEnter={e => (e.currentTarget.style.background = '#e8edf5')}
-              onMouseLeave={e => (e.currentTarget.style.background = '#f1f5f9')}
             >
-              <span style={{ color: '#94a3b8' }}>
+              <span className="text-muted/60">
                 {isCollapsed ? <ChevronRight size={13} /> : <ChevronDown size={13} />}
               </span>
 
               {/* Sprint label */}
-              <span className="text-xs font-bold" style={{ color: '#1e293b' }}>
+              <span className="text-xs font-bold text-heading">
                 {group.weekMeta.label}
               </span>
-              <span className="text-[10px]" style={{ color: '#94a3b8' }}>
+              <span className="text-[10px] text-muted/60">
                 {group.weekMeta.dates}
               </span>
 
@@ -145,13 +141,13 @@ export default function RoadmapTableView({ tasks, activeTrack, onToggleStatus, o
 
               {/* Progress bar */}
               <div className="ml-auto flex items-center gap-2">
-                <div className="w-28 h-1.5 rounded-full overflow-hidden" style={{ background: '#e2e8f0' }}>
+                <div className="w-28 h-1.5 rounded-full overflow-hidden bg-border/40">
                   <div
                     className="h-1.5 rounded-full transition-all duration-700"
                     style={{ width: `${pct}%`, background: pct === 100 ? '#16a34a' : '#0078d4' }}
                   />
                 </div>
-                <span className="text-[10px] font-semibold" style={{ color: '#64748b', minWidth: 40 }}>
+                <span className="text-[10px] font-semibold text-muted" style={{ minWidth: 40 }}>
                   {doneCount}/{group.items.length}
                 </span>
               </div>
@@ -169,14 +165,13 @@ export default function RoadmapTableView({ tasks, activeTrack, onToggleStatus, o
               return (
                 <div
                   key={task.id}
-                  className="grid border-b group/row transition-colors"
+                  className="grid border-b border-border/20 group/row transition-colors hover:bg-[rgba(0,120,212,0.04)]"
                   style={{
                     gridTemplateColumns: COLS,
-                    borderColor: '#f1f5f9',
-                    background: i % 2 === 0 ? '#ffffff' : '#fafbfe',
+                    background: i % 2 === 0 ? 'var(--theme-card)' : 'var(--theme-surface)',
                   }}
-                  onMouseEnter={e => (e.currentTarget.style.background = '#f0f7ff')}
-                  onMouseLeave={e => (e.currentTarget.style.background = i % 2 === 0 ? '#ffffff' : '#fafbfe')}
+                  onMouseEnter={e => (e.currentTarget.style.background = 'rgba(0,120,212,0.04)')}
+                  onMouseLeave={e => (e.currentTarget.style.background = i % 2 === 0 ? 'var(--theme-card)' : 'var(--theme-surface)')}
                 >
                   {/* Track color bar */}
                   <div className="flex items-stretch">
@@ -193,19 +188,19 @@ export default function RoadmapTableView({ tasks, activeTrack, onToggleStatus, o
                         >
                           <TypeIcon size={7} /> {typeCfg.label}
                         </span>
-                        <span className="text-[9px] font-mono" style={{ color: '#94a3b8' }}>{task.id}</span>
+                        <span className="text-[9px] font-mono text-muted/60">{task.id}</span>
                       </div>
                       <p
                         className="text-xs font-medium truncate"
                         style={{
-                          color: isDone ? '#94a3b8' : '#0f172a',
+                          color: isDone ? 'var(--theme-muted)' : 'var(--theme-heading)',
                           textDecoration: isDone ? 'line-through' : 'none',
                         }}
                       >
                         {task.title}
                       </p>
                       {task.desc && (
-                        <p className="text-[10px] truncate mt-0.5" style={{ color: '#94a3b8' }}>
+                        <p className="text-[10px] truncate mt-0.5 text-muted/60">
                           {task.desc}
                         </p>
                       )}
@@ -225,7 +220,7 @@ export default function RoadmapTableView({ tasks, activeTrack, onToggleStatus, o
 
                   {/* Track */}
                   <div className="px-3 py-2.5 flex items-center">
-                    <span className="flex items-center gap-1.5 text-[10px] font-medium" style={{ color: '#475569' }}>
+                    <span className="flex items-center gap-1.5 text-[10px] font-medium text-muted">
                       <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: trackColor }} />
                       {track?.name ?? task.track}
                     </span>
@@ -234,19 +229,19 @@ export default function RoadmapTableView({ tasks, activeTrack, onToggleStatus, o
                   {/* Tags */}
                   <div className="px-3 py-2.5 flex items-center flex-wrap gap-1">
                     {(task.tags ?? []).slice(0, 2).map(tag => (
-                      <span key={tag} className="text-[8px] font-medium px-1.5 py-0.5 rounded-sm"
-                        style={{ background: '#f8fafc', color: '#475569', border: '1px solid #e2e8f0' }}>
+                      <span key={tag} className="text-[8px] font-medium px-1.5 py-0.5 rounded-sm border border-border/40 text-muted"
+                        style={{ background: 'var(--theme-surface)' }}>
                         {TAG_CONFIG[tag]?.label ?? tag}
                       </span>
                     ))}
                     {(task.tags ?? []).length > 2 && (
-                      <span className="text-[8px]" style={{ color: '#94a3b8' }}>+{task.tags!.length - 2}</span>
+                      <span className="text-[8px] text-muted/50">+{task.tags!.length - 2}</span>
                     )}
                   </div>
 
                   {/* Assignee */}
                   <div className="px-3 py-2.5 flex items-center">
-                    <span className="text-[10px]" style={{ color: task.assignee ? '#334155' : '#cbd5e1' }}>
+                    <span className={`text-[10px] ${task.assignee ? 'text-muted' : 'text-muted/30'}`}>
                       {task.assignee ?? '—'}
                     </span>
                   </div>
@@ -254,13 +249,13 @@ export default function RoadmapTableView({ tasks, activeTrack, onToggleStatus, o
                   {/* Estimate */}
                   <div className="px-3 py-2.5 flex items-center">
                     {task.estimate ? (
-                      <span className="flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full"
-                        style={{ background: '#f8fafc', color: '#475569', border: '1px solid #e2e8f0' }}>
-                        <Clock size={8} style={{ color: '#94a3b8' }} />
+                      <span className="flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full border border-border/40 text-muted"
+                        style={{ background: 'var(--theme-surface)' }}>
+                        <Clock size={8} className="text-muted/50" />
                         {task.estimate}
                       </span>
                     ) : (
-                      <span className="text-[10px]" style={{ color: '#cbd5e1' }}>—</span>
+                      <span className="text-[10px] text-muted/30">—</span>
                     )}
                   </div>
 
@@ -269,18 +264,18 @@ export default function RoadmapTableView({ tasks, activeTrack, onToggleStatus, o
                     <button
                       onClick={() => onEdit(task)}
                       className="text-[9px] font-semibold px-2 py-0.5 rounded cursor-pointer transition-colors"
-                      style={{ background: '#eff6ff', color: '#0078d4', border: '1px solid #93c5fd' }}
-                      onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = '#dbeafe'; }}
-                      onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = '#eff6ff'; }}
+                      style={{ background: 'rgba(0,120,212,0.1)', color: '#0078d4', border: '1px solid rgba(0,120,212,0.25)' }}
+                      onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(0,120,212,0.18)'; }}
+                      onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(0,120,212,0.1)'; }}
                     >
                       Edit
                     </button>
                     <button
                       onClick={() => onDelete(task.id)}
                       className="text-[9px] font-semibold px-2 py-0.5 rounded cursor-pointer transition-colors"
-                      style={{ background: '#fef2f2', color: '#dc2626', border: '1px solid #fca5a5' }}
-                      onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = '#fee2e2'; }}
-                      onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = '#fef2f2'; }}
+                      style={{ background: 'rgba(220,38,38,0.08)', color: '#dc2626', border: '1px solid rgba(220,38,38,0.2)' }}
+                      onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(220,38,38,0.15)'; }}
+                      onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(220,38,38,0.08)'; }}
                     >
                       Del
                     </button>

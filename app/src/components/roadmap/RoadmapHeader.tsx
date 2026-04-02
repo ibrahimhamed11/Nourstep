@@ -5,7 +5,7 @@ import { useState } from 'react';
 import {
   Rocket, Search, X, Plus, Filter, LayoutDashboard, TableProperties,
   GitBranch, Home, Briefcase, ChevronRight, Calendar, Layers,
-  ChevronDown, SlidersHorizontal,
+  ChevronDown, SlidersHorizontal, Sun, Moon,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import type { ViewMode, Status, Tag, Week, TaskType } from './roadmap.types';
@@ -27,6 +27,8 @@ interface Props {
   setTypeFilter: (t: TaskType | 'all') => void;
   activeTags: Tag[];
   onAddTask: () => void;
+  theme: 'light' | 'dark';
+  onToggleTheme: () => void;
 }
 
 const VIEW_META = {
@@ -56,7 +58,7 @@ export default function RoadmapHeader({
   stats, view, setView, searchQuery, setSearchQuery,
   statusFilter, setStatusFilter, tagFilter, setTagFilter,
   weekFilter, setWeekFilter, typeFilter, setTypeFilter,
-  activeTags, onAddTask,
+  activeTags, onAddTask, theme, onToggleTheme,
 }: Props) {
   const [filtersOpen, setFiltersOpen] = useState(false);
 
@@ -186,6 +188,15 @@ export default function RoadmapHeader({
             <span className="text-[11px] font-semibold text-heading">{stats.pct}%</span>
             <span className="text-[10px] text-muted">{stats.done}/{stats.total}</span>
           </div>
+
+          {/* Theme toggle */}
+          <button
+            onClick={onToggleTheme}
+            title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            className="flex items-center justify-center w-8 h-8 rounded text-muted border border-border/40 hover:border-border/60 hover:text-heading transition-all cursor-pointer flex-shrink-0"
+          >
+            {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
+          </button>
 
           {/* New Task CTA */}
           <button

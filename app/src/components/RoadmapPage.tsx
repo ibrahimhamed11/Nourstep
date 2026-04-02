@@ -91,6 +91,29 @@ function ErrorState({ message, onRetry }: { message: string; onRetry: () => void
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function RoadmapPage() {
+  /* ── Local theme — always defaults to light, independent of global ── */
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    const saved = localStorage.getItem('nourstep-roadmap-theme') as 'light' | 'dark' | null;
+    return saved ?? 'light';
+  });
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (theme === 'dark') root.classList.add('dark');
+    else root.classList.remove('dark');
+    localStorage.setItem('nourstep-roadmap-theme', theme);
+    // Restore global theme on unmount
+    return () => {
+      const global = (localStorage.getItem('nourstep-theme') as 'light' | 'dark' | null) ?? 'light';
+      if (global === 'dark') root.classList.add('dark');
+      else root.classList.remove('dark');
+    };
+  }, [theme]);
+
+  const handleToggleTheme = useCallback(() => {
+    setTheme(t => (t === 'dark' ? 'light' : 'dark'));
+  }, []);
+
   /* ── State ── */
   const [tasks, setTasks] = useState<RoadmapTask[]>([]);
   const [loading, setLoading] = useState(true);
@@ -306,6 +329,8 @@ export default function RoadmapPage() {
         setTypeFilter={setTypeFilter}
         activeTags={activeTags}
         onAddTask={handleAddTask}
+        theme={theme}
+        onToggleTheme={handleToggleTheme}
       />
 
       <main className="max-w-screen-2xl mx-auto px-4 py-5 space-y-4">

@@ -30,23 +30,22 @@ export default function RoadmapParallelView({ tasks, activeTrack, onToggleStatus
         return (
           <div
             key={week.week}
-            className="rounded-lg overflow-hidden"
+            className="rounded-lg overflow-hidden border border-border/40"
             style={{
-              border: '1px solid #e2e8f0',
               boxShadow: '0 1px 6px rgba(0,0,0,0.05)',
-              background: '#fff',
+              background: 'var(--theme-card)',
             }}
           >
             {/* ── Week header ── */}
             <div
-              className="flex items-center gap-3 px-4 py-2.5 border-b"
-              style={{ background: '#f8fafc', borderColor: '#e2e8f0' }}
+              className="flex items-center gap-3 px-4 py-2.5 border-b border-border/40"
+              style={{ background: 'var(--theme-surface)' }}
             >
               <div>
-                <span className="text-xs font-bold" style={{ color: '#1e293b' }}>
+                <span className="text-xs font-bold text-heading">
                   {week.label}
                 </span>
-                <span className="text-[10px] ml-2" style={{ color: '#94a3b8' }}>
+                <span className="text-[10px] ml-2 text-muted/60">
                   {week.dates}
                 </span>
               </div>
@@ -56,19 +55,19 @@ export default function RoadmapParallelView({ tasks, activeTrack, onToggleStatus
                 <div className="flex items-center gap-1.5 text-[9px] font-semibold">
                   {weekStats.done > 0 && (
                     <span className="px-1.5 py-0.5 rounded-full"
-                      style={{ background: '#f0fdf4', color: '#16a34a', border: '1px solid #86efac' }}>
+                      style={{ background: 'rgba(22,163,74,0.1)', color: '#16a34a', border: '1px solid rgba(22,163,74,0.25)' }}>
                       ✓ {weekStats.done} done
                     </span>
                   )}
                   {weekStats.inProgress > 0 && (
                     <span className="px-1.5 py-0.5 rounded-full"
-                      style={{ background: '#eff6ff', color: '#0078d4', border: '1px solid #93c5fd' }}>
+                      style={{ background: 'rgba(0,120,212,0.1)', color: '#0078d4', border: '1px solid rgba(0,120,212,0.25)' }}>
                       ▶ {weekStats.inProgress} active
                     </span>
                   )}
                   {weekStats.blocked > 0 && (
                     <span className="px-1.5 py-0.5 rounded-full"
-                      style={{ background: '#fef2f2', color: '#dc2626', border: '1px solid #fca5a5' }}>
+                      style={{ background: 'rgba(220,38,38,0.08)', color: '#dc2626', border: '1px solid rgba(220,38,38,0.2)' }}>
                       ⊘ {weekStats.blocked} blocked
                     </span>
                   )}
@@ -76,7 +75,7 @@ export default function RoadmapParallelView({ tasks, activeTrack, onToggleStatus
 
                 {/* Progress bar */}
                 <div className="flex items-center gap-2">
-                  <div className="w-24 h-1.5 rounded-full overflow-hidden" style={{ background: '#e2e8f0' }}>
+                  <div className="w-24 h-1.5 rounded-full overflow-hidden bg-border/40">
                     <div
                       className="h-1.5 rounded-full transition-all duration-700"
                       style={{
@@ -85,7 +84,7 @@ export default function RoadmapParallelView({ tasks, activeTrack, onToggleStatus
                       }}
                     />
                   </div>
-                  <span className="text-[10px] font-semibold" style={{ color: '#64748b' }}>
+                  <span className="text-[10px] font-semibold text-muted">
                     {weekStats.done}/{weekStats.total}
                   </span>
                 </div>
@@ -99,7 +98,7 @@ export default function RoadmapParallelView({ tasks, activeTrack, onToggleStatus
                 visibleTracks.length === 2 ? 'grid-cols-2' :
                 'grid-cols-2 lg:grid-cols-4'
               }`}
-              style={{ gap: '1px', background: '#e2e8f0' }}
+              style={{ gap: '1px', background: 'var(--theme-border)' }}
             >
               {visibleTracks.map(track => {
                 const trackWeekTasks = weekTasks.filter(t => t.track === track.id);
@@ -111,13 +110,12 @@ export default function RoadmapParallelView({ tasks, activeTrack, onToggleStatus
                   <div
                     key={track.id}
                     className="flex flex-col min-w-0"
-                    style={{ background: '#fff' }}
+                    style={{ background: 'var(--theme-card)' }}
                   >
                     {/* Track label row */}
                     <div
-                      className="flex items-center justify-between px-3 py-2 border-b"
+                      className="flex items-center justify-between px-3 py-2 border-b border-border/30"
                       style={{
-                        borderColor: '#e2e8f0',
                         borderLeftColor: track.color,
                         borderLeftWidth: 3,
                         background: `${track.color}08`,
@@ -132,19 +130,19 @@ export default function RoadmapParallelView({ tasks, activeTrack, onToggleStatus
                       <div className="flex items-center gap-1 text-[9px] font-semibold">
                         {tStats.blocked > 0 && (
                           <span className="px-1.5 py-0.5 rounded-full"
-                            style={{ background: '#fef2f2', color: '#dc2626', border: '1px solid #fca5a5' }}>
+                            style={{ background: 'rgba(220,38,38,0.08)', color: '#dc2626', border: '1px solid rgba(220,38,38,0.2)' }}>
                             ⊘{tStats.blocked}
                           </span>
                         )}
-                        <span className="px-1.5 py-0.5 rounded-sm"
-                          style={{ background: '#f1f5f9', color: '#64748b' }}>
+                        <span className="px-1.5 py-0.5 rounded-sm text-muted"
+                          style={{ background: 'var(--theme-surface)' }}>
                           {tStats.done}/{tStats.total}
                         </span>
                       </div>
                     </div>
 
                     {/* Track progress bar */}
-                    <div className="h-[2px]" style={{ background: '#f1f5f9' }}>
+                    <div className="h-[2px] bg-border/20">
                       <div
                         className="h-[2px] transition-all duration-700"
                         style={{

@@ -30,6 +30,7 @@ const BusinessPage = lazy(() => import('./components/BusinessPage'));
 const ModuleDetailPage = lazy(() => import('./components/ModuleDetailPage'));
 const RoadmapPage = lazy(() => import('./components/RoadmapPage'));
 const TasksPage = lazy(() => import('./modules/tasks/TasksPage'));
+const ProjectOverviewPage = lazy(() => import('./components/ProjectOverviewPage'));
 
 /** Minimal placeholder for lazy sections */
 const SectionFallback = () => <div className="min-h-[30vh]" />;
@@ -40,7 +41,7 @@ function App() {
   const [lang, setLang] = useState<Lang>('ar');
   const [theme, setTheme] = useState<Theme>(() => {
     const saved = localStorage.getItem('nourstep-theme') as Theme | null;
-    return saved || 'dark';
+    return saved || 'light';
   });
 
   useEffect(() => {
@@ -115,6 +116,16 @@ function App() {
           element={
             <Suspense fallback={<SectionFallback />}>
               <ResetPasswordPage lang={lang} theme={theme} setLang={setLang} setTheme={setTheme} />
+            </Suspense>
+          }
+        />
+
+        {/* ── Project Overview (public) ── */}
+        <Route
+          path="/project"
+          element={
+            <Suspense fallback={<SectionFallback />}>
+              <ProjectOverviewPage />
             </Suspense>
           }
         />
