@@ -1,7 +1,12 @@
 /**
- * RoadmapHeader — matches NourStep site theme (bg-navy, dark/light tokens)
+ * RoadmapHeader — Azure DevOps-inspired professional header
  */
-import { Rocket, Search, X, Plus, Filter, LayoutDashboard, TableProperties, GitBranch, Home, Briefcase, ChevronRight, Calendar, Layers } from 'lucide-react';
+import { useState } from 'react';
+import {
+  Rocket, Search, X, Plus, Filter, LayoutDashboard, TableProperties,
+  GitBranch, Home, Briefcase, ChevronRight, Calendar, Layers,
+  ChevronDown, SlidersHorizontal,
+} from 'lucide-react';
 import { Link } from 'react-router-dom';
 import type { ViewMode, Status, Tag, Week, TaskType } from './roadmap.types';
 import { STATUS_CONFIG, TAG_CONFIG, WEEKS, TASK_TYPE_CONFIG } from './roadmap.types';
@@ -26,9 +31,26 @@ interface Props {
 
 const VIEW_META = {
   board:    { icon: LayoutDashboard, label: 'Board' },
-  table:    { icon: TableProperties,  label: 'Table' },
-  parallel: { icon: GitBranch,        label: 'Parallel' },
+  table:    { icon: TableProperties,  label: 'Backlog' },
+  parallel: { icon: GitBranch,        label: 'Sprints' },
 } as const;
+
+function FilterPill({
+  active, onClick, children,
+}: { active: boolean; onClick: () => void; children: React.ReactNode }) {
+  return (
+    <button
+      onClick={onClick}
+      className={`inline-flex items-center gap-1 px-2.5 py-1 rounded text-[11px] font-medium border transition-all cursor-pointer whitespace-nowrap ${
+        active
+          ? 'bg-[#0078d4]/15 text-[#0078d4] border-[#0078d4]/40 dark:bg-[#2899f5]/15 dark:text-[#2899f5] dark:border-[#2899f5]/40'
+          : 'text-muted/80 border-border/30 hover:border-border/60 hover:text-heading bg-transparent'
+      }`}
+    >
+      {children}
+    </button>
+  );
+}
 
 export default function RoadmapHeader({
   stats, view, setView, searchQuery, setSearchQuery,
@@ -36,196 +58,226 @@ export default function RoadmapHeader({
   weekFilter, setWeekFilter, typeFilter, setTypeFilter,
   activeTags, onAddTask,
 }: Props) {
-  return (
-    <header className="sticky top-0 z-40 bg-navy/95 backdrop-blur-2xl border-b border-border/40 shadow-[0_1px_0_0_rgba(61,139,255,0.1),0_4px_24px_-4px_rgba(0,0,0,0.12)]">
-      <div className="max-w-screen-2xl mx-auto px-4 py-3 space-y-2.5">
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
-        {/* ── Top nav strip: breadcrumb + back links ── */}
-        <div className="flex items-center gap-1.5 text-[10px] text-muted/60 pb-1 border-b border-border/20">
-          <Link to="/"
-            className="flex items-center gap-1 hover:text-heading transition-colors cursor-pointer font-semibold">
-            <Home size={10} /> Home
-          </Link>
-          <ChevronRight size={9} className="text-border/50" />
-          <span className="text-bright font-bold">Tasks Board</span>
-          <span className="ml-auto flex items-center gap-2">
+  const activeFiltersCount = [
+    statusFilter !== 'all',
+    tagFilter !== 'all',
+    weekFilter !== 'all',
+    typeFilter !== 'all',
+  ].filter(Boolean).length;
+
+  return (
+    <header className="sticky top-0 z-40 bg-navy/98 backdrop-blur-2xl border-b border-border/50"
+      style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 4px 16px -4px rgba(0,0,0,0.08)' }}>
+
+      {/* ── Azure-style top organization bar ── */}
+      <div className="border-b border-border/30 bg-surface/30 dark:bg-darkblue/30">
+        <div className="max-w-screen-2xl mx-auto px-4 h-8 flex items-center gap-2">
+          <div className="flex items-center gap-1.5 text-[11px] text-muted/70">
+            <Link to="/" className="flex items-center gap-1 hover:text-royal dark:hover:text-bright transition-colors cursor-pointer font-medium">
+              <Home size={11} /> NourStep
+            </Link>
+            <ChevronRight size={9} className="text-border/60" />
+            <span className="font-medium text-muted/70">Development</span>
+            <ChevronRight size={9} className="text-border/60" />
+            <span className="font-semibold text-heading">Sprint Board</span>
+          </div>
+          <div className="ml-auto flex items-center gap-1.5">
             <Link to="/"
-              className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-border/40 hover:border-royal/40 hover:text-heading bg-surface/40 dark:bg-darkblue/40 hover:bg-royal/5 transition-all font-semibold cursor-pointer">
-              <Home size={10} /> Go to Home
+              className="flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium text-muted/70 hover:text-heading hover:bg-surface/60 transition-all cursor-pointer">
+              <Home size={10} /> Home
             </Link>
             <Link to="/business"
-              className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-bright/30 text-bright hover:bg-bright/10 hover:border-bright/50 bg-bright/5 transition-all font-semibold cursor-pointer">
+              className="flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium text-[#0078d4] dark:text-[#2899f5] hover:bg-[#0078d4]/8 dark:hover:bg-[#2899f5]/8 transition-all cursor-pointer">
               <Briefcase size={10} /> Business
             </Link>
-          </span>
+          </div>
         </div>
+      </div>
 
-        {/* Row 1 */}
-        <div className="flex flex-wrap items-center gap-3">
+      <div className="max-w-screen-2xl mx-auto px-4">
 
-          {/* Brand */}
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-royal to-bright flex items-center justify-center shadow-lg shadow-royal/30">
-              <Rocket size={18} className="text-white" />
+        {/* ── Main toolbar row ── */}
+        <div className="flex items-center gap-2 h-12">
+
+          {/* Brand / Project name */}
+          <div className="flex items-center gap-2.5 flex-shrink-0">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#0078d4] to-[#2899f5] flex items-center justify-center shadow-md shadow-[#0078d4]/30">
+              <Rocket size={15} className="text-white" />
             </div>
-            <div>
-              <p className="text-heading font-bold text-sm">Tasks Board</p>
-              <p className="text-muted text-[10px]">Apr 1 – Jun 2, 2026 · Website · Backend · Mobile</p>
-            </div>
-          </div>
-
-          {/* Search */}
-          <div className="relative flex-1 min-w-[200px] max-w-sm">
-            <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted/60" />
-            <input
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              placeholder="Search tasks, TASK-3, BUG-1, tag…"
-              className="w-full text-xs bg-surface/60 dark:bg-darkblue/50 border border-border/50 rounded-xl pl-8 pr-8 py-2 text-heading placeholder-muted/50 focus:outline-none focus:ring-2 focus:ring-royal/30 focus:border-royal/40 transition-all"
-            />
-            {searchQuery && (
-              <button onClick={() => setSearchQuery('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted/60 hover:text-heading cursor-pointer transition-colors">
-                <X size={13} />
-              </button>
-            )}
-          </div>
-
-          {/* New Task */}
-          <button onClick={onAddTask}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-royal to-bright text-white hover:from-bright hover:to-royal transition-all shadow-md shadow-royal/25 cursor-pointer">
-            <Plus size={14} /> New Task
-          </button>
-
-          {/* Progress */}
-          <div className="flex items-center gap-3 ml-auto">
-            <div className="text-right hidden sm:block">
-              <p className="text-heading font-bold text-sm">{stats.pct}% complete</p>
-              <p className="text-muted text-[10px]">{stats.done} / {stats.total} done</p>
-            </div>
-            <div className="w-28 h-2 bg-surface dark:bg-darkblue rounded-full overflow-hidden border border-border/30">
-              <div
-                className="h-2 bg-gradient-to-r from-royal to-sky rounded-full transition-all duration-700"
-                style={{ width: `${stats.pct}%` }}
-              />
+            <div className="hidden sm:block">
+              <p className="text-heading font-bold text-sm leading-tight">NourStep Board</p>
+              <p className="text-muted text-[10px] leading-tight">Apr – Jun 2026</p>
             </div>
           </div>
 
-          {/* View toggle */}
-          <div className="flex items-center gap-0.5 bg-surface dark:bg-darkblue border border-border/40 rounded-xl p-1">
+          <div className="w-px h-5 bg-border/40 mx-1 flex-shrink-0" />
+
+          {/* View switcher — Azure-style tab buttons */}
+          <div className="flex items-stretch gap-0 h-full">
             {(['board', 'table', 'parallel'] as const).map(v => {
               const { icon: Icon, label } = VIEW_META[v];
               return (
-                <button key={v} onClick={() => setView(v)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
+                <button
+                  key={v}
+                  onClick={() => setView(v)}
+                  className={`relative flex items-center gap-1.5 px-3.5 text-[12px] font-medium transition-all cursor-pointer ${
                     view === v
-                      ? 'bg-gradient-to-r from-royal to-bright text-white shadow-sm'
-                      : 'text-muted hover:text-heading'
-                  }`}>
-                  <Icon size={11} /> {label}
+                      ? 'text-[#0078d4] dark:text-[#2899f5] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#0078d4] dark:after:bg-[#2899f5] after:rounded-t'
+                      : 'text-muted hover:text-heading hover:bg-surface/40 dark:hover:bg-darkblue/40'
+                  }`}
+                >
+                  <Icon size={13} />
+                  <span>{label}</span>
                 </button>
               );
             })}
           </div>
+
+          <div className="w-px h-5 bg-border/40 mx-1 flex-shrink-0 hidden sm:block" />
+
+          {/* Search */}
+          <div className="relative flex-1 min-w-0 max-w-xs hidden sm:block">
+            <Search size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted/50 pointer-events-none" />
+            <input
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              placeholder="Search tasks, IDs, tags…"
+              className="w-full text-[12px] bg-surface/50 dark:bg-darkblue/40 border border-border/40 rounded pl-7 pr-7 py-1.5 text-heading placeholder-muted/40 focus:outline-none focus:ring-1 focus:ring-[#0078d4]/50 focus:border-[#0078d4]/50 dark:focus:ring-[#2899f5]/40 dark:focus:border-[#2899f5]/40 transition-all"
+            />
+            {searchQuery && (
+              <button onClick={() => setSearchQuery('')}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-muted/50 hover:text-heading cursor-pointer transition-colors">
+                <X size={12} />
+              </button>
+            )}
+          </div>
+
+          {/* Filters toggle */}
+          <button
+            onClick={() => setFiltersOpen(o => !o)}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded text-[12px] font-medium border transition-all cursor-pointer flex-shrink-0 ${
+              filtersOpen || activeFiltersCount > 0
+                ? 'bg-[#0078d4]/10 text-[#0078d4] border-[#0078d4]/30 dark:bg-[#2899f5]/10 dark:text-[#2899f5] dark:border-[#2899f5]/30'
+                : 'text-muted border-border/40 hover:border-border/60 hover:text-heading'
+            }`}
+          >
+            <SlidersHorizontal size={13} />
+            <span className="hidden sm:inline">Filters</span>
+            {activeFiltersCount > 0 && (
+              <span className="w-4 h-4 rounded-full bg-[#0078d4] dark:bg-[#2899f5] text-white text-[9px] font-bold flex items-center justify-center">
+                {activeFiltersCount}
+              </span>
+            )}
+            <ChevronDown size={11} className={`transition-transform ${filtersOpen ? 'rotate-180' : ''}`} />
+          </button>
+
+          <div className="ml-auto flex-shrink-0" />
+
+          {/* Progress pill */}
+          <div className="hidden md:flex items-center gap-2 bg-surface/50 dark:bg-darkblue/40 border border-border/30 rounded px-3 py-1.5 flex-shrink-0">
+            <div className="w-20 h-1.5 bg-border/30 rounded-full overflow-hidden">
+              <div
+                className="h-1.5 rounded-full transition-all duration-700 bg-gradient-to-r from-[#0078d4] to-[#2899f5]"
+                style={{ width: `${stats.pct}%` }}
+              />
+            </div>
+            <span className="text-[11px] font-semibold text-heading">{stats.pct}%</span>
+            <span className="text-[10px] text-muted">{stats.done}/{stats.total}</span>
+          </div>
+
+          {/* New Task CTA */}
+          <button
+            onClick={onAddTask}
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded text-[12px] font-semibold bg-[#0078d4] hover:bg-[#106ebe] dark:bg-[#2899f5] dark:hover:bg-[#1e85d8] text-white transition-all shadow-sm shadow-[#0078d4]/25 cursor-pointer flex-shrink-0"
+          >
+            <Plus size={14} />
+            <span className="hidden sm:inline">New Work Item</span>
+            <span className="sm:hidden">New</span>
+          </button>
         </div>
 
-        {/* Row 2: Filters */}
-        <div className="flex flex-wrap items-center gap-1.5">
-          <Filter size={11} className="text-muted/60 mr-1" />
+        {/* ── Filters Panel (collapsible, Azure-style filter bar) ── */}
+        {filtersOpen && (
+          <div className="border-t border-border/30 py-2.5 space-y-2">
 
-          <button onClick={() => setStatusFilter('all')}
-            className={`px-2.5 py-1 rounded-lg text-[10px] font-bold border transition-all cursor-pointer ${
-              statusFilter === 'all'
-                ? 'bg-royal/10 text-royal border-royal/25 dark:bg-bright/10 dark:text-bright dark:border-bright/25'
-                : 'text-muted border-border/40 hover:border-royal/25 hover:text-royal dark:hover:text-bright'
-            }`}>
-            All Status
-          </button>
-          {(Object.keys(STATUS_CONFIG) as Status[]).map(s => {
-            const cfg = STATUS_CONFIG[s];
-            const Icon = cfg.icon;
-            return (
-              <button key={s} onClick={() => setStatusFilter(statusFilter === s ? 'all' : s)}
-                className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-bold border transition-all cursor-pointer ${
-                  statusFilter === s ? cfg.badge : 'text-muted border-border/40 hover:border-royal/25 hover:text-royal dark:hover:text-bright'
-                }`}>
-                <Icon size={10} /> {cfg.label}
-              </button>
-            );
-          })}
+            {/* Search (mobile) */}
+            <div className="relative sm:hidden mb-2">
+              <Search size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted/50 pointer-events-none" />
+              <input
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                placeholder="Search tasks, IDs, tags…"
+                className="w-full text-[12px] bg-surface/50 dark:bg-darkblue/40 border border-border/40 rounded pl-7 pr-7 py-1.5 text-heading placeholder-muted/40 focus:outline-none focus:ring-1 focus:ring-[#0078d4]/50 focus:border-[#0078d4]/50 transition-all"
+              />
+            </div>
 
-          <span className="text-border/50 mx-1 select-none">·</span>
+            {/* Status row */}
+            <div className="flex flex-wrap items-center gap-1.5">
+              <span className="text-[10px] font-semibold text-muted/60 uppercase tracking-widest w-14 flex-shrink-0 flex items-center gap-1">
+                <Filter size={9} /> State
+              </span>
+              <FilterPill active={statusFilter === 'all'} onClick={() => setStatusFilter('all')}>All</FilterPill>
+              {(Object.keys(STATUS_CONFIG) as Status[]).map(s => {
+                const cfg = STATUS_CONFIG[s];
+                const Icon = cfg.icon;
+                return (
+                  <FilterPill key={s} active={statusFilter === s} onClick={() => setStatusFilter(statusFilter === s ? 'all' : s)}>
+                    <Icon size={10} /> {cfg.label}
+                  </FilterPill>
+                );
+              })}
+            </div>
 
-          <button onClick={() => setTagFilter('all')}
-            className={`px-2.5 py-1 rounded-lg text-[10px] font-bold border transition-all cursor-pointer ${
-              tagFilter === 'all'
-                ? 'bg-royal/10 text-royal border-royal/25 dark:bg-bright/10 dark:text-bright dark:border-bright/25'
-                : 'text-muted border-border/40 hover:border-royal/25 hover:text-royal dark:hover:text-bright'
-            }`}>
-            All Tags
-          </button>
-          {activeTags.map(tag => {
-            const cfg = TAG_CONFIG[tag];
-            return (
-              <button key={tag} onClick={() => setTagFilter(tagFilter === tag ? 'all' : tag)}
-                className={`px-2.5 py-1 rounded-lg text-[10px] font-bold border transition-all cursor-pointer ${
-                  tagFilter === tag ? cfg.cls : 'text-muted border-border/40 hover:border-royal/25 hover:text-royal dark:hover:text-bright'
-                }`}>
-                {cfg.label}
-              </button>
-            );
-          })}
-        </div>
+            {/* Week row */}
+            <div className="flex flex-wrap items-center gap-1.5">
+              <span className="text-[10px] font-semibold text-muted/60 uppercase tracking-widest w-14 flex-shrink-0 flex items-center gap-1">
+                <Calendar size={9} /> Sprint
+              </span>
+              <FilterPill active={weekFilter === 'all'} onClick={() => setWeekFilter('all')}>All</FilterPill>
+              {WEEKS.map(w => (
+                <FilterPill key={w.week} active={weekFilter === w.week} onClick={() => setWeekFilter(weekFilter === w.week ? 'all' : w.week)}>
+                  {w.label}
+                </FilterPill>
+              ))}
+            </div>
 
-        {/* Row 3: Week filter + Task type filter */}
-        <div className="flex flex-wrap items-center gap-1.5">
-          <Calendar size={11} className="text-muted/60 mr-1" />
+            {/* Type row */}
+            <div className="flex flex-wrap items-center gap-1.5">
+              <span className="text-[10px] font-semibold text-muted/60 uppercase tracking-widest w-14 flex-shrink-0 flex items-center gap-1">
+                <Layers size={9} /> Type
+              </span>
+              <FilterPill active={typeFilter === 'all'} onClick={() => setTypeFilter('all')}>All</FilterPill>
+              {(Object.keys(TASK_TYPE_CONFIG) as TaskType[]).map(type => {
+                const cfg = TASK_TYPE_CONFIG[type];
+                const Icon = cfg.icon;
+                return (
+                  <FilterPill key={type} active={typeFilter === type} onClick={() => setTypeFilter(typeFilter === type ? 'all' : type)}>
+                    <Icon size={10} /> {cfg.label}
+                  </FilterPill>
+                );
+              })}
+            </div>
 
-          {/* Week filters */}
-          <button onClick={() => setWeekFilter('all')}
-            className={`px-2.5 py-1 rounded-lg text-[10px] font-bold border transition-all cursor-pointer ${
-              weekFilter === 'all'
-                ? 'bg-royal/10 text-royal border-royal/25 dark:bg-bright/10 dark:text-bright dark:border-bright/25'
-                : 'text-muted border-border/40 hover:border-royal/25 hover:text-royal dark:hover:text-bright'
-            }`}>
-            All Weeks
-          </button>
-          {WEEKS.map(w => (
-            <button key={w.week} onClick={() => setWeekFilter(weekFilter === w.week ? 'all' : w.week)}
-              className={`px-2.5 py-1 rounded-lg text-[10px] font-bold border transition-all cursor-pointer ${
-                weekFilter === w.week
-                  ? 'bg-royal/10 text-royal border-royal/25 dark:bg-bright/10 dark:text-bright dark:border-bright/25'
-                  : 'text-muted border-border/40 hover:border-royal/25 hover:text-royal dark:hover:text-bright'
-              }`}>
-              {w.label}
-            </button>
-          ))}
+            {/* Tags row */}
+            {activeTags.length > 0 && (
+              <div className="flex flex-wrap items-center gap-1.5">
+                <span className="text-[10px] font-semibold text-muted/60 uppercase tracking-widest w-14 flex-shrink-0">Tags</span>
+                <FilterPill active={tagFilter === 'all'} onClick={() => setTagFilter('all')}>All</FilterPill>
+                {activeTags.map(tag => {
+                  const cfg = TAG_CONFIG[tag];
+                  return (
+                    <FilterPill key={tag} active={tagFilter === tag} onClick={() => setTagFilter(tagFilter === tag ? 'all' : tag)}>
+                      {cfg.label}
+                    </FilterPill>
+                  );
+                })}
+              </div>
+            )}
 
-          <span className="text-border/50 mx-1 select-none">·</span>
-
-          {/* Task type filters */}
-          <Layers size={11} className="text-muted/60 mr-0.5" />
-          <button onClick={() => setTypeFilter('all')}
-            className={`px-2.5 py-1 rounded-lg text-[10px] font-bold border transition-all cursor-pointer ${
-              typeFilter === 'all'
-                ? 'bg-royal/10 text-royal border-royal/25 dark:bg-bright/10 dark:text-bright dark:border-bright/25'
-                : 'text-muted border-border/40 hover:border-royal/25 hover:text-royal dark:hover:text-bright'
-            }`}>
-            All Types
-          </button>
-          {(Object.keys(TASK_TYPE_CONFIG) as TaskType[]).map(type => {
-            const cfg = TASK_TYPE_CONFIG[type];
-            const Icon = cfg.icon;
-            return (
-              <button key={type} onClick={() => setTypeFilter(typeFilter === type ? 'all' : type)}
-                className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-bold border transition-all cursor-pointer ${
-                  typeFilter === type ? cfg.badge : 'text-muted border-border/40 hover:border-royal/25 hover:text-royal dark:hover:text-bright'
-                }`}>
-                <Icon size={10} /> {cfg.label}
-              </button>
-            );
-          })}
-        </div>
+          </div>
+        )}
       </div>
     </header>
   );

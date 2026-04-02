@@ -43,8 +43,8 @@ function LoadingState() {
   return (
     <div className="min-h-screen bg-navy flex items-center justify-center">
       <div className="text-center space-y-4">
-        <div className="w-12 h-12 border-4 border-royal/20 border-t-royal rounded-full animate-spin mx-auto" />
-        <p className="text-muted text-sm font-medium">Loading tasks board…</p>
+        <div className="w-10 h-10 border-2 border-[#0078d4]/20 border-t-[#0078d4] rounded-full animate-spin mx-auto" />
+        <p className="text-muted text-sm">Loading work items…</p>
       </div>
     </div>
   );
@@ -53,11 +53,12 @@ function LoadingState() {
 function BackendUnavailableState() {
   return (
     <div className="min-h-screen bg-navy flex items-center justify-center">
-      <div className="text-center space-y-4 max-w-sm mx-4 card-dark rounded-2xl p-8">
-        <div className="w-14 h-14 rounded-2xl bg-royal/10 border border-royal/20 flex items-center justify-center mx-auto">
-          <span className="text-3xl">🚧</span>
+      <div className="text-center space-y-4 max-w-sm mx-4 rounded-lg border border-border/40 bg-[var(--theme-card)] p-8"
+        style={{ boxShadow: '0 4px 24px rgba(0,0,0,0.12)' }}>
+        <div className="w-12 h-12 rounded-lg border border-border/40 bg-surface/60 flex items-center justify-center mx-auto">
+          <span className="text-2xl">🚧</span>
         </div>
-        <p className="text-heading font-bold text-lg">Backend Coming Soon</p>
+        <p className="text-heading font-semibold text-base">Backend Coming Soon</p>
         <p className="text-muted text-sm leading-relaxed">
           The roadmap API is not deployed yet.<br />Check back once the backend is live.
         </p>
@@ -69,15 +70,16 @@ function BackendUnavailableState() {
 function ErrorState({ message, onRetry }: { message: string; onRetry: () => void }) {
   return (
     <div className="min-h-screen bg-navy flex items-center justify-center">
-      <div className="text-center space-y-4 max-w-sm mx-4 card-dark rounded-2xl p-8">
-        <div className="w-14 h-14 rounded-2xl bg-error/10 border border-error/20 flex items-center justify-center mx-auto">
-          <span className="text-error text-2xl">⚠</span>
+      <div className="text-center space-y-4 max-w-sm mx-4 rounded-lg border border-error/30 bg-[var(--theme-card)] p-8"
+        style={{ boxShadow: '0 4px 24px rgba(255,77,77,0.08)' }}>
+        <div className="w-12 h-12 rounded-lg border border-error/25 bg-error/5 flex items-center justify-center mx-auto">
+          <span className="text-error text-xl">⚠</span>
         </div>
-        <p className="text-heading font-semibold">Failed to load tasks board</p>
+        <p className="text-heading font-semibold">Failed to load work items</p>
         <p className="text-muted text-sm">{message}</p>
         <button
           onClick={onRetry}
-          className="px-5 py-2 bg-gradient-to-r from-royal to-bright text-white rounded-xl text-sm font-bold hover:opacity-90 transition-all"
+          className="px-5 py-2 bg-[#0078d4] hover:bg-[#106ebe] text-white rounded text-sm font-medium transition-colors cursor-pointer"
         >
           Retry
         </button>
@@ -306,8 +308,8 @@ export default function RoadmapPage() {
         onAddTask={handleAddTask}
       />
 
-      <main className="max-w-screen-2xl mx-auto px-4 py-8 space-y-6">
-        {/* Stats + Milestones + Track Filter Pills */}
+      <main className="max-w-screen-2xl mx-auto px-4 py-5 space-y-4">
+        {/* KPIs + Track filter + Milestones */}
         <RoadmapStats
           tasks={filteredTasks}
           activeTrack={activeTrack}
@@ -316,7 +318,7 @@ export default function RoadmapPage() {
 
         {/* ── BOARD VIEW ── */}
         {view === 'board' && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             {WEEKS.map(w => (
               <RoadmapWeekColumn
                 key={w.week}
@@ -333,7 +335,7 @@ export default function RoadmapPage() {
           </div>
         )}
 
-        {/* ── TABLE VIEW ── */}
+        {/* ── BACKLOG TABLE VIEW ── */}
         {view === 'table' && (
           <RoadmapTableView
             tasks={filteredTasks}
@@ -344,7 +346,7 @@ export default function RoadmapPage() {
           />
         )}
 
-        {/* ── PARALLEL VIEW ── */}
+        {/* ── SPRINTS PARALLEL VIEW ── */}
         {view === 'parallel' && (
           <RoadmapParallelView
             tasks={filteredTasks}
@@ -355,11 +357,11 @@ export default function RoadmapPage() {
           />
         )}
 
-        {/* ── Bottom Summary ── */}
+        {/* Analytics footer */}
         <RoadmapBottomSummary tasks={filteredTasks} />
       </main>
 
-      {/* ── Add/Edit Modal ── */}
+      {/* Add/Edit Modal */}
       <RoadmapTaskFormModal
         open={modalTask !== null}
         initial={modalTask && 'id' in modalTask ? (modalTask as RoadmapTask) : null}
@@ -369,12 +371,12 @@ export default function RoadmapPage() {
         onClose={handleCloseModal}
       />
 
-      {/* ── Saving overlay ── */}
+      {/* Saving overlay */}
       {saving && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/30 backdrop-blur-sm">
-          <div className="bg-[var(--theme-card)] border border-[var(--theme-border)] rounded-2xl shadow-2xl px-8 py-5 flex items-center gap-3">
-            <div className="w-5 h-5 border-2 border-royal/25 border-t-royal rounded-full animate-spin" />
-            <span className="text-heading text-sm font-semibold">Saving…</span>
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/25 backdrop-blur-sm">
+          <div className="bg-[var(--theme-card)] border border-border/40 rounded-lg shadow-xl px-6 py-4 flex items-center gap-3">
+            <div className="w-4 h-4 border-2 border-[#0078d4]/25 border-t-[#0078d4] rounded-full animate-spin" />
+            <span className="text-heading text-sm font-medium">Saving…</span>
           </div>
         </div>
       )}

@@ -1,11 +1,10 @@
 /**
- * RoadmapTaskCard — NourStep theme, full data display
+ * RoadmapTaskCard — Azure DevOps Work Item card (rich light-theme colors)
  */
 import { useState } from 'react';
 import {
-  CheckCircle2, Circle, ChevronDown, ChevronUp,
-  Edit2, Trash2, Clock, User, Link2, AlertTriangle,
-  ArrowRight, Copy, Check, Hash,
+  CheckCircle2, Circle, Clock, AlertTriangle, Edit2, Trash2,
+  ChevronDown, ChevronUp, User, Copy, Check, ArrowRight,
 } from 'lucide-react';
 import type { RoadmapTask } from './roadmap.types';
 import { TRACKS, STATUS_CONFIG, TASK_TYPE_CONFIG, TAG_CONFIG } from './roadmap.types';
@@ -18,21 +17,31 @@ interface Props {
   onDelete: (id: string) => void;
 }
 
+const STATUS_META: Record<string, { color: string; bg: string; border: string; label: string }> = {
+  'todo':        { color: '#64748b', bg: '#f1f5f9', border: '#cbd5e1',  label: 'To Do'       },
+  'in-progress': { color: '#0078d4', bg: '#eff6ff', border: '#93c5fd',  label: 'In Progress' },
+  'done':        { color: '#16a34a', bg: '#f0fdf4', border: '#86efac',  label: 'Done'        },
+  'blocked':     { color: '#dc2626', bg: '#fef2f2', border: '#fca5a5',  label: 'Blocked'     },
+};
+
 export default function RoadmapTaskCard({ task, allTasks, onToggleStatus, onEdit, onDelete }: Props) {
   const [expanded, setExpanded] = useState(false);
-  const [copied, setCopied] = useState<'id' | 'num' | null>(null);
+  const [copied, setCopied] = useState(false);
 
-  const copyText = (text: string, key: 'id' | 'num') => {
-    navigator.clipboard.writeText(text).then(() => {
-      setCopied(key);
-      setTimeout(() => setCopied(null), 1500);
+  const copyId = () => {
+    navigator.clipboard.writeText(task.id).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
     });
   };
 
-  const track      = TRACKS.find(t => t.id === task.track);
-  const statusCfg  = STATUS_CONFIG[task.status];
-  const typeCfg    = TASK_TYPE_CONFIG[task.taskType];
-  const TypeIcon   = typeCfg.icon;
+  const track     = TRACKS.find(t => t.id === task.track);
+  const statusCfg = STATUS_CONFIG[task.status];
+  const typeCfg   = TASK_TYPE_CONFIG[task.taskType];
+  const TypeIcon  = typeCfg.icon;
+  const isDone    = task.status === 'done';
+  const sm        = STATUS_META[task.status] ?? STATUS_META['todo'];
+  const trackColor = task.status === 'blocked' ? '#dc2626' : (track?.color ?? '#0078d4');
 
   const blockedByTasks = (task.blockedBy ?? [])
     .map(id => allTasks.find(t => t.id === id))
@@ -42,95 +51,101 @@ export default function RoadmapTaskCard({ task, allTasks, onToggleStatus, onEdit
     .map(id => allTasks.find(t => t.id === id))
     .filter(Boolean) as RoadmapTask[];
 
-  const isDone = task.status === 'done';
-
   return (
     <div
-      className={`card-dark rounded-xl overflow-hidden transition-all duration-200 select-none ${
-        task.status === 'blocked' ? 'ring-1 ring-error/30' : ''
-      }`}
-      style={{ borderLeft: `3px solid ${track?.color ?? '#1B4FD8'}` }}
+      className="group rounded overflow-hidden transition-all duration-150 hover:shadow-md"
+      style={{
+        background: 'var(--theme-card)',
+        border: '1px solid var(--theme-border)',
+        borderLeftColor: trackColor,
+        borderLeftWidth: '3px',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.07)',
+      }}
     >
-      {/* ── Collapsed / always-visible row ── */}
+      {/* Main row */}
       <div
-        className="flex items-start gap-2.5 px-3 py-2.5 cursor-pointer"
+        className="flex items-start gap-2.5 px-3 py-2.5 cursor-pointer select-none"
         onClick={() => setExpanded(e => !e)}
       >
-        {/* Status toggle */}
+        {/* Status toggle button */}
         <button
           onClick={e => { e.stopPropagation(); onToggleStatus(task.id); }}
-          className="mt-0.5 flex-shrink-0 text-muted hover:text-success transition-colors cursor-pointer"
-          title={`Status: ${statusCfg.label} — click to cycle`}
+          className="mt-0.5 flex-shrink-0 transition-transform hover:scale-110 cursor-pointer"
+          title={`${statusCfg.label} — click to cycle`}
         >
           {isDone
-            ? <CheckCircle2 size={15} className="text-success" />
-            : <Circle size={15} className={statusCfg.cls} />}
+            ? <CheckCircle2 size={15} style={{ color: sm.color }} />
+            : <Circle size={15} style={{ color: sm.color }} />}
         </button>
 
         <div className="flex-1 min-w-0">
-          {/* Task ID + type */}
-          <div className="flex items-center gap-1.5 mb-0.5">
-            <button
-              onClick={e => { e.stopPropagation(); copyText(task.id, 'id'); }}
-              title="Copy task ID"
-              className={`flex items-center gap-1 text-[9px] font-black font-mono tracking-widest px-1.5 py-0.5 rounded-md border transition-all cursor-pointer ${
-                copied === 'id'
-                  ? 'bg-success/15 text-success border-success/30'
-                  : `${typeCfg.cls} border-current/20 hover:bg-current/10`
-              }`}
+          {/* Type badge + ID */}
+          <div className="flex items-center gap-1.5 mb-1 flex-wrap">
+            <span
+              className="inline-flex items-center gap-0.5 text-[9px] font-bold px-1.5 py-0.5 rounded-sm"
+              style={{
+                background: `${trackColor}18`,
+                color: trackColor,
+                border: `1px solid ${trackColor}35`,
+              }}
             >
-              {copied === 'id' ? <Check size={8} /> : <Copy size={8} />}
+              <TypeIcon size={8} /> {typeCfg.label}
+            </span>
+            <button
+              onClick={e => { e.stopPropagation(); copyId(); }}
+              className="flex items-center gap-0.5 text-[9px] font-mono font-semibold transition-colors cursor-pointer"
+              style={{ color: copied ? '#16a34a' : '#94a3b8' }}
+              title="Copy ID"
+            >
+              {copied ? <Check size={8} /> : <Copy size={8} />}
               {task.id}
             </button>
-            {task.taskNumber != null && (
-              <button
-                onClick={e => { e.stopPropagation(); copyText(`#${task.taskNumber}`, 'num'); }}
-                title="Copy task number"
-                className={`flex items-center gap-0.5 text-[9px] font-bold px-1.5 py-0.5 rounded-md border transition-all cursor-pointer ${
-                  copied === 'num'
-                    ? 'bg-success/15 text-success border-success/30'
-                    : 'text-muted border-border/40 hover:text-heading hover:border-border/70'
-                }`}
-              >
-                {copied === 'num' ? <Check size={8} /> : <Hash size={8} />}
-                {task.taskNumber}
-              </button>
-            )}
-            <span className={`flex items-center gap-0.5 text-[8px] font-bold px-1.5 py-0.5 rounded border ${typeCfg.badge}`}>
-              <TypeIcon size={8} />{typeCfg.label}
-            </span>
           </div>
 
           {/* Title */}
-          <p className={`text-xs font-semibold leading-snug ${
-            isDone ? 'line-through text-muted/60' : 'text-heading'
-          }`}>
+          <p
+            className="text-xs font-medium leading-snug"
+            style={{
+              color: isDone ? '#94a3b8' : 'var(--theme-heading)',
+              textDecoration: isDone ? 'line-through' : 'none',
+            }}
+          >
             {task.title}
           </p>
 
-          {/* Status + estimate row */}
+          {/* Status pill + estimate + blockers */}
           <div className="flex items-center flex-wrap gap-1.5 mt-1.5">
-            <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-md border ${statusCfg.badge}`}>
-              {statusCfg.label}
+            <span
+              className="inline-flex items-center text-[9px] font-semibold px-2 py-0.5 rounded-full"
+              style={{ background: sm.bg, color: sm.color, border: `1px solid ${sm.border}` }}
+            >
+              {sm.label}
             </span>
             {task.estimate && task.estimate !== '—' && (
-              <span className="flex items-center gap-0.5 text-[9px] text-muted">
-                <Clock size={9} />{task.estimate}
+              <span className="flex items-center gap-1 text-[9px]" style={{ color: '#94a3b8' }}>
+                <Clock size={9} /> {task.estimate}
               </span>
             )}
             {(task.blockedBy ?? []).length > 0 && (
-              <span className="flex items-center gap-0.5 text-[9px] text-error/70">
-                <AlertTriangle size={9} />{task.blockedBy!.length}
+              <span className="flex items-center gap-0.5 text-[9px] font-medium" style={{ color: '#dc2626' }}>
+                <AlertTriangle size={9} /> {task.blockedBy!.length} blocker
               </span>
             )}
           </div>
 
-          {/* Tags — always visible */}
+          {/* Tags */}
           {(task.tags ?? []).length > 0 && (
             <div className="flex flex-wrap gap-1 mt-1.5">
               {task.tags!.map(tag => (
-                <span key={tag}
-                  className={`text-[8px] font-bold px-1.5 py-0.5 rounded border ${TAG_CONFIG[tag]?.cls ?? 'bg-surface text-muted border-border/40'}`}>
+                <span
+                  key={tag}
+                  className="text-[8px] font-medium px-1.5 py-0.5 rounded-sm"
+                  style={{
+                    background: '#f8fafc',
+                    color: '#475569',
+                    border: '1px solid #e2e8f0',
+                  }}
+                >
                   {TAG_CONFIG[tag]?.label ?? tag}
                 </span>
               ))}
@@ -138,125 +153,123 @@ export default function RoadmapTaskCard({ task, allTasks, onToggleStatus, onEdit
           )}
         </div>
 
-        <span className="flex-shrink-0 text-muted/30 mt-1">
-          {expanded ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+        {/* Hover action buttons */}
+        <div
+          className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"
+          onClick={e => e.stopPropagation()}
+        >
+          <button
+            onClick={() => onEdit(task)}
+            className="w-6 h-6 flex items-center justify-center rounded transition-all cursor-pointer"
+            style={{ color: '#64748b' }}
+            onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#0078d4'; (e.currentTarget as HTMLButtonElement).style.background = '#eff6ff'; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#64748b'; (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}
+            title="Edit"
+          >
+            <Edit2 size={11} />
+          </button>
+          <button
+            onClick={() => onDelete(task.id)}
+            className="w-6 h-6 flex items-center justify-center rounded transition-all cursor-pointer"
+            style={{ color: '#64748b' }}
+            onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#dc2626'; (e.currentTarget as HTMLButtonElement).style.background = '#fef2f2'; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#64748b'; (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}
+            title="Delete"
+          >
+            <Trash2 size={11} />
+          </button>
+        </div>
+
+        <span className="flex-shrink-0 mt-1" style={{ color: '#cbd5e1' }}>
+          {expanded ? <ChevronUp size={11} /> : <ChevronDown size={11} />}
         </span>
       </div>
 
-      {/* ── Expanded details ── */}
+      {/* Expanded detail panel */}
       {expanded && (
         <div
-          className="border-t border-border/30 px-3 py-2.5 space-y-2.5"
+          className="border-t px-3 py-3 space-y-3"
+          style={{
+            background: '#fafbfe',
+            borderColor: 'var(--theme-border)',
+          }}
           onClick={e => e.stopPropagation()}
         >
-          {/* Description */}
           {task.desc && (
-            <p className="text-muted text-[11px] leading-relaxed">{task.desc}</p>
+            <p className="text-[11px] leading-relaxed" style={{ color: '#475569' }}>
+              {task.desc}
+            </p>
           )}
 
-          {/* Assignee + estimate */}
-          <div className="flex flex-wrap gap-3 text-[10px] text-muted">
+          <div className="flex flex-wrap gap-4 text-[10px]" style={{ color: '#64748b' }}>
             {task.assignee && (
-              <span className="flex items-center gap-1">
-                <User size={10} className="flex-shrink-0" />{task.assignee}
+              <span className="flex items-center gap-1.5">
+                <span className="w-4 h-4 rounded-full flex items-center justify-center" style={{ background: '#eff6ff' }}>
+                  <User size={9} style={{ color: '#0078d4' }} />
+                </span>
+                {task.assignee}
               </span>
             )}
             {task.estimate && task.estimate !== '—' && (
               <span className="flex items-center gap-1">
-                <Clock size={10} className="flex-shrink-0" />Est: {task.estimate}
+                <Clock size={9} /> Estimate: {task.estimate}
               </span>
             )}
           </div>
 
-          {/* Blocked by */}
           {blockedByTasks.length > 0 && (
             <div>
-              <p className="text-[9px] font-black text-error/70 uppercase tracking-widest mb-1 flex items-center gap-1">
+              <p className="text-[9px] font-bold uppercase tracking-widest mb-1 flex items-center gap-1" style={{ color: '#dc2626' }}>
                 <AlertTriangle size={9} /> Blocked by
               </p>
               <div className="flex flex-wrap gap-1">
-                {blockedByTasks.map(d => {
-                  const dTrack = TRACKS.find(t => t.id === d.track);
-                  return (
-                    <span key={d.id}
-                      className="flex items-center gap-1 text-[9px] bg-error/8 border border-error/20 text-error/80 px-1.5 py-0.5 rounded-md"
-                      style={{ borderLeftColor: dTrack?.color, borderLeftWidth: 2 }}>
-                      <span className="font-black">{d.id}</span>
-                      <span className="text-muted/70 truncate max-w-[80px]">{d.title}</span>
-                    </span>
-                  );
-                })}
+                {blockedByTasks.map(d => (
+                  <span key={d.id} className="flex items-center gap-1 text-[9px] px-2 py-0.5 rounded-sm"
+                    style={{ background: '#fef2f2', color: '#dc2626', border: '1px solid #fca5a5' }}>
+                    <span className="font-bold font-mono">{d.id}</span>
+                    <span className="truncate max-w-[90px]" style={{ color: '#94a3b8' }}>{d.title}</span>
+                  </span>
+                ))}
               </div>
             </div>
           )}
 
-          {/* Parallel tasks */}
           {parallelTasks.length > 0 && (
             <div>
-              <p className="text-[9px] font-black text-royal/70 dark:text-bright/70 uppercase tracking-widest mb-1 flex items-center gap-1">
+              <p className="text-[9px] font-bold uppercase tracking-widest mb-1 flex items-center gap-1" style={{ color: '#0078d4' }}>
                 <ArrowRight size={9} /> Runs in parallel
               </p>
               <div className="flex flex-wrap gap-1">
-                {parallelTasks.map(d => {
-                  const dTrack = TRACKS.find(t => t.id === d.track);
-                  return (
-                    <span key={d.id}
-                      className="flex items-center gap-1 text-[9px] bg-royal/8 dark:bg-bright/8 border border-royal/20 dark:border-bright/20 text-royal/80 dark:text-bright/80 px-1.5 py-0.5 rounded-md"
-                      style={{ borderLeftColor: dTrack?.color, borderLeftWidth: 2 }}>
-                      <span className="font-black">{d.id}</span>
-                      <span className="text-muted/70 truncate max-w-[80px]">{d.title}</span>
-                    </span>
-                  );
-                })}
+                {parallelTasks.map(d => (
+                  <span key={d.id} className="flex items-center gap-1 text-[9px] px-2 py-0.5 rounded-sm"
+                    style={{ background: '#eff6ff', color: '#0078d4', border: '1px solid #93c5fd' }}>
+                    <span className="font-bold font-mono">{d.id}</span>
+                    <span className="truncate max-w-[90px]" style={{ color: '#94a3b8' }}>{d.title}</span>
+                  </span>
+                ))}
               </div>
             </div>
           )}
 
-          {/* Footer: linked IDs pill + actions */}
-          <div className="flex items-center justify-between pt-1 border-t border-border/20">
-            <div className="flex items-center gap-1.5">
-              <Link2 size={9} className="text-muted/40 flex-shrink-0" />
-              <button
-                onClick={() => copyText(task.id, 'id')}
-                title="Copy task ID"
-                className={`flex items-center gap-1 text-[9px] font-black font-mono px-1.5 py-0.5 rounded-md border transition-all cursor-pointer ${
-                  copied === 'id'
-                    ? 'bg-success/15 text-success border-success/30'
-                    : `${typeCfg.cls} border-current/20 hover:bg-current/10`
-                }`}
-              >
-                {copied === 'id' ? <Check size={8} /> : <Copy size={8} />}
-                {task.id}
-              </button>
-              {task.taskNumber != null && (
-                <button
-                  onClick={() => copyText(`#${task.taskNumber}`, 'num')}
-                  title="Copy task number"
-                  className={`flex items-center gap-0.5 text-[9px] font-bold px-1.5 py-0.5 rounded-md border transition-all cursor-pointer ${
-                    copied === 'num'
-                      ? 'bg-success/15 text-success border-success/30'
-                      : 'text-muted border-border/40 hover:text-heading hover:border-border/70'
-                  }`}
-                >
-                  {copied === 'num' ? <Check size={8} /> : <Hash size={8} />}
-                  #{task.taskNumber}
-                </button>
-              )}
-            </div>
-            <div className="flex gap-1.5">
-              <button
-                onClick={() => onEdit(task)}
-                className="flex items-center gap-1 text-[10px] font-semibold text-royal dark:text-bright border border-royal/20 dark:border-bright/20 bg-royal/5 dark:bg-bright/5 hover:bg-royal/10 dark:hover:bg-bright/10 rounded-lg px-2.5 py-1 transition-colors cursor-pointer"
-              >
-                <Edit2 size={9} /> Edit
-              </button>
-              <button
-                onClick={() => onDelete(task.id)}
-                className="flex items-center gap-1 text-[10px] font-semibold text-error/70 border border-error/20 bg-error/5 hover:bg-error/10 rounded-lg px-2.5 py-1 transition-colors cursor-pointer"
-              >
-                <Trash2 size={9} /> Delete
-              </button>
-            </div>
+          <div className="flex gap-2 pt-2 border-t" style={{ borderColor: '#e2e8f0' }}>
+            <button
+              onClick={() => onEdit(task)}
+              className="flex items-center gap-1.5 text-[10px] font-semibold px-3 py-1 rounded cursor-pointer transition-colors"
+              style={{ background: '#eff6ff', color: '#0078d4', border: '1px solid #93c5fd' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = '#dbeafe'; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = '#eff6ff'; }}
+            >
+              <Edit2 size={10} /> Edit
+            </button>
+            <button
+              onClick={() => onDelete(task.id)}
+              className="flex items-center gap-1.5 text-[10px] font-semibold px-3 py-1 rounded cursor-pointer transition-colors"
+              style={{ background: '#fef2f2', color: '#dc2626', border: '1px solid #fca5a5' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = '#fee2e2'; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = '#fef2f2'; }}
+            >
+              <Trash2 size={10} /> Delete
+            </button>
           </div>
         </div>
       )}

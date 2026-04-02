@@ -1,5 +1,5 @@
 /**
- * RoadmapWeekColumn — Board week column (NourStep theme)
+ * RoadmapWeekColumn — Azure DevOps Sprint Column (rich light-theme colors)
  */
 import { Plus } from 'lucide-react';
 import type { RoadmapTask, Track, Week } from './roadmap.types';
@@ -17,71 +17,159 @@ interface Props {
   onAddTask: (week: Week) => void;
 }
 
+function isCurrentWeek(week: (typeof WEEKS)[number]): boolean {
+  return week.week === 1;
+}
+
 export default function RoadmapWeekColumn({
   week, tasks, allTasks, activeTrack, onToggleStatus, onEdit, onDelete, onAddTask,
 }: Props) {
   const filtered = activeTrack === 'all' ? tasks : tasks.filter(t => t.track === activeTrack);
   const stats = getStats(filtered);
-  const isCurrent = week.week === 1;
+  const isCurrent = isCurrentWeek(week);
+
+  const doneCount    = filtered.filter(t => t.status === 'done').length;
+  const inProgCount  = filtered.filter(t => t.status === 'in-progress').length;
+  const blockedCount = filtered.filter(t => t.status === 'blocked').length;
 
   return (
-    <div className={`card-dark rounded-2xl overflow-hidden flex flex-col transition-all duration-200 ${
-      isCurrent ? 'ring-2 ring-royal/40 dark:ring-bright/30 shadow-lg shadow-royal/10' : ''
-    }`}>
-      {/* Header */}
-      <div className={`px-4 py-3 flex items-center justify-between border-b border-border/30 ${
-        isCurrent
-          ? 'bg-gradient-to-r from-royal/15 to-bright/10 dark:from-royal/20 dark:to-bright/10'
-          : 'bg-surface/50 dark:bg-darkblue/40'
-      }`}>
+    <div
+      className="flex flex-col rounded-lg overflow-hidden transition-all duration-150"
+      style={{
+        background: '#fff',
+        border: isCurrent ? '1.5px solid #0078d4' : '1px solid #e2e8f0',
+        boxShadow: isCurrent
+          ? '0 0 0 3px rgba(0,120,212,0.10), 0 2px 8px rgba(0,120,212,0.10)'
+          : '0 1px 4px rgba(0,0,0,0.06)',
+      }}
+    >
+      {/* ── Column header ── */}
+      <div
+        className="px-3 py-2.5 flex items-center justify-between border-b"
+        style={{
+          background: isCurrent ? '#eff6ff' : '#f8fafc',
+          borderColor: isCurrent ? '#93c5fd' : '#e2e8f0',
+        }}
+      >
         <div>
-          <div className="flex items-center gap-2">
-            <span className={`font-bold text-sm ${isCurrent ? 'text-royal dark:text-bright' : 'text-heading'}`}>
+          <div className="flex items-center gap-1.5">
+            <span
+              className="text-xs font-bold"
+              style={{ color: isCurrent ? '#0078d4' : '#1e293b' }}
+            >
               {week.label}
             </span>
             {isCurrent && (
-              <span className="text-[9px] font-black bg-royal/15 text-royal dark:bg-bright/15 dark:text-bright border border-royal/25 dark:border-bright/25 px-1.5 py-0.5 rounded-md tracking-widest">
-                NOW
+              <span
+                className="text-[8px] font-bold px-1.5 py-0.5 rounded-sm"
+                style={{ background: '#0078d4', color: '#fff', letterSpacing: '0.05em' }}
+              >
+                CURRENT
               </span>
             )}
           </div>
-          <p className="text-muted text-[10px] mt-0.5">{week.dates}</p>
+          <p className="text-[10px] mt-0.5" style={{ color: '#94a3b8' }}>{week.dates}</p>
         </div>
-        <div className="flex items-center gap-2">
+
+        <div className="flex items-center gap-1.5">
+          {/* Mini status indicators */}
+          {filtered.length > 0 && (
+            <div className="flex items-center gap-1 text-[9px] font-semibold">
+              {doneCount > 0 && (
+                <span style={{ color: '#16a34a' }}>✓{doneCount}</span>
+              )}
+              {inProgCount > 0 && (
+                <span style={{ color: '#0078d4' }}>▶{inProgCount}</span>
+              )}
+              {blockedCount > 0 && (
+                <span style={{ color: '#dc2626' }}>⊘{blockedCount}</span>
+              )}
+            </div>
+          )}
+
+          {/* Done/total badge */}
+          <span
+            className="text-[10px] font-bold px-1.5 py-0.5 rounded-sm"
+            style={
+              isCurrent
+                ? { background: '#dbeafe', color: '#0078d4' }
+                : { background: '#f1f5f9', color: '#64748b' }
+            }
+          >
+            {stats.done}/{stats.total}
+          </span>
+
+          {/* Add task button */}
           <button
             onClick={() => onAddTask(week.week)}
-            className="p-1.5 rounded-lg text-muted hover:text-royal dark:hover:text-bright hover:bg-royal/8 transition-all cursor-pointer"
-            title="Add task to this week">
+            className="w-6 h-6 flex items-center justify-center rounded transition-all cursor-pointer"
+            style={{ color: isCurrent ? '#0078d4' : '#94a3b8' }}
+            onMouseEnter={e => {
+              (e.currentTarget as HTMLButtonElement).style.background = '#eff6ff';
+              (e.currentTarget as HTMLButtonElement).style.color = '#0078d4';
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLButtonElement).style.background = 'transparent';
+              (e.currentTarget as HTMLButtonElement).style.color = isCurrent ? '#0078d4' : '#94a3b8';
+            }}
+            title={`Add task to ${week.label}`}
+          >
             <Plus size={13} />
           </button>
-          <div className="text-right">
-            <p className="text-xs font-bold text-heading">{stats.done}/{stats.total}</p>
-            <p className="text-[9px] text-muted">{stats.pct}%</p>
-          </div>
         </div>
       </div>
 
-      {/* Progress bar */}
-      <div className="h-0.5 bg-surface dark:bg-navy">
+      {/* ── Progress bar ── */}
+      <div className="h-[3px]" style={{ background: '#e2e8f0' }}>
         <div
-          className={`h-0.5 transition-all duration-700 ${isCurrent ? 'bg-gradient-to-r from-royal to-bright' : 'bg-success/60'}`}
-          style={{ width: `${stats.pct}%` }}
+          className="h-[3px] transition-all duration-700"
+          style={{
+            width: `${stats.pct}%`,
+            background: stats.pct === 100
+              ? '#16a34a'
+              : isCurrent
+                ? 'linear-gradient(90deg, #0078d4, #2899f5)'
+                : '#0078d4',
+          }}
         />
       </div>
 
-      {/* Tasks */}
-      <div className="p-3 space-y-2 flex-1 min-h-[80px]">
+      {/* ── Tasks list ── */}
+      <div className="p-2.5 space-y-1.5 flex-1 overflow-y-auto" style={{ minHeight: 120, maxHeight: 600 }}>
         {filtered.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-6 gap-1.5">
-            <div className="w-8 h-8 rounded-xl bg-surface dark:bg-darkblue border border-border/30 flex items-center justify-center">
-              <Plus size={13} className="text-muted/40" />
-            </div>
-            <p className="text-muted/40 text-[10px]">No tasks</p>
-          </div>
+          <button
+            onClick={() => onAddTask(week.week)}
+            className="w-full flex flex-col items-center justify-center py-8 gap-2 rounded cursor-pointer transition-all"
+            style={{
+              border: '1.5px dashed #e2e8f0',
+            }}
+            onMouseEnter={e => {
+              (e.currentTarget as HTMLButtonElement).style.borderColor = '#93c5fd';
+              (e.currentTarget as HTMLButtonElement).style.background = '#f0f7ff';
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLButtonElement).style.borderColor = '#e2e8f0';
+              (e.currentTarget as HTMLButtonElement).style.background = 'transparent';
+            }}
+          >
+            <span
+              className="w-7 h-7 rounded-full flex items-center justify-center"
+              style={{ border: '1.5px dashed #cbd5e1' }}
+            >
+              <Plus size={12} style={{ color: '#cbd5e1' }} />
+            </span>
+            <p className="text-[10px]" style={{ color: '#cbd5e1' }}>Add work item</p>
+          </button>
         ) : (
           filtered.map(t => (
-            <RoadmapTaskCard key={t.id} task={t} allTasks={allTasks}
-              onToggleStatus={onToggleStatus} onEdit={onEdit} onDelete={onDelete} />
+            <RoadmapTaskCard
+              key={t.id}
+              task={t}
+              allTasks={allTasks}
+              onToggleStatus={onToggleStatus}
+              onEdit={onEdit}
+              onDelete={onDelete}
+            />
           ))
         )}
       </div>
